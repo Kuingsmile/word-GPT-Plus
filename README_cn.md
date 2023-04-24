@@ -1,10 +1,10 @@
 <div align="center">
   <a href="https://github.com/Kuingsmile/Word-chatGPT-Plus">
-    <img src="src/assets/logo.web" alt="Logo" height="100">
+    <img src="public/assets/logo-filled.png" alt="Logo" height="100">
   </a>
 
 <br />
-  <h3 align="center">Word & chatGPT</h3
+  <h3 align="center">Word & chatGPT</h3>
 
 </div>
 
@@ -25,8 +25,6 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 
 ![230424 091554](https://user-images.githubusercontent.com/96409857/233878627-6b5abdfd-7ff6-4818-8b26-d78f74ea0e85.gif)
 ![230424 091221](https://user-images.githubusercontent.com/96409857/233878368-3a793d8b-3740-4471-822b-0e062415b704.gif)
-![image](https://user-images.githubusercontent.com/96409857/233877854-eea9c2cb-c420-494b-b535-182c0a837889.png)
-![image](https://user-images.githubusercontent.com/96409857/233845361-1e929b20-280f-48af-a8ea-27de864dd83e.png)
 
 ## 快速开始
 
