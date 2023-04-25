@@ -41,6 +41,27 @@ To get started with Word GPT Plus, you will need to sideload the add-in into Mic
 
 To sideload WordGPT, you will need to follow the instructions provided by Microsoft. You can find these instructions at the following link: [sideload office add-ins](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins)
 
+### How to get access token
+
+#### email + password accounts
+
+To use ChatGPT web API, you'll need an OpenAI access token from the ChatGPT webapp. To do this, you can use any of the following methods which take an email and password and return an access token:
+
+- Node.js libs
+  - [ericlewis/openai-authenticator](https://github.com/ericlewis/openai-authenticator)
+  - [michael-dm/openai-token](https://github.com/michael-dm/openai-token)
+  - [allanoricil/chat-gpt-authenticator](https://github.com/AllanOricil/chat-gpt-authenticator)
+- Python libs
+  - [acheong08/OpenAIAuth](https://github.com/acheong08/OpenAIAuth)
+
+These libraries work with email + password accounts (e.g., they do not support accounts where you auth via Microsoft / Google).
+
+#### Microsoft / Google accounts
+
+Alternatively, you can manually get an accessToken by logging in to the ChatGPT webapp and then opening `https://chat.openai.com/api/auth/session`, which will return a JSON object containing your accessToken string.
+
+**Access tokens last for days.**
+
 ## Contributing
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request.

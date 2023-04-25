@@ -41,6 +41,26 @@ yarn run serve
 
 为了旁加载 Word GPT Plus，你需要遵循 Microsoft 提供的说明。你可以在以下链接找到这些说明：[旁加载 office 插件](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins)
 
+### 如何获取access token
+
+#### email + password 账户
+
+为了使用 ChatGPT web API，你需要一个来自 ChatGPT webapp 的 OpenAI access token。你可以使用以下任何方法，这些方法都需要一个 email 和 password 并返回一个 access token：
+
+- Node.js libs
+  - [ericlewis/openai-authenticator](https://github.com/ericlewis/openai-authenticator)
+  - [michael-dm/openai-token](https://github.com/michael-dm/openai-token)
+  - [allanoricil/chat-gpt-authenticator](https://github.com/AllanOricil/chat-gpt-authenticator)
+- Python libs
+  - [acheong08/OpenAIAuth](https://github.com/acheong08/OpenAIAuth)
+
+这些库适用于 email + password 账户（也就是说，它们不支持通过 Microsoft / Google 进行身份验证的账户）。
+#### Microsoft / Google 账户
+
+如果你使用的是 Microsoft / Google 账户，你可以通过登录 ChatGPT webapp 并打开 `https://chat.openai.com/api/auth/session` 来手动获取 accessToken，这将返回一个包含你的 accessToken 字符串的 JSON 对象。
+
+**Access token 只有几天的有效期。**
+
 ## 贡献
 
 如果你希望贡献代码，请 fork 这个仓库并创建一个 pull request。
