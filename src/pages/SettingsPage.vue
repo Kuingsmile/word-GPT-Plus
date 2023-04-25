@@ -377,6 +377,7 @@ function initData () {
   model.value = localStorage.getItem(localStorageKey.model) || 'gpt-3.5-turbo'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
   apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
+  api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'web-api' || 'web-api'
   accessToken.value = localStorage.getItem(localStorageKey.accessToken) || ''
   enableProxy.value = localStorage.getItem(localStorageKey.enableProxy) === 'true'
   proxyHost.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').host || ''
@@ -409,6 +410,7 @@ function handleAccessTokenChange () {
 }
 
 function handleApiChange (val: string) {
+  console.log(val)
   localStorage.setItem(localStorageKey.api, val)
 }
 
