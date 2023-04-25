@@ -17,6 +17,7 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 ## 特色功能
 
 - 使用GPT-3.5 API生成文本并支持选择模型
+- 支持设置access token调用chatGPT web接口（使用该方法免费，建议配合chatGPT-plus）
 - 内置用于翻译、总结、润色和学术写作的提示
 - 支持多种语言
 - 可以自定义提示并保存以供将来使用

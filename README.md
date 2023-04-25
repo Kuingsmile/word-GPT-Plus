@@ -17,6 +17,7 @@ Word GPT Plus is a word add-in which integrates the chatGPT model into Microsoft
 ## Features
 
 - Utilize the GPT-3.5 API to generate text and support select models
+- Support chatGPT web api using access Token, it's FREE!
 - Built-in prompts for translation, summarization, polishing, and academic writing
 - Support for multiple languages
 - Custom prompts can be set and saved for future use
