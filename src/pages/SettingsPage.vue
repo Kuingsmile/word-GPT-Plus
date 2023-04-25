@@ -56,6 +56,26 @@
           <el-form-item>
             <template #label>
               <span>
+                {{ $t('chooseAPI') }}
+              </span>
+            </template>
+            <el-select
+              v-model="api"
+              size="small"
+              :placeholder="$t('chooseAPIDescription')"
+              @change="handleApiChange"
+            >
+              <el-option
+                v-for="item in apiList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <template #label>
+              <span>
                 {{ $t('apiKey') }}
               </span>
             </template>
@@ -63,7 +83,20 @@
               v-model="apiKey"
               :placeholder="$t('apiKeyDescription')"
               size="small"
-              @blur="handelApiKeyChange"
+              @blur="handleApiKeyChange"
+            />
+          </el-form-item>
+          <el-form-item>
+            <template #label>
+              <span>
+                {{ $t('accessToken') }}
+              </span>
+            </template>
+            <el-input
+              v-model="accessToken"
+              :placeholder="$t('accessTokenDescription')"
+              size="small"
+              @blur="handleAccessTokenChange"
             />
           </el-form-item>
           <el-form-item>
@@ -76,7 +109,7 @@
               v-model="basePath"
               :placeholder="$t('settingBasePath')"
               size="small"
-              @blur="handelBasePathChange"
+              @blur="handleBasePathChange"
             />
           </el-form-item>
           <el-form-item>
@@ -89,7 +122,7 @@
               v-model="model"
               size="small"
               :placeholder="$t('settingModel')"
-              @change="handelModelChange"
+              @change="handleModelChange"
             >
               <el-option
                 v-for="item in modelList"
@@ -111,7 +144,7 @@
               :max="2"
               :step="0.1"
               size="small"
-              @change="handelTemperatureChange"
+              @change="handleTemperatureChange"
             />
           </el-form-item>
           <el-form-item>
@@ -125,7 +158,7 @@
               :min="1"
               :step="1"
               size="small"
-              @change="handelMaxTokensChange"
+              @change="handleMaxTokensChange"
             />
           </el-form-item>
           <el-form-item>
@@ -138,7 +171,7 @@
               v-model="replyLanguage"
               size="small"
               :placeholder="$t('settingReplyLanguage')"
-              @change="handelReplyLanguageChange"
+              @change="handleReplyLanguageChange"
             >
               <el-option
                 v-for="item in replyLanguageList"
@@ -188,7 +221,7 @@
             v-model="enableProxy"
             :active-text="$t('settingOpen')"
             :inactive-text="$t('settingClose')"
-            @change="handelEnableProxyChange"
+            @change="handleEnableProxyChange"
           />
         </el-form-item>
         <template v-if="enableProxy">
@@ -303,12 +336,14 @@ const modelList = Object.keys(availableModels).map((key) => ({
   value: key
 }))
 
+const api = ref<'official' | 'web-api'>('web-api')
 const currentUILanguage = ref('en')
 const temperature = ref(0.7)
 const maxTokens = ref(400)
 const model = ref(availableModels['gpt-3.5'])
 const replyLanguage = ref('English')
 const apiKey = ref('')
+const accessToken = ref('')
 const enableProxy = ref(false)
 const proxyHost = ref('')
 const proxyPort = ref('')
@@ -317,6 +352,17 @@ const proxyPassword = ref('')
 const proxyProtocol = ref('http')
 const proxyVisible = ref(false)
 const basePath = ref('')
+
+const apiList = [
+  {
+    label: 'web-api',
+    value: 'web-api'
+  },
+  {
+    label: 'official',
+    value: 'official'
+  }
+]
 
 const { locale } = useI18n()
 
@@ -331,6 +377,7 @@ function initData () {
   model.value = localStorage.getItem(localStorageKey.model) || 'gpt-3.5-turbo'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
   apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
+  accessToken.value = localStorage.getItem(localStorageKey.accessToken) || ''
   enableProxy.value = localStorage.getItem(localStorageKey.enableProxy) === 'true'
   proxyHost.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').host || ''
   proxyPort.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').port || ''
@@ -345,31 +392,39 @@ function handleLocalLanguageChange (val: string) {
   localStorage.setItem(localStorageKey.localLanguage, val)
 }
 
-function handelReplyLanguageChange (val: string) {
+function handleReplyLanguageChange (val: string) {
   localStorage.setItem(localStorageKey.replyLanguage, val)
 }
 
-function handelModelChange (val: string) {
+function handleModelChange (val: string) {
   localStorage.setItem(localStorageKey.model, val)
 }
 
-function handelApiKeyChange () {
+function handleApiKeyChange () {
   localStorage.setItem(localStorageKey.apiKey, apiKey.value)
 }
 
-function handelBasePathChange () {
+function handleAccessTokenChange () {
+  localStorage.setItem(localStorageKey.accessToken, accessToken.value)
+}
+
+function handleApiChange (val: string) {
+  localStorage.setItem(localStorageKey.api, val)
+}
+
+function handleBasePathChange () {
   localStorage.setItem(localStorageKey.basePath, basePath.value)
 }
 
-function handelTemperatureChange () {
+function handleTemperatureChange () {
   localStorage.setItem(localStorageKey.temperature, temperature.value.toString())
 }
 
-function handelMaxTokensChange () {
+function handleMaxTokensChange () {
   localStorage.setItem(localStorageKey.maxTokens, maxTokens.value.toString())
 }
 
-function handelEnableProxyChange () {
+function handleEnableProxyChange () {
   localStorage.setItem(localStorageKey.enableProxy, enableProxy.value.toString())
 }
 

@@ -3,7 +3,11 @@ import { createI18n } from 'vue-i18n'
 const messages = {
   en: {
     apiKey: 'API Key',
-    apiKeyDescription: 'Please enter your API key',
+    apiKeyDescription: 'API key',
+    accessToken: 'Access Token',
+    accessTokenDescription: 'Access Token',
+    chooseAPI: 'API',
+    chooseAPIDescription: 'Please choose API',
     translate: 'Trans',
     summarize: 'Sum',
     polish: 'Polish',
@@ -53,7 +57,11 @@ const messages = {
   },
   'zh-cn': {
     apiKey: 'API 密钥',
-    apiKeyDescription: '请输入您的 API 密钥',
+    apiKeyDescription: 'API 密钥',
+    accessToken: 'access token',
+    accessTokenDescription: 'access token',
+    chooseAPI: 'API',
+    chooseAPIDescription: '请选择API',
     translate: '翻译',
     summarize: '摘要',
     polish: '润色',

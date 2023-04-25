@@ -54,10 +54,12 @@ export const availableModels: IStringKeyMap = {
 }
 
 export enum localStorageKey {
+  api = 'api',
   model = 'model',
   temperature = 'temperature',
   maxTokens = 'maxTokens',
   apiKey = 'apiKey',
+  accessToken = 'accessToken',
   localLanguage = 'localLanguage',
   basePath = 'basePath',
   replyLanguage = 'replyLanguage',

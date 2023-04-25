@@ -391,16 +391,19 @@ import { Configuration, ConfigurationParameters, CreateChatCompletionRequest, Op
 import { useRouter } from 'vue-router'
 import { localStorageKey, languageMap, buildInPrompt } from '@/utils/constant'
 import { promptDbInstance } from '@/store/promtStore'
-import { IStringKeyMap } from '@/types'
+import { IStringKeyMap, opts } from '@/types'
 import { CirclePlus, Remove } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import { ChatGPTUnofficialProxyAPI, ChatMessage } from 'chatgpt'
 
 const replyLanguageList = Object.values(languageMap).map((key) => ({
   label: key,
   value: key
 }))
 
+const api = ref<'web-api' | 'official'>('web-api')
 const apiKey = ref('')
+const accessToken = ref('')
 const localLanguage = ref('en')
 const temperature = ref(0.7)
 const maxTokens = ref(100)
@@ -431,6 +434,9 @@ const result = ref('res')
 const loading = ref(false)
 const router = useRouter()
 const historyDialog = ref<any[]>([])
+const parentMessageId = ref('')
+const conversationId = ref('')
+
 const insertType = ref('replace')
 const insertTypeList = [
   {
@@ -514,7 +520,9 @@ function handelPromptChange (val: string) {
 }
 
 onBeforeMount(async () => {
+  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' ?? 'web-api'
   apiKey.value = localStorage.getItem(localStorageKey.apiKey) ?? ''
+  accessToken.value = localStorage.getItem(localStorageKey.accessToken) ?? ''
   localLanguage.value = localStorage.getItem(localStorageKey.localLanguage) ?? 'en'
   temperature.value = Number(localStorage.getItem(localStorageKey.temperature)) ?? 0.7
   maxTokens.value = Number(localStorage.getItem(localStorageKey.maxTokens)) ?? 100
@@ -559,6 +567,14 @@ function setConfig (apiKey: string, basePath?: string): Configuration {
   return config
 }
 
+function setUnofficalConfig (accessToken: string): opts {
+  const configParams: opts = {
+    accessToken,
+    apiReverseProxyUrl: 'https://ai.fakeopen.com/api/conversation'
+  }
+  return configParams
+}
+
 async function createChatCompletionStream (
   config: Configuration,
   messages: any[],
@@ -593,30 +609,66 @@ async function createChatCompletionStream (
     }
   } catch (error) {
     result.value = 'error'
+    console.error(error)
+  }
+  loading.value = false
+}
+
+async function createChatCompletionUnoffical (
+  config: opts,
+  messages: any[]
+) : Promise<void> {
+  const unOfficalAPI = new ChatGPTUnofficialProxyAPI(config)
+  let response
+  try {
+    response = await unOfficalAPI.sendMessage(
+      messages[0] + '\n' + messages[1],
+      {
+        timeoutMs: 30000,
+        onProgress: (partialResponse: ChatMessage) => {
+          result.value = partialResponse.text
+        }
+      }
+    )
+    parentMessageId.value = response.parentMessageId ?? ''
+    conversationId.value = response.conversationId ?? ''
+  } catch (error) {
+    result.value = 'error'
+    console.log(error)
   }
   loading.value = false
 }
 
 function insertResult () {
+  const paragraph = result.value.replace(/\n+/g, '\n').split('\n')
   switch (insertType.value) {
     case 'replace':
       Word.run(async (context) => {
         const range = context.document.getSelection()
-        range.insertText(result.value, 'Replace')
+        range.insertText(paragraph[0], 'Replace')
+        for (let i = paragraph.length - 1; i > 0; i--) {
+          range.insertParagraph(paragraph[i], 'After')
+        }
         await context.sync()
       })
       break
     case 'append':
       Word.run(async (context) => {
         const range = context.document.getSelection()
-        range.insertText(result.value, 'End')
+        range.insertText(paragraph[0], 'End')
+        for (let i = paragraph.length - 1; i > 0; i--) {
+          range.insertParagraph(paragraph[i], 'After')
+        }
         await context.sync()
       })
       break
     case 'newLine':
       Word.run(async (context) => {
         const range = context.document.getSelection()
-        range.insertParagraph(result.value, 'After')
+        range.insertParagraph(paragraph[0], 'After')
+        for (let i = paragraph.length - 1; i > 0; i--) {
+          range.insertParagraph(paragraph[i], 'After')
+        }
         await context.sync()
       })
       break
@@ -645,31 +697,43 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
     systemMessage = buildInPrompt[taskType].system(replyLanguage.value)
     userMessage = buildInPrompt[taskType].user(selectedText, replyLanguage.value)
   }
-  const config = setConfig(apiKey.value, basePath.value)
-  historyDialog.value = [
-    {
-      role: 'system',
-      content: systemMessage
-    },
-    {
-      role: 'user',
-      content: userMessage
-    }
-  ]
-  await createChatCompletionStream(
-    config,
-    historyDialog.value,
-    maxTokens.value,
-    temperature.value,
-    model.value,
-    proxy.value
-  )
+  if (api.value === 'official' && apiKey.value !== '') {
+    const config = setConfig(apiKey.value, basePath.value)
+    historyDialog.value = [
+      {
+        role: 'system',
+        content: systemMessage
+      },
+      {
+        role: 'user',
+        content: userMessage
+      }
+    ]
+    await createChatCompletionStream(
+      config,
+      historyDialog.value,
+      maxTokens.value,
+      temperature.value,
+      model.value,
+      proxy.value
+    )
+  } else if (api.value === 'web-api' && accessToken.value !== '') {
+    const config = setUnofficalConfig(accessToken.value)
+    await createChatCompletionUnoffical(config, [systemMessage, userMessage])
+  } else {
+    ElMessage.error('Set API Key or Access Token first')
+    return
+  }
+  if (result.value === 'error') {
+    ElMessage.error('Something went wrong')
+    return
+  }
   insertResult()
 }
 
 function checkApiKey () {
-  if (apiKey.value === '') {
-    ElMessage.error('Go to settings to set API key')
+  if (apiKey.value === '' && accessToken.value === '') {
+    ElMessage.error('Set API Key or Access Token first')
     return false
   }
   return true
@@ -711,15 +775,48 @@ async function continueChat () {
     role: 'user',
     content: 'continue'
   })
-  await createChatCompletionStream(
-    setConfig(apiKey.value, basePath.value),
-    historyDialog.value,
-    maxTokens.value,
-    temperature.value,
-    model.value,
-    proxy.value
-  )
-  insertResult()
+  if (api.value === 'official') {
+    try {
+      await createChatCompletionStream(
+        setConfig(apiKey.value, basePath.value),
+        historyDialog.value,
+        maxTokens.value,
+        temperature.value,
+        model.value,
+        proxy.value
+      )
+    } catch (error) {
+      result.value = 'error'
+      console.log(error)
+    }
+  } else {
+    try {
+      const config = setUnofficalConfig(accessToken.value)
+      const unOfficalAPI = new ChatGPTUnofficialProxyAPI(config)
+      const response = await unOfficalAPI.sendMessage(
+        'continue',
+        {
+          timeoutMs: 30000,
+          parentMessageId: parentMessageId.value,
+          conversationId: conversationId.value,
+          onProgress: (partialResponse: ChatMessage) => {
+            result.value = partialResponse.text
+          }
+        }
+      )
+      parentMessageId.value = response.parentMessageId ?? ''
+      conversationId.value = response.conversationId ?? ''
+    } catch (error) {
+      result.value = 'error'
+      console.log(error)
+    }
+  }
+  loading.value = false
+  if (result.value === 'error') {
+    ElMessage.error('Error')
+  } else {
+    insertResult()
+  }
 }
 
 </script>
