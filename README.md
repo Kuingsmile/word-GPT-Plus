@@ -41,8 +41,8 @@ However, if you desire faster speeds and possess expertise with Node.js, self-ho
 
 1. Download the add-in `manifest.xml` file and Save it to a directory on your computer, such as `C:\Users\username\Documents\WordGPT`.
 
-  - Countries except China: [release/other/manifest.xml](https://raw.githubusercontent.com/Kuingsmile/word-GPT-Plus/master/release/other/manifest.xml)
-  - China: [release/china/manifest.xml](https://raw.githubusercontent.com/Kuingsmile/word-GPT-Plus/master/release/china/manifest.xml)
+  - Countries except China: [release/other/manifest.xml](https://release.piclist.cn/release/other/manifest.xml)
+  - China: [release/china/manifest.xml](https://release.piclist.cn/release/china/manifest.xml)
 
 2. Follow the [Sideload add-in](#sideload-add-in) instructions below to install the add-in.
 
