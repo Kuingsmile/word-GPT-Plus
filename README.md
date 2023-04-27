@@ -29,7 +29,22 @@ Word GPT Plus is a word add-in which integrates the chatGPT model into Microsoft
 
 ## Getting Started
 
-At first, clone this repo and install dependencies, the run the project.
+There are two ways to install Word GPT Plus: through my free hosting service, or by self-hosting it.
+
+I highly recommend utilizing my hosting service as it is both user-friendly and requires no installation of additional dependencies. Furthermore, you will have access to the most up-to-date version of Word GPT Plus at all times.
+
+Rest assured that your privacy is protected as all data is saved using localStorage.
+
+However, if you desire faster speeds and possess expertise with Node.js, self-hosting is also an option.
+
+### Service hosted by me
+
+1. Download the add-in `manifest.xml` file from [here](https://raw.githubusercontent.com/Kuingsmile/word-GPT-Plus/master/release/manifest.xml) and save it to a directory on your computer, such as `C:\Users\username\Documents\WordGPT`.
+2. Follow the [Sideload add-in](#sideload-add-in) instructions below to install the add-in.
+
+### Self-hosted
+
+If you want to host the add-in yourself, you will need to clone this repo and install dependencies, then run the project. Need Node.js 16+.
 
 ```bash
 git clone https://github.com/Kuingsmile/Word-GPT-Plus.git
@@ -37,13 +52,34 @@ yarn
 yarn run serve
 ```
 
-To get started with Word GPT Plus, you will need to sideload the add-in into Microsoft Word. Sideloading allows you to install and test add-ins that are not yet available on the Microsoft Store.
+Then, follow the [Sideload add-in](#sideload-add-in) instructions below to install the add-in.
 
-To sideload WordGPT, you will need to follow the instructions provided by Microsoft. You can find these instructions at the following link: [sideload office add-ins](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins)
+### Sideload add-in
 
-### How to get access token
+To get started with Word GPT Plus, you will need to sideload the add-in into Microsoft Word.
 
-#### email + password accounts
+You can find instructions provided by MicroSoft at the following link: [sideload office add-ins](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins)
+
+1. Go to the folder where you saved the `manifest.xml` file, for example `C:\Users\username\Documents\WordGPT`.
+2. Open the context menu for the folder(right-click the folder) and select **Properties**.
+3. Within the **Properties** dialog box, select the **Sharing** tab, and then select **Share**.
+![image](https://learn.microsoft.com/en-us/office/dev/add-ins/images/sideload-windows-properties-dialog.png)
+4. Within the **Network access** dialog box, add yourself and any other users you want to share, choose the **Share** button, When you see confirmation that Your folder is shared, note the **full network path** that's displayed immediately following the folder name.
+![image](https://learn.microsoft.com/en-us/office/dev/add-ins/images/sideload-windows-network-access-dialog.png)
+5. Open a new document in Word, choose the **File** tab, and then choose **Options**.
+6. Choose **Trust Center**, and then choose the **Trust Center Settings** button.
+7. Choose **Trusted Add-in Catalogs**.
+8. In the **Catalog Url** box, enter the **full network path** and then choose **Add Catalog**.
+9. Select the **Show in Menu** check box, and then choose **OK**.
+![image](https://learn.microsoft.com/en-us/office/dev/add-ins/images/sideload-windows-trust-center-dialog.png)
+10. Close and then restart Word.
+11. Click **Insert** > **My Add-ins** > **Shared Folder**, choose **GPT Plus**, and then choose **Add**.
+12. Enjoy it!
+![image](https://user-images.githubusercontent.com/96409857/234744280-9d9f13cf-536b-4fb5-adfa-cbec262d56a2.png)
+
+## How to get access token
+
+### email + password accounts
 
 To use ChatGPT web API, you'll need an OpenAI access token from the ChatGPT webapp. To do this, you can use any of the following methods which take an email and password and return an access token:
 
@@ -56,7 +92,7 @@ To use ChatGPT web API, you'll need an OpenAI access token from the ChatGPT weba
 
 These libraries work with email + password accounts (e.g., they do not support accounts where you auth via Microsoft / Google).
 
-#### Microsoft / Google accounts
+### Microsoft / Google accounts
 
 Alternatively, you can manually get an accessToken by logging in to the ChatGPT webapp and then opening `https://chat.openai.com/api/auth/session`, which will return a JSON object containing your accessToken string.
 

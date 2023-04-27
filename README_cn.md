@@ -29,21 +29,57 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 
 ## 快速开始
 
-首先，克隆这个仓库并安装依赖，然后运行项目。
+有两种方法可以安装 Word GPT Plus：通过我的免费web服务，或者自己搭建服务。
+
+我强烈建议使用我的web服务，因为它安装简单快捷，也不需要安装额外的依赖项。此外，你将随时可以访问到最新版本的 Word GPT Plus。
+
+由于所有数据都是使用localStorage保存的，所以你的隐私是受到保护的。
+
+但是，如果你想要更快的速度，并且具有Node.js的专业知识，自己搭建服务也是一个选择。
+
+### 由我提供的服务
+
+1. 下载 [manifest.xml](https://raw.githubusercontent.com/Kuingsmile/word-GPT-Plus/master/release/manifest.xml) 文件并保存到你的电脑上，例如 `C:\Users\username\Documents\WordGPT`.
+2. 按照下面的 [旁加载插件](#旁加载插件) 说明安装插件。
+
+### 自己搭建服务
+
+如果你想要自己搭建服务，你需要克隆这个仓库并安装依赖项，然后运行项目。需要 Node.js 16+。
 
 ```bash
-git clone https://github.com/Kuingsmile/word-GPT-Plus.git
+git clone https://github.com/Kuingsmile/Word-GPT-Plus.git
 yarn
 yarn run serve
 ```
 
-为了开始使用 Word GPT Plus，你需要将插件旁加载到 Microsoft Word 中。旁加载允许你安装和测试尚未在 Microsoft Store 中提供的插件。
+然后，按照下面的 [旁加载插件](#旁加载插件) 说明安装插件。
 
-为了旁加载 Word GPT Plus，你需要遵循 Microsoft 提供的说明。你可以在以下链接找到这些说明：[旁加载 office 插件](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins)
+### 旁加载插件
 
-### 如何获取access token
+为了开始使用 Word GPT Plus，你需要将插件旁加载到 Microsoft Word 中。
 
-#### email + password 账户
+你可以在下面的链接中找到微软提供的说明：[sideload office add-ins](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins)
+
+1. 打开你保存了 `manifest.xml` 文件的文件夹，例如 `C:\Users\username\Documents\WordGPT`.
+2. 右键点击文件夹打开菜单，选择 **属性**.
+3. 在 **属性** 对话框中，选择 **共享** 选项卡，然后选择 **共享**.
+![image](https://learn.microsoft.com/en-us/office/dev/add-ins/images/sideload-windows-properties-dialog.png)
+4. 在 **网络访问** 对话框中，添加你自己和任何你想要共享的其他用户，选择 **共享** 按钮，当你看到你的文件夹被共享的确认信息时，注意显示在文件夹名称后面的 **完整网络路径**.
+![image](https://learn.microsoft.com/en-us/office/dev/add-ins/images/sideload-windows-network-access-dialog.png)
+5. 在 Word 中打开一个新文档，选择 **文件** 选项卡，然后选择 **选项**.
+6. 选择 **信任中心**，然后选择 **信任中心设置** 按钮.
+7. 选择 **信任的目录**.
+8. 在 **目录 URL** 框中，输入 **完整网络路径**，然后选择 **添加目录**.
+9. 选择 **在菜单中显示** 复选框，然后选择 **确定**.
+![image](https://learn.microsoft.com/en-us/office/dev/add-ins/images/sideload-windows-trust-center-dialog.png)
+10. 关闭并重新启动 Word.
+11. 点击**插入** -> **获取加载项** -> **共享目录**，选择 **Word GPT**.
+12. 享受 Word GPT Plus 的强大功能吧！
+![image](https://user-images.githubusercontent.com/96409857/234744280-9d9f13cf-536b-4fb5-adfa-cbec262d56a2.png)
+
+## 如何获取access token
+
+### email + password 账户
 
 为了使用 ChatGPT web API，你需要一个来自 ChatGPT webapp 的 OpenAI access token。你可以使用以下任何方法，这些方法都需要一个 email 和 password 并返回一个 access token：
 
@@ -55,7 +91,8 @@ yarn run serve
   - [acheong08/OpenAIAuth](https://github.com/acheong08/OpenAIAuth)
 
 这些库适用于 email + password 账户（也就是说，它们不支持通过 Microsoft / Google 进行身份验证的账户）。
-#### Microsoft / Google 账户
+
+### Microsoft / Google 账户
 
 如果你使用的是 Microsoft / Google 账户，你可以通过登录 ChatGPT webapp 并打开 `https://chat.openai.com/api/auth/session` 来手动获取 accessToken，这将返回一个包含你的 accessToken 字符串的 JSON 对象。
 
@@ -69,6 +106,6 @@ yarn run serve
 
 MIT License
 
-## 请给个 ⭐️ 吧！
+## 请给个 ⭐️ 吧
 
 如果这个项目帮助到了你，请给个 ⭐️ 吧！
