@@ -437,6 +437,9 @@ const historyDialog = ref<any[]>([])
 const parentMessageId = ref('')
 const conversationId = ref('')
 
+const jsonIssue = ref(false)
+const errorIssue = ref(false)
+
 const insertType = ref('replace')
 const insertTypeList = [
   {
@@ -533,7 +536,7 @@ onBeforeMount(async () => {
     ? false
     : JSON.parse(localStorage.getItem(localStorageKey.proxy) || 'false')
   insertType.value = localStorage.getItem(localStorageKey.insertType) ?? 'replace' as 'replace' | 'append' | 'newLine' | 'NoAction'
-  systemPrompt.value = localStorage.getItem(localStorageKey.defaultSystemPrompt) ?? `Act like a personal assistant. Reply in ${replyLanguage.value}.`
+  systemPrompt.value = localStorage.getItem(localStorageKey.defaultSystemPrompt) ?? 'Act like a personal assistant.'
   await getSystemPromptList()
   if (systemPromptList.value.find((item) => item.value === systemPrompt.value)) {
     systemPromptSelected.value = systemPrompt.value
@@ -605,10 +608,13 @@ async function createChatCompletionStream (
         content: result.value
       })
     } else {
-      result.value = 'error'
+      result.value = response.statusText?.toString() ?? 'error'
+      errorIssue.value = true
+      console.log(response)
     }
   } catch (error) {
-    result.value = 'error'
+    result.value = String(error)
+    errorIssue.value = true
     console.error(error)
   }
   loading.value = false
@@ -632,15 +638,37 @@ async function createChatCompletionUnoffical (
     )
     parentMessageId.value = response.parentMessageId ?? ''
     conversationId.value = response.conversationId ?? ''
+    loading.value = false
   } catch (error) {
-    result.value = 'error'
-    console.log(error)
+    console.error(error)
+    if (String(error).includes('SyntaxError') && String(error).includes('JSON')) {
+      let count = 0
+      let oldResult = ''
+      jsonIssue.value = true
+      const interval = setInterval(() => {
+        if (count > 30) {
+          clearInterval(interval)
+          jsonIssue.value = false
+          loading.value = false
+          insertResult()
+        }
+        if (oldResult !== result.value) {
+          oldResult = result.value
+          count = 0
+        } else {
+          count++
+        }
+      }, 100)
+    } else {
+      result.value = String(error)
+      errorIssue.value = true
+      loading.value = false
+    }
   }
-  loading.value = false
 }
 
 function insertResult () {
-  const paragraph = result.value.replace(/\n+/g, '\n').split('\n')
+  const paragraph = result.value.replace(/\n+/g, '\n').replace(/\r+/g, '\n').split('\n')
   switch (insertType.value) {
     case 'replace':
       Word.run(async (context) => {
@@ -665,8 +693,7 @@ function insertResult () {
     case 'newLine':
       Word.run(async (context) => {
         const range = context.document.getSelection()
-        range.insertParagraph(paragraph[0], 'After')
-        for (let i = paragraph.length - 1; i > 0; i--) {
+        for (let i = paragraph.length - 1; i >= 0; i--) {
           range.insertParagraph(paragraph[i], 'After')
         }
         await context.sync()
@@ -692,12 +719,12 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
   const selectedText = await getSeletedText()
   if (taskType === 'custom') {
     systemMessage = systemPrompt.value
-    userMessage = `${prompt.value} ${selectedText}`
+    userMessage = `Reply in ${replyLanguage.value} ${prompt.value} ${selectedText}`
   } else {
     systemMessage = buildInPrompt[taskType].system(replyLanguage.value)
     userMessage = buildInPrompt[taskType].user(selectedText, replyLanguage.value)
   }
-  if (api.value === 'official' && apiKey.value !== '') {
+  if (api.value === 'official' && !apiKey.value) {
     const config = setConfig(apiKey.value, basePath.value)
     historyDialog.value = [
       {
@@ -717,22 +744,25 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
       model.value,
       proxy.value
     )
-  } else if (api.value === 'web-api' && accessToken.value !== '') {
+  } else if (api.value === 'web-api' && !accessToken.value) {
     const config = setUnofficalConfig(accessToken.value)
     await createChatCompletionUnoffical(config, [systemMessage, userMessage])
   } else {
     ElMessage.error('Set API Key or Access Token first')
     return
   }
-  if (result.value === 'error') {
-    ElMessage.error('Something went wrong')
+  if (errorIssue.value === true) {
+    errorIssue.value = false
+    ElMessage.error('Something is wrong')
     return
   }
-  insertResult()
+  if (!jsonIssue.value) {
+    insertResult()
+  }
 }
 
 function checkApiKey () {
-  if (apiKey.value === '' && accessToken.value === '') {
+  if (!apiKey.value && !accessToken.value) {
     ElMessage.error('Set API Key or Access Token first')
     return false
   }
@@ -786,8 +816,9 @@ async function continueChat () {
         proxy.value
       )
     } catch (error) {
-      result.value = 'error'
-      console.log(error)
+      result.value = String(error)
+      errorIssue.value = true
+      console.error(error)
     }
   } else {
     try {
@@ -806,17 +837,40 @@ async function continueChat () {
       )
       parentMessageId.value = response.parentMessageId ?? ''
       conversationId.value = response.conversationId ?? ''
+      loading.value = false
     } catch (error) {
-      result.value = 'error'
-      console.log(error)
+      console.error(error)
+      if (String(error).includes('SyntaxError') && String(error).includes('JSON')) {
+        let count = 0
+        let oldResult = ''
+        jsonIssue.value = true
+        const interval = setInterval(() => {
+          if (count > 30) {
+            clearInterval(interval)
+            jsonIssue.value = false
+            loading.value = false
+            insertResult()
+          }
+          if (oldResult !== result.value) {
+            oldResult = result.value
+            count = 0
+          } else {
+            count++
+          }
+        }, 100)
+      } else {
+        result.value = String(error)
+        errorIssue.value = true
+        loading.value = false
+      }
     }
   }
-  loading.value = false
-  if (result.value === 'error') {
-    ElMessage.error('Error')
-  } else {
-    insertResult()
+  if (errorIssue.value === true) {
+    errorIssue.value = false
+    ElMessage.error('Something is wrong')
+    return
   }
+  insertResult()
 }
 
 </script>
