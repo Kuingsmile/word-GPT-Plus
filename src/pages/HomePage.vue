@@ -408,6 +408,7 @@ const localLanguage = ref('en')
 const temperature = ref(0.7)
 const maxTokens = ref(100)
 const model = ref('gpt-3.5-turbo')
+const webModel = ref('default')
 const replyLanguage = ref('English')
 const basePath = ref('')
 const proxy = ref<AxiosProxyConfig | false>(false)
@@ -530,6 +531,7 @@ onBeforeMount(async () => {
   temperature.value = Number(localStorage.getItem(localStorageKey.temperature)) ?? 0.7
   maxTokens.value = Number(localStorage.getItem(localStorageKey.maxTokens)) ?? 100
   model.value = localStorage.getItem(localStorageKey.model) ?? 'gpt-3.5-turbo'
+  webModel.value = localStorage.getItem(localStorageKey.webModel) ?? 'default'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) ?? 'English'
   basePath.value = localStorage.getItem(localStorageKey.basePath) ?? ''
   proxy.value = localStorage.getItem(localStorageKey.enableProxy) === 'false'
@@ -724,7 +726,7 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
     systemMessage = buildInPrompt[taskType].system(replyLanguage.value)
     userMessage = buildInPrompt[taskType].user(selectedText, replyLanguage.value)
   }
-  if (api.value === 'official' && !apiKey.value) {
+  if (api.value === 'official' && apiKey.value) {
     const config = setConfig(apiKey.value, basePath.value)
     historyDialog.value = [
       {
@@ -744,7 +746,7 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
       model.value,
       proxy.value
     )
-  } else if (api.value === 'web-api' && !accessToken.value) {
+  } else if (api.value === 'web-api' && accessToken.value) {
     const config = setUnofficalConfig(accessToken.value)
     await createChatCompletionUnoffical(config, [systemMessage, userMessage])
   } else {
@@ -762,7 +764,7 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
 }
 
 function checkApiKey () {
-  if (!apiKey.value && !accessToken.value) {
+  if (apiKey.value === '' && accessToken.value === '') {
     ElMessage.error('Set API Key or Access Token first')
     return false
   }

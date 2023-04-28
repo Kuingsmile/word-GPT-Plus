@@ -53,9 +53,16 @@ export const availableModels: IStringKeyMap = {
   'gpt4-32k-0314': 'gpt-4-32k-0314'
 }
 
+export const availableModelsForPlus: IStringKeyMap = {
+  default: 'text-davinci-002-render-sha',
+  'legacy(plus)': 'model=text-davinci-002-render-paid',
+  'gpt4(plus)': 'gpt4'
+}
+
 export enum localStorageKey {
   api = 'api',
   model = 'model',
+  webModel = 'webModel',
   temperature = 'temperature',
   maxTokens = 'maxTokens',
   apiKey = 'apiKey',

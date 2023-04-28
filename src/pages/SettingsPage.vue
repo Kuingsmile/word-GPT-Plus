@@ -73,7 +73,9 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item>
+          <el-form-item
+            v-if="api === 'official'"
+          >
             <template #label>
               <span>
                 {{ $t('apiKey') }}
@@ -86,7 +88,9 @@
               @blur="handleApiKeyChange"
             />
           </el-form-item>
-          <el-form-item>
+          <el-form-item
+            v-if="api === 'web-api'"
+          >
             <template #label>
               <span>
                 {{ $t('accessToken') }}
@@ -99,7 +103,9 @@
               @blur="handleAccessTokenChange"
             />
           </el-form-item>
-          <el-form-item>
+          <el-form-item
+            v-if="api === 'official'"
+          >
             <template #label>
               <span>
                 {{ $t('settingBasePath') }}
@@ -112,7 +118,9 @@
               @blur="handleBasePathChange"
             />
           </el-form-item>
-          <el-form-item>
+          <el-form-item
+            v-if="api === 'official'"
+          >
             <template #label>
               <span>
                 {{ $t('settingModel') }}
@@ -132,7 +140,31 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item>
+          <el-form-item
+            v-if="false"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingModel') }}
+              </span>
+            </template>
+            <el-select
+              v-model="webModel"
+              size="small"
+              :placeholder="$t('settingModel')"
+              @change="handleWebModelChange"
+            >
+              <el-option
+                v-for="item in webModelList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'official'"
+          >
             <template #label>
               <span>
                 {{ $t('settingTemperature') }}
@@ -147,7 +179,9 @@
               @change="handleTemperatureChange"
             />
           </el-form-item>
-          <el-form-item>
+          <el-form-item
+            v-if="api === 'official'"
+          >
             <template #label>
               <span>
                 {{ $t('settingMaxTokens') }}
@@ -181,7 +215,9 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item>
+          <el-form-item
+            v-if="api === 'official'"
+          >
             <template #label>
               <span>
                 {{ $t('settingProxy') }}
@@ -309,7 +345,7 @@
 <script lang="ts" setup>
 import { onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { languageMap, availableModels, localStorageKey } from '@/utils/constant'
+import { languageMap, availableModels, localStorageKey, availableModelsForPlus } from '@/utils/constant'
 import { useRouter } from 'vue-router'
 import { AxiosProxyConfig } from 'axios'
 
@@ -336,11 +372,17 @@ const modelList = Object.keys(availableModels).map((key) => ({
   value: key
 }))
 
+const webModelList = Object.keys(availableModelsForPlus).map((key) => ({
+  label: key,
+  value: key
+}))
+
 const api = ref<'official' | 'web-api'>('web-api')
 const currentUILanguage = ref('en')
 const temperature = ref(0.7)
 const maxTokens = ref(400)
 const model = ref(availableModels['gpt-3.5'])
+const webModel = ref('default')
 const replyLanguage = ref('English')
 const apiKey = ref('')
 const accessToken = ref('')
@@ -375,6 +417,7 @@ function initData () {
   temperature.value = forceNumber(localStorage.getItem(localStorageKey.temperature)) || 0.7
   maxTokens.value = forceNumber(localStorage.getItem(localStorageKey.maxTokens)) || 100
   model.value = localStorage.getItem(localStorageKey.model) || 'gpt-3.5-turbo'
+  webModel.value = localStorage.getItem(localStorageKey.webModel) || 'default'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
   apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
   api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'web-api' || 'web-api'
@@ -399,6 +442,10 @@ function handleReplyLanguageChange (val: string) {
 
 function handleModelChange (val: string) {
   localStorage.setItem(localStorageKey.model, val)
+}
+
+function handleWebModelChange (val: string) {
+  localStorage.setItem(localStorageKey.webModel, val)
 }
 
 function handleApiKeyChange () {
