@@ -415,7 +415,7 @@ onBeforeMount(() => {
 function initData () {
   currentUILanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
   temperature.value = forceNumber(localStorage.getItem(localStorageKey.temperature)) || 0.7
-  maxTokens.value = forceNumber(localStorage.getItem(localStorageKey.maxTokens)) || 100
+  maxTokens.value = forceNumber(localStorage.getItem(localStorageKey.maxTokens)) || 400
   model.value = localStorage.getItem(localStorageKey.model) || 'gpt-3.5-turbo'
   webModel.value = localStorage.getItem(localStorageKey.webModel) || 'default'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
