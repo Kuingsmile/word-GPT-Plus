@@ -457,7 +457,6 @@ function handleAccessTokenChange () {
 }
 
 function handleApiChange (val: string) {
-  console.log(val)
   localStorage.setItem(localStorageKey.api, val)
 }
 
