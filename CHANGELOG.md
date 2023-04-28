@@ -1,3 +1,19 @@
+## :tada: 0.2.2 (2023-04-28)
+
+
+### :bug: Bug Fixes
+
+* **custom:** change default maxTokens from 100 to 400 ([dcae188](https://github.com/Kuingsmile/word-GPT-Plus/commit/dcae188))
+* **custom:** fix token and api key bug ([dfb70a2](https://github.com/Kuingsmile/word-GPT-Plus/commit/dfb70a2))
+
+
+### :pencil: Documentation
+
+* **custom:** delete china server due to tech issue ([16cd6a9](https://github.com/Kuingsmile/word-GPT-Plus/commit/16cd6a9))
+* **custom:** update manifest.xml download link ([772c1d9](https://github.com/Kuingsmile/word-GPT-Plus/commit/772c1d9))
+
+
+
 ## :tada: 0.2.1 (2023-04-27)
 
 
