@@ -27,6 +27,14 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 ![230424 091554](https://user-images.githubusercontent.com/96409857/233878627-6b5abdfd-7ff6-4818-8b26-d78f74ea0e85.gif)
 ![230424 091221](https://user-images.githubusercontent.com/96409857/233878368-3a793d8b-3740-4471-822b-0e062415b704.gif)
 
+## 环境要求
+
+- Microsoft Word 2016/2019 零售版，Microsoft Word 2021 或 Microsoft 365
+- Edge WebView2 Runtime [https://developer.microsoft.com/en-us/microsoft-edge/webview2/](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
+- 如果你使用自己搭建的服务，你需要 Node.js 16+
+
+**注意：office 插件只能在 docx 文件中使用，不支持 doc 文件。**
+
 ## 快速开始
 
 有两种方法可以安装 Word GPT Plus：通过我的免费web服务，或者自己搭建服务。

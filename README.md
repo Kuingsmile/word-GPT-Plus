@@ -27,6 +27,14 @@ Word GPT Plus is a word add-in which integrates the chatGPT model into Microsoft
 ![230424 091554](https://user-images.githubusercontent.com/96409857/233878627-6b5abdfd-7ff6-4818-8b26-d78f74ea0e85.gif)
 ![230424 091221](https://user-images.githubusercontent.com/96409857/233878368-3a793d8b-3740-4471-822b-0e062415b704.gif)
 
+## Requirements
+
+- Microsoft Word 2016/2019 retail version , Microsoft Word 2021 or Microsoft 365
+- Edge WebView2 Runtime [https://developer.microsoft.com/en-us/microsoft-edge/webview2/](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
+- if you use self-hosted, you need Node.js 16+
+
+**Note: office add-in can only used in docx file, not support doc file.**
+
 ## Getting Started
 
 There are two ways to install Word GPT Plus: through my free hosting service, or by self-hosting it.
