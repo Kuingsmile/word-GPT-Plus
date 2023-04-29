@@ -39,6 +39,11 @@ However, if you desire faster speeds and possess expertise with Node.js, self-ho
 
 ### Service hosted by me
 
+This service is built using Cloudflare Pages, domain name: [https://word.msq.pub](https://word.msq.pub)
+
+** For China users, there maybe some network problems, please use `ping word.msq.pub` to see if you can access the domain.**
+** You can add `msq.pub` to your proxy software's rules, or use self-hosted. **
+
 1. Download the add-in `manifest.xml` file and Save it to a directory on your computer, such as `C:\Users\username\Documents\WordGPT`.
 
   - download: [release/other/manifest.xml](https://release.piclist.cn/release/other/manifest.xml)
