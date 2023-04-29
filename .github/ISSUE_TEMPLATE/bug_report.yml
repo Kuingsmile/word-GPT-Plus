@@ -1,0 +1,68 @@
+name: "🐛 Bug Report"
+description: 提交一个问题 / Report a bug
+title: "[Bug]: "
+labels: ["bug"]
+assignees:
+  - Kuingsmile
+body:
+  - type: markdown
+    attributes:
+      value: |+
+        ## Word GPT Plus Issue 模板
+
+        请依照该模板来提交，否则将会被关闭。
+        **提问之前请注意你看过 FAQ、文档以及那些被关闭的 issues。否则同样的提问也会被关闭！**
+
+        Please submit according to this template, otherwise it will be closed.
+        **Before asking a question, please note that you have read the FAQ, Doc, and those closed issues. Otherwise the same question will also be closed! **
+
+  - type: checkboxes
+    id: read
+    attributes:
+      label: 前置阅读 | Pre-reading
+      description: 我已经自行查找、阅读以下内容（阅读了请打勾） | I have searched and read the following on my own (Please tick after reading)
+      options:
+        - label: "[Issues](https://github.com/Kuingsmile/word-gpt-plus/issues?q=is%3Aissue+sort%3Aupdated-desc+is%3Aclosed)"
+          required: true
+        - label: "[README](https://github.com/Kuingsmile/word-gpt-plus/blob/master/README.md)"
+          required: true
+  - type: dropdown
+    id: service
+    attributes:
+      label: 服务类型 | Service Type
+      options:
+        - Official hosted service
+        - Self-hosted service
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: 系统信息 | System Information
+      options:
+        - Windows
+        - Mac
+        - Mac(arm64)
+        - Linux
+        - All
+    validations:
+      required: true
+  - type: dropdown
+    id: office
+    attributes:
+      label: Office 版本 | Office Version
+      options:
+        - office 2016 retail
+        - office 2019 retail
+        - office 2021
+        - microsoft 365
+        - others
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 问题重现 | Bug reproduce
+      description: 请复述Bug重现流程，必要时附图 | Please tell me the bug reproduction process, attach pictures if necessary
+    validations:
+      required: true
