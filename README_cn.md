@@ -49,8 +49,9 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 
 这项服务是使用 Cloudflare Pages 构建的，域名: [https://word.msq.pub](https://word.msq.pub)
 
-** 中国用户可能会遇到网络问题，请使用 `ping word.msq.pub` 查看是否可以访问该域名。**  
-** 你可以将 `msq.pub` 添加到你的代理软件的规则中，或者使用自己搭建的服务。**
+**中国用户可能会遇到网络问题，请使用 `ping word.msq.pub` 查看是否可以访问该域名。**  
+
+**你可以将 `msq.pub` 添加到你的代理软件的规则中，或者使用自己搭建的服务。**
 
 1. 下载`manifest.xml`文件并保存到你的电脑上，例如 `C:\Users\username\Documents\WordGPT`.
   - 下载: [release/other/manifest.xml](https://release.piclist.cn/release/other/manifest.xml)
