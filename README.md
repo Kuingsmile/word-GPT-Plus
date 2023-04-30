@@ -29,9 +29,17 @@ Word GPT Plus is a word add-in which integrates the chatGPT model into Microsoft
 
 ## Requirements
 
+### software
+
 - Microsoft Word 2016/2019 retail version , Microsoft Word 2021 or Microsoft 365
 - Edge WebView2 Runtime [https://developer.microsoft.com/en-us/microsoft-edge/webview2/](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
 - if you use self-hosted service, you need Node.js 16+
+
+### account
+
+Official API need an OpenAI api key, you can get it from [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)
+
+Web API need an access token of chatGPT website, you can get it from [access token](#how-to-get-access-token)
 
 **Note: office add-in can only used in docx file, not support doc file.**
 

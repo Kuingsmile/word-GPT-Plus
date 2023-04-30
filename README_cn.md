@@ -29,11 +29,18 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 
 ## 环境要求
 
+### 软件要求
+
 - Microsoft Word 2016/2019 零售版，Microsoft Word 2021 或 Microsoft 365
 - Edge WebView2 Runtime [https://developer.microsoft.com/en-us/microsoft-edge/webview2/](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
 - 如果你使用自己搭建的服务，你需要 Node.js 16+
 
 **注意：office 插件只能在 docx 文件中使用，不支持 doc 文件。**
+
+### 账户要求
+
+官方API需要一个OpenAI api key，你可以从[https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)获取
+网页API需要一个chatGPT网站的access token，你可以参考[access token](#how-to-get-access-token)获取
 
 ## 快速开始
 
