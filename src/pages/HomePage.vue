@@ -389,7 +389,7 @@ import { onBeforeMount, ref } from 'vue'
 import { AxiosProxyConfig } from 'axios'
 import { Configuration, ConfigurationParameters, CreateChatCompletionRequest, OpenAIApi } from 'openai'
 import { useRouter } from 'vue-router'
-import { localStorageKey, languageMap, buildInPrompt } from '@/utils/constant'
+import { localStorageKey, languageMap, buildInPrompt, availableModels } from '@/utils/constant'
 import { promptDbInstance } from '@/store/promtStore'
 import { IStringKeyMap, opts } from '@/types'
 import { CirclePlus, Remove } from '@element-plus/icons-vue'
@@ -589,6 +589,9 @@ async function createChatCompletionStream (
   proxy?: AxiosProxyConfig | false
 ): Promise<void> {
   const openai = new OpenAIApi(config)
+  if (Object.keys(availableModels).includes(model ?? '')) {
+    model = availableModels[model ?? '']
+  }
   const requestConfig: CreateChatCompletionRequest = {
     model: model ?? 'gpt-3.5-turbo',
     messages,

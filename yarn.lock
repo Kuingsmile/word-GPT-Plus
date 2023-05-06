@@ -1156,10 +1156,10 @@
   resolved "https://registry.npmmirror.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
-"@dqbd/tiktoken@^1.0.2":
-  version "1.0.6"
-  resolved "https://registry.npmjs.org/@dqbd/tiktoken/-/tiktoken-1.0.6.tgz#96bfd0a4909726c61551a8c783493f01841bd163"
-  integrity sha512-umSdeZTy/SbPPKVuZKV/XKyFPmXSN145CcM3iHjBbmhlohBJg7vaDp4cPCW+xNlWL6L2U1sp7T2BD+di2sUKdA==
+"@dqbd/tiktoken@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.npmjs.org/@dqbd/tiktoken/-/tiktoken-1.0.7.tgz#612871cf91eba5599c804f100c573aa4d8596f57"
+  integrity sha512-bhR5k5W+8GLzysjk8zTMVygQZsgvf7W1F0IlL4ZQ5ugjo5rCyiwGM5d8DYriXspytfu98tv59niang3/T+FoDw==
 
 "@element-plus/icons-vue@^2.0.6", "@element-plus/icons-vue@^2.1.0":
   version "2.1.0"
@@ -2922,12 +2922,12 @@ chardet@^0.7.0:
   resolved "https://registry.npmjs.org/chardet/-/chardet-0.7.0.tgz#90094849f0937f2eedc2425d0d28a9e5f0cbad9e"
   integrity sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==
 
-chatgpt@^5.2.2:
-  version "5.2.2"
-  resolved "https://registry.npmjs.org/chatgpt/-/chatgpt-5.2.2.tgz#b9fc23bf137eab027becd49f2460a2754b3aae3e"
-  integrity sha512-6HVueHj7ghJtcsBHi8CfXCC5fbCXJMc29NSGluTcg/2yLo0Jla3Wm/dlcz3cIb+7KVBKD5b6Qz5bVu8XFEF7Sg==
+chatgpt@^5.2.4:
+  version "5.2.4"
+  resolved "https://registry.npmjs.org/chatgpt/-/chatgpt-5.2.4.tgz#9b808a830d17a0d689f2a9ad1598f1c50162479e"
+  integrity sha512-U53cUJ/1sEUD1+lcdW52QqbVQZOIMy3hxzYdEIhmmgZJQW/zI8C5O9ohCxXbFsbk6OtXHEBxY/0xw4Qa6twG2Q==
   dependencies:
-    "@dqbd/tiktoken" "^1.0.2"
+    "@dqbd/tiktoken" "^1.0.7"
     cac "^6.7.14"
     conf "^11.0.1"
     eventsource-parser "^1.0.0"

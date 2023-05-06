@@ -100,6 +100,7 @@
               v-model="accessToken"
               :placeholder="$t('accessTokenDescription')"
               size="small"
+              clearable
               @blur="handleAccessTokenChange"
             />
           </el-form-item>
@@ -369,12 +370,12 @@ const replyLanguageList = Object.values(languageMap).map((key) => ({
 
 const modelList = Object.keys(availableModels).map((key) => ({
   label: availableModels[key],
-  value: key
+  value: availableModels[key]
 }))
 
 const webModelList = Object.keys(availableModelsForPlus).map((key) => ({
   label: key,
-  value: key
+  value: availableModels[key]
 }))
 
 const api = ref<'official' | 'web-api'>('web-api')
@@ -416,7 +417,12 @@ function initData () {
   currentUILanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
   temperature.value = forceNumber(localStorage.getItem(localStorageKey.temperature)) || 0.7
   maxTokens.value = forceNumber(localStorage.getItem(localStorageKey.maxTokens)) || 400
-  model.value = localStorage.getItem(localStorageKey.model) || 'gpt-3.5-turbo'
+  const modelTemp = localStorage.getItem(localStorageKey.model) || 'gpt-3.5-turbo'
+  if (Object.keys(availableModels).includes(modelTemp)) {
+    model.value = availableModels[modelTemp]
+  } else {
+    model.value = modelTemp
+  }
   webModel.value = localStorage.getItem(localStorageKey.webModel) || 'default'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
   apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
