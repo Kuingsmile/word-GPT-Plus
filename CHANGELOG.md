@@ -1,3 +1,25 @@
+## :tada: 0.2.3 (2023-05-06)
+
+
+### :bug: Bug Fixes
+
+* **custom:** fix 404 bug after changing model ([a262415](https://github.com/Kuingsmile/word-GPT-Plus/commit/a262415))
+
+
+### :pencil: Documentation
+
+* **custom:** add requirements ([9d9fdc3](https://github.com/Kuingsmile/word-GPT-Plus/commit/9d9fdc3)), closes [#3](https://github.com/Kuingsmile/word-GPT-Plus/issues/3)
+* **custom:** fix format error ([6ab3952](https://github.com/Kuingsmile/word-GPT-Plus/commit/6ab3952))
+* **custom:** update account requirement ([f68486b](https://github.com/Kuingsmile/word-GPT-Plus/commit/f68486b))
+* **custom:** update instruction for China users to install ([fe45629](https://github.com/Kuingsmile/word-GPT-Plus/commit/fe45629))
+
+
+### :package: Chore
+
+* **custom:** add issue template ([4ed5653](https://github.com/Kuingsmile/word-GPT-Plus/commit/4ed5653))
+
+
+
 ## :tada: 0.2.2 (2023-04-28)
 
 
