@@ -387,14 +387,15 @@
 <script lang="ts" setup>
 import { onBeforeMount, ref } from 'vue'
 import { AxiosProxyConfig } from 'axios'
-import { Configuration, ConfigurationParameters, CreateChatCompletionRequest, OpenAIApi } from 'openai'
 import { useRouter } from 'vue-router'
-import { localStorageKey, languageMap, buildInPrompt, availableModels } from '@/utils/constant'
+import { localStorageKey, languageMap, buildInPrompt } from '@/utils/constant'
 import { promptDbInstance } from '@/store/promtStore'
-import { IStringKeyMap, opts } from '@/types'
+import { IStringKeyMap } from '@/types'
 import { CirclePlus, Remove } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { ChatGPTUnofficialProxyAPI, ChatMessage } from 'chatgpt'
+import { checkAuth } from '@/utils/common'
+import API from '@/api'
 
 const replyLanguageList = Object.values(languageMap).map((key) => ({
   label: key,
@@ -404,9 +405,10 @@ const replyLanguageList = Object.values(languageMap).map((key) => ({
 const api = ref<'web-api' | 'official'>('web-api')
 const apiKey = ref('')
 const accessToken = ref('')
+
 const localLanguage = ref('en')
 const temperature = ref(0.7)
-const maxTokens = ref(400)
+const maxTokens = ref(800)
 const model = ref('gpt-3.5-turbo')
 const webModel = ref('default')
 const replyLanguage = ref('English')
@@ -529,7 +531,7 @@ onBeforeMount(async () => {
   accessToken.value = localStorage.getItem(localStorageKey.accessToken) ?? ''
   localLanguage.value = localStorage.getItem(localStorageKey.localLanguage) ?? 'en'
   temperature.value = Number(localStorage.getItem(localStorageKey.temperature)) ?? 0.7
-  maxTokens.value = Number(localStorage.getItem(localStorageKey.maxTokens)) ?? 400
+  maxTokens.value = Number(localStorage.getItem(localStorageKey.maxTokens)) ?? 800
   model.value = localStorage.getItem(localStorageKey.model) ?? 'gpt-3.5-turbo'
   webModel.value = localStorage.getItem(localStorageKey.webModel) ?? 'default'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) ?? 'English'
@@ -560,155 +562,6 @@ function handelInsertTypeChange (val: string) {
   localStorage.setItem(localStorageKey.insertType, val)
 }
 
-function setConfig (apiKey: string, basePath?: string): Configuration {
-  const configParams: ConfigurationParameters = {
-    apiKey
-  }
-  if (basePath) {
-    configParams.basePath = basePath
-  }
-  const config = new Configuration(configParams)
-  delete config.baseOptions.headers['User-Agent']
-  return config
-}
-
-function setUnofficalConfig (accessToken: string): opts {
-  const configParams: opts = {
-    accessToken,
-    apiReverseProxyUrl: 'https://ai.fakeopen.com/api/conversation'
-  }
-  return configParams
-}
-
-async function createChatCompletionStream (
-  config: Configuration,
-  messages: any[],
-  maxTokens?: number,
-  temperature?: number,
-  model?: string,
-  proxy?: AxiosProxyConfig | false
-): Promise<void> {
-  const openai = new OpenAIApi(config)
-  if (Object.keys(availableModels).includes(model ?? '')) {
-    model = availableModels[model ?? '']
-  }
-  const requestConfig: CreateChatCompletionRequest = {
-    model: model ?? 'gpt-3.5-turbo',
-    messages,
-    temperature: temperature ?? 0.7,
-    max_tokens: maxTokens ?? 400
-  }
-  let response
-  let data
-  try {
-    response = await openai.createChatCompletion(requestConfig, {
-      proxy: proxy ?? false,
-      timeout: 30000
-    })
-    data = response.data
-    if (response.status === 200) {
-      result.value = data.choices[0].message?.content.replace(/\\n/g, '\n') ?? ''
-      historyDialog.value.push({
-        role: 'assistant',
-        content: result.value
-      })
-    } else {
-      result.value = response.statusText?.toString() ?? 'error'
-      errorIssue.value = true
-      console.log(response)
-    }
-  } catch (error) {
-    result.value = String(error)
-    errorIssue.value = true
-    console.error(error)
-  }
-  loading.value = false
-}
-
-async function createChatCompletionUnoffical (
-  config: opts,
-  messages: any[]
-) : Promise<void> {
-  const unOfficalAPI = new ChatGPTUnofficialProxyAPI(config)
-  let response
-  try {
-    response = await unOfficalAPI.sendMessage(
-      messages[0] + '\n' + messages[1],
-      {
-        timeoutMs: 30000,
-        onProgress: (partialResponse: ChatMessage) => {
-          result.value = partialResponse.text
-        }
-      }
-    )
-    parentMessageId.value = response.parentMessageId ?? ''
-    conversationId.value = response.conversationId ?? ''
-    loading.value = false
-  } catch (error) {
-    console.error(error)
-    if (String(error).includes('SyntaxError') && String(error).includes('JSON')) {
-      let count = 0
-      let oldResult = ''
-      jsonIssue.value = true
-      const interval = setInterval(() => {
-        if (count > 30) {
-          clearInterval(interval)
-          jsonIssue.value = false
-          loading.value = false
-          insertResult()
-        }
-        if (oldResult !== result.value) {
-          oldResult = result.value
-          count = 0
-        } else {
-          count++
-        }
-      }, 100)
-    } else {
-      result.value = String(error)
-      errorIssue.value = true
-      loading.value = false
-    }
-  }
-}
-
-function insertResult () {
-  const paragraph = result.value.replace(/\n+/g, '\n').replace(/\r+/g, '\n').split('\n')
-  switch (insertType.value) {
-    case 'replace':
-      Word.run(async (context) => {
-        const range = context.document.getSelection()
-        range.insertText(paragraph[0], 'Replace')
-        for (let i = paragraph.length - 1; i > 0; i--) {
-          range.insertParagraph(paragraph[i], 'After')
-        }
-        await context.sync()
-      })
-      break
-    case 'append':
-      Word.run(async (context) => {
-        const range = context.document.getSelection()
-        range.insertText(paragraph[0], 'End')
-        for (let i = paragraph.length - 1; i > 0; i--) {
-          range.insertParagraph(paragraph[i], 'After')
-        }
-        await context.sync()
-      })
-      break
-    case 'newLine':
-      Word.run(async (context) => {
-        const range = context.document.getSelection()
-        for (let i = paragraph.length - 1; i >= 0; i--) {
-          range.insertParagraph(paragraph[i], 'After')
-        }
-        await context.sync()
-      })
-      break
-    case 'NoAction':
-      break
-  }
-}
-
 async function template (taskType: keyof typeof buildInPrompt | 'custom') {
   loading.value = true
   let systemMessage
@@ -730,7 +583,7 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
     userMessage = buildInPrompt[taskType].user(selectedText, replyLanguage.value)
   }
   if (api.value === 'official' && apiKey.value) {
-    const config = setConfig(apiKey.value, basePath.value)
+    const config = API.official.setConfig(apiKey.value, basePath.value)
     historyDialog.value = [
       {
         role: 'system',
@@ -741,17 +594,31 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
         content: userMessage
       }
     ]
-    await createChatCompletionStream(
+    await API.official.createChatCompletionStream(
       config,
       historyDialog.value,
+      result,
+      historyDialog,
+      errorIssue,
+      loading,
       maxTokens.value,
       temperature.value,
       model.value,
       proxy.value
     )
   } else if (api.value === 'web-api' && accessToken.value) {
-    const config = setUnofficalConfig(accessToken.value)
-    await createChatCompletionUnoffical(config, [systemMessage, userMessage])
+    const config = API.webapi.setUnofficalConfig(accessToken.value)
+    await API.webapi.createChatCompletionUnoffical(
+      config,
+      [systemMessage, userMessage],
+      parentMessageId,
+      conversationId,
+      jsonIssue,
+      errorIssue,
+      result,
+      insertType,
+      loading
+    )
   } else {
     ElMessage.error('Set API Key or Access Token first')
     return
@@ -762,12 +629,17 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
     return
   }
   if (!jsonIssue.value) {
-    insertResult()
+    API.common.insertResult(result, insertType)
   }
 }
 
 function checkApiKey () {
-  if (apiKey.value === '' && accessToken.value === '') {
+  const auth = {
+    type: api.value,
+    accessToken: accessToken.value,
+    apiKey: apiKey.value
+  }
+  if (!checkAuth(auth)) {
     ElMessage.error('Set API Key or Access Token first')
     return false
   }
@@ -812,9 +684,13 @@ async function continueChat () {
   })
   if (api.value === 'official') {
     try {
-      await createChatCompletionStream(
-        setConfig(apiKey.value, basePath.value),
+      await API.official.createChatCompletionStream(
+        API.official.setConfig(apiKey.value, basePath.value),
         historyDialog.value,
+        result,
+        historyDialog,
+        errorIssue,
+        loading,
         maxTokens.value,
         temperature.value,
         model.value,
@@ -825,9 +701,9 @@ async function continueChat () {
       errorIssue.value = true
       console.error(error)
     }
-  } else {
+  } else if (api.value === 'web-api') {
     try {
-      const config = setUnofficalConfig(accessToken.value)
+      const config = API.webapi.setUnofficalConfig(accessToken.value)
       const unOfficalAPI = new ChatGPTUnofficialProxyAPI(config)
       const response = await unOfficalAPI.sendMessage(
         'continue',
@@ -854,7 +730,7 @@ async function continueChat () {
             clearInterval(interval)
             jsonIssue.value = false
             loading.value = false
-            insertResult()
+            API.common.insertResult(result, insertType)
           }
           if (oldResult !== result.value) {
             oldResult = result.value
@@ -875,7 +751,7 @@ async function continueChat () {
     ElMessage.error('Something is wrong')
     return
   }
-  insertResult()
+  API.common.insertResult(result, insertType)
 }
 
 </script>

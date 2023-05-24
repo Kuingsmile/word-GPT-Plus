@@ -381,7 +381,7 @@ const webModelList = Object.keys(availableModelsForPlus).map((key) => ({
 const api = ref<'official' | 'web-api'>('web-api')
 const currentUILanguage = ref('en')
 const temperature = ref(0.7)
-const maxTokens = ref(400)
+const maxTokens = ref(800)
 const model = ref(availableModels['gpt-3.5'])
 const webModel = ref('default')
 const replyLanguage = ref('English')
@@ -416,7 +416,7 @@ onBeforeMount(() => {
 function initData () {
   currentUILanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
   temperature.value = forceNumber(localStorage.getItem(localStorageKey.temperature)) || 0.7
-  maxTokens.value = forceNumber(localStorage.getItem(localStorageKey.maxTokens)) || 400
+  maxTokens.value = forceNumber(localStorage.getItem(localStorageKey.maxTokens)) || 800
   const modelTemp = localStorage.getItem(localStorageKey.model) || 'gpt-3.5-turbo'
   if (Object.keys(availableModels).includes(modelTemp)) {
     model.value = availableModels[modelTemp]

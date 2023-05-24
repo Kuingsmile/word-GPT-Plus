@@ -8,7 +8,7 @@ import 'element-plus/dist/index.css'
 window.Office.onReady(() => {
   const app = createApp(App)
   const debounce = (fn: { apply: (arg0: any, arg1: IArguments) => void }, delay: number | undefined) => {
-    let timer: number | null | undefined = null
+    let timer: any = null
     return function () {
       // @ts-ignore
       const context = this
