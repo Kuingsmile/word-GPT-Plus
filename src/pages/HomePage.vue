@@ -708,7 +708,6 @@ async function continueChat () {
       const response = await unOfficalAPI.sendMessage(
         'continue',
         {
-          timeoutMs: 30000,
           parentMessageId: parentMessageId.value,
           conversationId: conversationId.value,
           onProgress: (partialResponse: ChatMessage) => {

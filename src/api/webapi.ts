@@ -30,7 +30,6 @@ async function createChatCompletionUnoffical (
     response = await unOfficalAPI.sendMessage(
       messages[0] + '\n' + messages[1],
       {
-        timeoutMs: 30000,
         onProgress: (partialResponse: ChatMessage) => {
           result.value = partialResponse.text
         }

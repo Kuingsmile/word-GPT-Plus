@@ -12,7 +12,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
     "axios": "^1.4.0",
-    "chatgpt": "^5.2.4",
+    "chatgpt": "^5.2.5",
     "core-js": "^3.30.2",
     "dexie": "^3.2.3",
     "element-plus": "^2.3.5",

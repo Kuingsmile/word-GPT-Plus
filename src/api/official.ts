@@ -35,8 +35,7 @@ async function createChatCompletionStream (
   let data
   try {
     response = await openai.createChatCompletion(requestConfig, {
-      proxy: proxy ?? false,
-      timeout: 30000
+      proxy: proxy ?? false
     })
     data = response.data
     if (response.status === 200) {
