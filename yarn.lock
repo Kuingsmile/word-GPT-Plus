@@ -1193,10 +1193,10 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@eslint/js@8.41.0":
-  version "8.41.0"
-  resolved "https://registry.npmjs.org/@eslint/js/-/js-8.41.0.tgz#080321c3b68253522f7646b55b577dd99d2950b3"
-  integrity sha512-LxcyMGxwmTh2lY9FwHPGWOHmYFCZvbrFCBZL4FzSSsxsRPuhrYUg/49/0KDfW8tnIEaEHtfmn6+NPN+1DqaNmA==
+"@eslint/js@8.42.0":
+  version "8.42.0"
+  resolved "https://registry.npmjs.org/@eslint/js/-/js-8.42.0.tgz#484a1d638de2911e6f5a30c12f49c7e4a3270fb6"
+  integrity sha512-6SWlXpWU5AvId8Ac7zjzmIOqMOba/JWY8XZ4A7q7Gn1Vlfg/SFFIlrtHXt9nPn4op9ZPAkl91Jao+QQv3r/ukw==
 
 "@floating-ui/core@^1.2.6":
   version "1.2.6"
@@ -1222,10 +1222,10 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@humanwhocodes/config-array@^0.11.8":
-  version "0.11.8"
-  resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"
-  integrity sha512-UybHIJzJnR5Qc/MsD9Kr+RpO2h+/P1GhOwdiLPXK5TWk5sgTdu88bTD9UP+CKbPPh5Rni1u0GjAdYQLemG8g+g==
+"@humanwhocodes/config-array@^0.11.10":
+  version "0.11.10"
+  resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.11.10.tgz#5a3ffe32cc9306365fb3fd572596cd602d5e12d2"
+  integrity sha512-KVVjQmNUepDVGXNuoRRdmmEjruj0KfiGSbS8LVc12LMsWDQzRXJ0qdhN8L8uUigKpfEHRhlaQFY0ib1tnUbNeQ==
   dependencies:
     "@humanwhocodes/object-schema" "^1.2.1"
     debug "^4.1.1"
@@ -1593,10 +1593,10 @@
   resolved "https://registry.npmmirror.com/@types/normalize-package-data/-/normalize-package-data-2.4.1.tgz#d3357479a0fdfdd5907fe67e17e0a85c906e1301"
   integrity sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==
 
-"@types/office-js@^1.0.326":
-  version "1.0.326"
-  resolved "https://registry.npmjs.org/@types/office-js/-/office-js-1.0.326.tgz#75c2de6f57169489dbcbbf86248d10f4c2b7923d"
-  integrity sha512-xT7aaP7YSyfVAZWgeA3GSkDfgc3N0do6N6EFlTNeYHBD9VCG6dKFEeVwcxHXAsrnUti74IJBeaC/C5RXZJeXBg==
+"@types/office-js@^1.0.327":
+  version "1.0.327"
+  resolved "https://registry.npmjs.org/@types/office-js/-/office-js-1.0.327.tgz#bb9ef44d3f61de337e52245acf0a7c8f033c7673"
+  integrity sha512-aFU++6gFJ7RclwCiQMp+s01FcERiDT8TVNJW83zFwBMyMWVmwD0iLhowtRhyrRZBYstzCeebMIVWiHULos20Yw==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -3830,10 +3830,10 @@ detect-node@^2.0.4:
   resolved "https://registry.npmjs.org/detect-node/-/detect-node-2.1.0.tgz#c9c70775a49c3d03bc2c06d9a73be550f978f8b1"
   integrity sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==
 
-dexie@^3.2.3:
-  version "3.2.3"
-  resolved "https://registry.npmjs.org/dexie/-/dexie-3.2.3.tgz#f35c91ca797599df8e771b998e9ae9669c877f8c"
-  integrity sha512-iHayBd4UYryDCVUNa3PMsJMEnd8yjyh5p7a+RFeC8i8n476BC9wMhVvqiImq5zJZJf5Tuer+s4SSj+AA3x+ZbQ==
+dexie@^3.2.4:
+  version "3.2.4"
+  resolved "https://registry.npmjs.org/dexie/-/dexie-3.2.4.tgz#b22a9729be1102acb2eee16102ea6e2bc76454cf"
+  integrity sha512-VKoTQRSv7+RnffpOJ3Dh6ozknBqzWw/F3iqMdsZg958R0AS8AnY9x9d1lbwENr0gzeGJHXKcGhAMRaqys6SxqA==
 
 diff@^4.0.1:
   version "4.0.2"
@@ -3974,10 +3974,10 @@ electron-to-chromium@^1.4.284:
   resolved "https://registry.npmmirror.com/electron-to-chromium/-/electron-to-chromium-1.4.368.tgz#75901f97d3e23da2e66feb1e61fbb8e70ac96430"
   integrity sha512-e2aeCAixCj9M7nJxdB/wDjO6mbYX+lJJxSJCXDzlr5YPGYVofuJwGN9nKg2o6wWInjX6XmxRinn3AeJMK81ltw==
 
-element-plus@^2.3.5:
-  version "2.3.5"
-  resolved "https://registry.npmjs.org/element-plus/-/element-plus-2.3.5.tgz#5b04de44fd0ee1bd29ad6ed971d9155982cc1295"
-  integrity sha512-g27DHm2C5/tPwte9H6Juu+JOdzT9z1ALHTIvia6MwnBdCrI4kd77o6KcYdodU15/tYiPBoCEmobhl/7GUDb+1Q==
+element-plus@^2.3.6:
+  version "2.3.6"
+  resolved "https://registry.npmjs.org/element-plus/-/element-plus-2.3.6.tgz#848f8834ed70adfbae8f4dec5303a9126d472d28"
+  integrity sha512-GLz0pXUYI2zRfIgyI6W7SWmHk6dSEikP9yR++hsQUyy63+WjutoiGpA3SZD4cGPSXUzRFeKfVr8CnYhK5LqXZw==
   dependencies:
     "@ctrl/tinycolor" "^3.4.1"
     "@element-plus/icons-vue" "^2.0.6"
@@ -4216,10 +4216,10 @@ eslint-plugin-promise@^6.0.0:
   resolved "https://registry.npmjs.org/eslint-plugin-promise/-/eslint-plugin-promise-6.1.1.tgz#269a3e2772f62875661220631bd4dafcb4083816"
   integrity sha512-tjqWDwVZQo7UIPMeDReOpUgHCmCiH+ePnVT+5zVapL0uuHnegBUs2smM13CzOs2Xb5+MHMRFTs9v24yjba4Oig==
 
-eslint-plugin-vue@^9.14.0:
-  version "9.14.0"
-  resolved "https://registry.npmjs.org/eslint-plugin-vue/-/eslint-plugin-vue-9.14.0.tgz#73004a62d794e276a60d471114d81ed8887efcb8"
-  integrity sha512-4O7EuiqPGVQA1wYCzLvCzsBTv9JIPHLHhrf0k55DLzbwtmJbSw2TKS0G/l7pOwi9RWMSkjIT7ftChU5gZpgnJw==
+eslint-plugin-vue@^9.14.1:
+  version "9.14.1"
+  resolved "https://registry.npmjs.org/eslint-plugin-vue/-/eslint-plugin-vue-9.14.1.tgz#3b0c9857642dac547c7564031cfb09d283eafdd4"
+  integrity sha512-LQazDB1qkNEKejLe/b5a9VfEbtbczcOaui5lQ4Qw0tbRBbQYREyxxOV5BQgNDTqGPs9pxqiEpbMi9ywuIaF7vw==
   dependencies:
     "@eslint-community/eslint-utils" "^4.3.0"
     natural-compare "^1.4.0"
@@ -4290,16 +4290,16 @@ eslint-webpack-plugin@^3.1.0:
     normalize-path "^3.0.0"
     schema-utils "^4.0.0"
 
-eslint@^8.41.0:
-  version "8.41.0"
-  resolved "https://registry.npmjs.org/eslint/-/eslint-8.41.0.tgz#3062ca73363b4714b16dbc1e60f035e6134b6f1c"
-  integrity sha512-WQDQpzGBOP5IrXPo4Hc0814r4/v2rrIsB0rhT7jtunIalgg6gYXWhRMOejVO8yH21T/FGaxjmFjBMNqcIlmH1Q==
+eslint@^8.42.0:
+  version "8.42.0"
+  resolved "https://registry.npmjs.org/eslint/-/eslint-8.42.0.tgz#7bebdc3a55f9ed7167251fe7259f75219cade291"
+  integrity sha512-ulg9Ms6E1WPf67PHaEY4/6E2tEn5/f7FXGzr3t9cBMugOmf1INYvuUwwh1aXQN4MfJ6a5K2iNwP3w4AColvI9A==
   dependencies:
     "@eslint-community/eslint-utils" "^4.2.0"
     "@eslint-community/regexpp" "^4.4.0"
     "@eslint/eslintrc" "^2.0.3"
-    "@eslint/js" "8.41.0"
-    "@humanwhocodes/config-array" "^0.11.8"
+    "@eslint/js" "8.42.0"
+    "@humanwhocodes/config-array" "^0.11.10"
     "@humanwhocodes/module-importer" "^1.0.1"
     "@nodelib/fs.walk" "^1.2.8"
     ajv "^6.10.0"
@@ -5799,7 +5799,7 @@ kind-of@^6.0.2, kind-of@^6.0.3:
   resolved "https://registry.npmmirror.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
 
-klona@^2.0.5:
+klona@^2.0.5, klona@^2.0.6:
   version "2.0.6"
   resolved "https://registry.npmmirror.com/klona/-/klona-2.0.6.tgz#85bffbf819c03b2f53270412420a4555ef882e22"
   integrity sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==
@@ -8109,13 +8109,13 @@ stylehacks@^5.1.1:
     browserslist "^4.21.4"
     postcss-selector-parser "^6.0.4"
 
-stylus-loader@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.npmjs.org/stylus-loader/-/stylus-loader-7.1.0.tgz#19e09a98b19075c246e6e3f65e38b8cb89d2d6fb"
-  integrity sha512-gNUEjjozR+oZ8cuC/Fx4LVXqZOgDKvpW9t2hpXHcxjfPYqSjQftaGwZUK+wL9B0QJ26uS6p1EmoWHmvld1dF7g==
+stylus-loader@^7.1.2:
+  version "7.1.2"
+  resolved "https://registry.npmjs.org/stylus-loader/-/stylus-loader-7.1.2.tgz#bf9556757344469f857e2edd79d1b9f69e364f69"
+  integrity sha512-terrqvQV0ie1q2XKHnStfLOztCyKj6CYO7NqFIP2ijIsGGgCX4cbyn49DjaTwpkc91QBnMMSYkK7JAIL5gvmIg==
   dependencies:
     fast-glob "^3.2.12"
-    klona "^2.0.5"
+    klona "^2.0.6"
     normalize-path "^3.0.0"
 
 stylus@^0.59.0:
@@ -8457,10 +8457,15 @@ typed-array-length@^1.0.4:
     for-each "^0.3.3"
     is-typed-array "^1.1.9"
 
-"typescript@^4.6.4 || ^5.0.0", typescript@^5.0.4:
+"typescript@^4.6.4 || ^5.0.0":
   version "5.0.4"
   resolved "https://registry.npmjs.org/typescript/-/typescript-5.0.4.tgz#b217fd20119bd61a94d4011274e0ab369058da3b"
   integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
+
+typescript@^5.1.3:
+  version "5.1.3"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-5.1.3.tgz#8d84219244a6b40b6fb2b33cc1c062f715b9e826"
+  integrity sha512-XH627E9vkeqhlZFQuL+UsyAXEnibT0kWR2FWONlr4sTjvxyJYnyefgrkyECLzM5NenmKzRAy2rR/OlYLA1HkZw==
 
 uglify-js@^3.1.4:
   version "3.17.4"
@@ -8627,10 +8632,10 @@ vue-loader@^17.0.0:
     hash-sum "^2.0.0"
     watchpack "^2.4.0"
 
-vue-router@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.npmjs.org/vue-router/-/vue-router-4.2.1.tgz#f8ab85c89e74682cad71519480fdf2b855e8c9e0"
-  integrity sha512-nW28EeifEp8Abc5AfmAShy5ZKGsGzjcnZ3L1yc2DYUo+MqbBClrRP9yda3dIekM4I50/KnEwo1wkBLf7kHH5Cw==
+vue-router@^4.2.2:
+  version "4.2.2"
+  resolved "https://registry.npmjs.org/vue-router/-/vue-router-4.2.2.tgz#b0097b66d89ca81c0986be03da244c7b32a4fd81"
+  integrity sha512-cChBPPmAflgBGmy3tBsjeoe3f3VOSG6naKyY5pjtrqLGbNEXdzCigFUHgBvp9e3ysAtFtEx7OLqcSDh/1Cq2TQ==
   dependencies:
     "@vue/devtools-api" "^6.5.0"
 
