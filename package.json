@@ -10,6 +10,7 @@
     "release": "bump-version"
   },
   "dependencies": {
+    "@azure/openai": "^1.0.0-beta.2",
     "@element-plus/icons-vue": "^2.1.0",
     "axios": "^1.4.0",
     "chatgpt": "^5.2.5",

@@ -402,18 +402,26 @@ const replyLanguageList = Object.values(languageMap).map((key) => ({
   value: key
 }))
 
-const api = ref<'web-api' | 'official'>('web-api')
+const api = ref<'web-api' | 'official' | 'azure'>('web-api')
 const apiKey = ref('')
 const accessToken = ref('')
+const azureAPIKey = ref('')
 
 const localLanguage = ref('en')
+const replyLanguage = ref('English')
+
+const webModel = ref('default')
+
 const temperature = ref(0.7)
 const maxTokens = ref(800)
 const model = ref('gpt-3.5-turbo')
-const webModel = ref('default')
-const replyLanguage = ref('English')
 const basePath = ref('')
 const proxy = ref<AxiosProxyConfig | false>(false)
+
+const azureAPIEndpoint = ref('')
+const azureDeploymentName = ref('')
+const azureMaxTokens = ref(800)
+const azureTemperature = ref(0.7)
 
 const systemPrompt = ref('')
 const systemPromptSelected = ref('')
@@ -526,19 +534,25 @@ function handelPromptChange (val: string) {
 }
 
 onBeforeMount(async () => {
-  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' ?? 'web-api'
+  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' | 'azure' ?? 'web-api'
+  replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) ?? 'English'
+  localLanguage.value = localStorage.getItem(localStorageKey.localLanguage) ?? 'en'
   apiKey.value = localStorage.getItem(localStorageKey.apiKey) ?? ''
   accessToken.value = localStorage.getItem(localStorageKey.accessToken) ?? ''
-  localLanguage.value = localStorage.getItem(localStorageKey.localLanguage) ?? 'en'
-  temperature.value = Number(localStorage.getItem(localStorageKey.temperature)) ?? 0.7
-  maxTokens.value = Number(localStorage.getItem(localStorageKey.maxTokens)) ?? 800
-  model.value = localStorage.getItem(localStorageKey.model) ?? 'gpt-3.5-turbo'
+  azureAPIKey.value = localStorage.getItem(localStorageKey.azureAPIKey) ?? ''
   webModel.value = localStorage.getItem(localStorageKey.webModel) ?? 'default'
-  replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) ?? 'English'
+  temperature.value = Number(localStorage.getItem(localStorageKey.temperature)) || 0.7
+  maxTokens.value = Number(localStorage.getItem(localStorageKey.maxTokens)) || 800
+  model.value = localStorage.getItem(localStorageKey.model) ?? 'gpt-3.5-turbo'
   basePath.value = localStorage.getItem(localStorageKey.basePath) ?? ''
   proxy.value = localStorage.getItem(localStorageKey.enableProxy) === 'false'
     ? false
     : JSON.parse(localStorage.getItem(localStorageKey.proxy) || 'false')
+  azureAPIEndpoint.value = localStorage.getItem(localStorageKey.azureAPIEndpoint) ?? ''
+  azureDeploymentName.value = localStorage.getItem(localStorageKey.azureDeploymentName) ?? ''
+  azureMaxTokens.value = Number(localStorage.getItem(localStorageKey.azureMaxTokens)) || 800
+  console.log(azureMaxTokens.value)
+  azureTemperature.value = Number(localStorage.getItem(localStorageKey.azureTemperature)) || 0.7
   insertType.value = localStorage.getItem(localStorageKey.insertType) ?? 'replace' as 'replace' | 'append' | 'newLine' | 'NoAction'
   systemPrompt.value = localStorage.getItem(localStorageKey.defaultSystemPrompt) ?? 'Act like a personal assistant.'
   await getSystemPromptList()
@@ -619,6 +633,29 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
       insertType,
       loading
     )
+  } else if (api.value === 'azure' && azureAPIKey.value) {
+    historyDialog.value = [
+      {
+        role: 'system',
+        content: systemMessage
+      },
+      {
+        role: 'user',
+        content: userMessage
+      }
+    ]
+    await API.azure.createChatCompletionStream(
+      azureAPIKey.value,
+      azureAPIEndpoint.value,
+      azureDeploymentName.value,
+      historyDialog.value,
+      result,
+      historyDialog,
+      errorIssue,
+      loading,
+      azureMaxTokens.value,
+      azureTemperature.value
+    )
   } else {
     ElMessage.error('Set API Key or Access Token first')
     return
@@ -637,7 +674,8 @@ function checkApiKey () {
   const auth = {
     type: api.value,
     accessToken: accessToken.value,
-    apiKey: apiKey.value
+    apiKey: apiKey.value,
+    azureAPIKey: azureAPIKey.value
   }
   if (!checkAuth(auth)) {
     ElMessage.error('Set API Key or Access Token first')

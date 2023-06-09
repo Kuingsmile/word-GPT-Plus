@@ -45,6 +45,7 @@ export const languageMap: IStringKeyMap = {
   ur: 'اردو'
 }
 
+// Openai API 可用的模型
 export const availableModels: IStringKeyMap = {
   'gpt-3.5': 'gpt-3.5-turbo',
   gtp4: 'gpt-4',
@@ -53,6 +54,7 @@ export const availableModels: IStringKeyMap = {
   'gpt4-32k-0314': 'gpt-4-32k-0314'
 }
 
+// Web API 可用的模型
 export const availableModelsForPlus: IStringKeyMap = {
   default: 'text-davinci-002-render-sha',
   'legacy(plus)': 'model=text-davinci-002-render-paid',
@@ -60,21 +62,31 @@ export const availableModelsForPlus: IStringKeyMap = {
 }
 
 export enum localStorageKey {
+  // common
   api = 'api',
-  model = 'model',
+  localLanguage = 'localLanguage',
+  replyLanguage = 'replyLanguage',
+  insertType = 'insertType',
+  // web api
   webModel = 'webModel',
+  accessToken = 'accessToken',
+  // official api
+  apiKey = 'apiKey',
+  model = 'model',
   temperature = 'temperature',
   maxTokens = 'maxTokens',
-  apiKey = 'apiKey',
-  accessToken = 'accessToken',
-  localLanguage = 'localLanguage',
   basePath = 'basePath',
-  replyLanguage = 'replyLanguage',
+  // azure api
+  azureAPIKey = 'azureAPIKey',
+  azureAPIEndpoint = 'azureAPIEndpoint',
+  azureDeploymentName = 'azureDeploymentName',
+  azureMaxTokens = 'azureMaxTokens',
+  azureTemperature = 'azureTemperature',
+  // proxy
   enableProxy = 'enableProxy',
   proxy = 'proxy',
   defaultSystemPrompt = 'defaultSystemPrompt',
   defaultPrompt = 'defaultPrompt',
-  insertType = 'insertType'
 }
 
 export const buildInPrompt = {

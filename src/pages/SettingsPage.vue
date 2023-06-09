@@ -74,6 +74,22 @@
             </el-select>
           </el-form-item>
           <el-form-item
+            v-if="api === 'web-api'"
+          >
+            <template #label>
+              <span>
+                {{ $t('accessToken') }}
+              </span>
+            </template>
+            <el-input
+              v-model="accessToken"
+              :placeholder="$t('accessTokenDescription')"
+              size="small"
+              clearable
+              @blur="handleAccessTokenChange"
+            />
+          </el-form-item>
+          <el-form-item
             v-if="api === 'official'"
           >
             <template #label>
@@ -89,19 +105,81 @@
             />
           </el-form-item>
           <el-form-item
-            v-if="api === 'web-api'"
+            v-if="api === 'azure'"
           >
             <template #label>
               <span>
-                {{ $t('accessToken') }}
+                {{ $t('apiKey') }}
               </span>
             </template>
             <el-input
-              v-model="accessToken"
-              :placeholder="$t('accessTokenDescription')"
+              v-model="azureAPIKey"
+              :placeholder="$t('apiKeyDescription')"
               size="small"
-              clearable
-              @blur="handleAccessTokenChange"
+              @blur="handleAzureAPIKeyChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'azure'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingAzureEndpoint') }}
+              </span>
+            </template>
+            <el-input
+              v-model="azureAPIEndpoint"
+              :placeholder="$t('settingAzureEndpoint')"
+              size="small"
+              @blur="handleAzureAPIEndpointChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'azure'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingAzureDeploymentName') }}
+              </span>
+            </template>
+            <el-input
+              v-model="azureDeploymentName"
+              :placeholder="$t('settingAzureDeploymentName')"
+              size="small"
+              @blur="handleAzureDeploymentNameChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'azure'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingTemperature') }}
+              </span>
+            </template>
+            <el-input-number
+              v-model="azureTemperature"
+              :min="0"
+              :max="2"
+              :step="0.1"
+              size="small"
+              @change="handleAzureTemperatureChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'azure'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingMaxTokens') }}
+              </span>
+            </template>
+            <el-input-number
+              v-model="azureMaxTokens"
+              :min="1"
+              :step="1"
+              size="small"
+              @change="handleAzureMaxTokensChange"
             />
           </el-form-item>
           <el-form-item
@@ -378,15 +456,25 @@ const webModelList = Object.keys(availableModelsForPlus).map((key) => ({
   value: availableModels[key]
 }))
 
-const api = ref<'official' | 'web-api'>('web-api')
+const api = ref<'official' | 'web-api' | 'azure'>('web-api')
 const currentUILanguage = ref('en')
+const replyLanguage = ref('English')
+// web API
+const accessToken = ref('')
+const webModel = ref('default')
+// official API
+const model = ref(availableModels['gpt-3.5'])
+const apiKey = ref('')
 const temperature = ref(0.7)
 const maxTokens = ref(800)
-const model = ref(availableModels['gpt-3.5'])
-const webModel = ref('default')
-const replyLanguage = ref('English')
-const apiKey = ref('')
-const accessToken = ref('')
+const basePath = ref('')
+// azure OpenAI API
+const azureAPIKey = ref('')
+const azureAPIEndpoint = ref('')
+const azureDeploymentName = ref('')
+const azureMaxTokens = ref(800)
+const azureTemperature = ref(0.7)
+// proxy
 const enableProxy = ref(false)
 const proxyHost = ref('')
 const proxyPort = ref('')
@@ -394,7 +482,6 @@ const proxyUsername = ref('')
 const proxyPassword = ref('')
 const proxyProtocol = ref('http')
 const proxyVisible = ref(false)
-const basePath = ref('')
 
 const apiList = [
   {
@@ -404,6 +491,10 @@ const apiList = [
   {
     label: 'official',
     value: 'official'
+  },
+  {
+    label: 'azure',
+    value: 'azure'
   }
 ]
 
@@ -414,27 +505,43 @@ onBeforeMount(() => {
 })
 
 function initData () {
+  // common
+  api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'web-api' | 'azure' || 'web-api'
   currentUILanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
-  temperature.value = forceNumber(localStorage.getItem(localStorageKey.temperature)) || 0.7
-  maxTokens.value = forceNumber(localStorage.getItem(localStorageKey.maxTokens)) || 800
+  replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
+  // web API
+  accessToken.value = localStorage.getItem(localStorageKey.accessToken) || ''
+  webModel.value = localStorage.getItem(localStorageKey.webModel) || 'default'
+  // official API
+  apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
   const modelTemp = localStorage.getItem(localStorageKey.model) || 'gpt-3.5-turbo'
   if (Object.keys(availableModels).includes(modelTemp)) {
     model.value = availableModels[modelTemp]
   } else {
     model.value = modelTemp
   }
-  webModel.value = localStorage.getItem(localStorageKey.webModel) || 'default'
-  replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
-  apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
-  api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'web-api' || 'web-api'
-  accessToken.value = localStorage.getItem(localStorageKey.accessToken) || ''
+  temperature.value = forceNumber(localStorage.getItem(localStorageKey.temperature)) || 0.7
+  maxTokens.value = forceNumber(localStorage.getItem(localStorageKey.maxTokens)) || 800
+  basePath.value = localStorage.getItem(localStorageKey.basePath) || ''
+  // azure OpenAI API
+  azureAPIKey.value = localStorage.getItem(localStorageKey.azureAPIKey) || ''
+  azureAPIEndpoint.value = localStorage.getItem(localStorageKey.azureAPIEndpoint) || ''
+  azureDeploymentName.value = localStorage.getItem(localStorageKey.azureDeploymentName) || ''
+  azureMaxTokens.value = forceNumber(localStorage.getItem(localStorageKey.azureMaxTokens)) || 800
+  azureTemperature.value = forceNumber(localStorage.getItem(localStorageKey.azureTemperature)) || 0.7
+  // proxy
   enableProxy.value = localStorage.getItem(localStorageKey.enableProxy) === 'true'
   proxyHost.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').host || ''
   proxyPort.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').port || ''
   proxyUsername.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').username || ''
   proxyPassword.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').password || ''
   proxyProtocol.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').protocol || 'http'
-  basePath.value = localStorage.getItem(localStorageKey.basePath) || ''
+}
+
+// common
+
+function handleApiChange (val: string) {
+  localStorage.setItem(localStorageKey.api, val)
 }
 
 function handleLocalLanguageChange (val: string) {
@@ -446,12 +553,12 @@ function handleReplyLanguageChange (val: string) {
   localStorage.setItem(localStorageKey.replyLanguage, val)
 }
 
-function handleModelChange (val: string) {
-  localStorage.setItem(localStorageKey.model, val)
-}
-
 function handleWebModelChange (val: string) {
   localStorage.setItem(localStorageKey.webModel, val)
+}
+
+function handleModelChange (val: string) {
+  localStorage.setItem(localStorageKey.model, val)
 }
 
 function handleApiKeyChange () {
@@ -460,10 +567,6 @@ function handleApiKeyChange () {
 
 function handleAccessTokenChange () {
   localStorage.setItem(localStorageKey.accessToken, accessToken.value)
-}
-
-function handleApiChange (val: string) {
-  localStorage.setItem(localStorageKey.api, val)
 }
 
 function handleBasePathChange () {
@@ -476,6 +579,26 @@ function handleTemperatureChange () {
 
 function handleMaxTokensChange () {
   localStorage.setItem(localStorageKey.maxTokens, maxTokens.value.toString())
+}
+
+function handleAzureAPIKeyChange () {
+  localStorage.setItem(localStorageKey.azureAPIKey, azureAPIKey.value)
+}
+
+function handleAzureAPIEndpointChange () {
+  localStorage.setItem(localStorageKey.azureAPIEndpoint, azureAPIEndpoint.value)
+}
+
+function handleAzureDeploymentNameChange () {
+  localStorage.setItem(localStorageKey.azureDeploymentName, azureDeploymentName.value)
+}
+
+function handleAzureMaxTokensChange () {
+  localStorage.setItem(localStorageKey.azureMaxTokens, azureMaxTokens.value.toString())
+}
+
+function handleAzureTemperatureChange () {
+  localStorage.setItem(localStorageKey.azureTemperature, azureTemperature.value.toString())
 }
 
 function handleEnableProxyChange () {
