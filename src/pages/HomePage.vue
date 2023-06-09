@@ -551,7 +551,6 @@ onBeforeMount(async () => {
   azureAPIEndpoint.value = localStorage.getItem(localStorageKey.azureAPIEndpoint) ?? ''
   azureDeploymentName.value = localStorage.getItem(localStorageKey.azureDeploymentName) ?? ''
   azureMaxTokens.value = Number(localStorage.getItem(localStorageKey.azureMaxTokens)) || 800
-  console.log(azureMaxTokens.value)
   azureTemperature.value = Number(localStorage.getItem(localStorageKey.azureTemperature)) || 0.7
   insertType.value = localStorage.getItem(localStorageKey.insertType) ?? 'replace' as 'replace' | 'append' | 'newLine' | 'NoAction'
   systemPrompt.value = localStorage.getItem(localStorageKey.defaultSystemPrompt) ?? 'Act like a personal assistant.'
@@ -716,11 +715,11 @@ function StartChat () {
 async function continueChat () {
   if (!checkApiKey()) return
   loading.value = true
-  historyDialog.value.push({
-    role: 'user',
-    content: 'continue'
-  })
   if (api.value === 'official') {
+    historyDialog.value.push({
+      role: 'user',
+      content: 'continue'
+    })
     try {
       await API.official.createChatCompletionStream(
         API.official.setConfig(apiKey.value, basePath.value),
@@ -733,6 +732,29 @@ async function continueChat () {
         temperature.value,
         model.value,
         proxy.value
+      )
+    } catch (error) {
+      result.value = String(error)
+      errorIssue.value = true
+      console.error(error)
+    }
+  } else if (api.value === 'azure') {
+    try {
+      historyDialog.value.push({
+        role: 'user',
+        content: 'continue'
+      })
+      await API.azure.createChatCompletionStream(
+        azureAPIKey.value,
+        azureAPIEndpoint.value,
+        azureDeploymentName.value,
+        historyDialog.value,
+        result,
+        historyDialog,
+        errorIssue,
+        loading,
+        azureMaxTokens.value,
+        azureTemperature.value
       )
     } catch (error) {
       result.value = String(error)

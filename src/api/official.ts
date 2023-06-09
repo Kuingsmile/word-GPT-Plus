@@ -47,7 +47,6 @@ async function createChatCompletionStream (
     } else {
       result.value = response.statusText?.toString() ?? 'error'
       errorIssue.value = true
-      console.log(response)
     }
   } catch (error) {
     result.value = String(error)

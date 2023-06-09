@@ -16,8 +16,9 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 
 ## 特色功能
 
-- 使用GPT-3.5 API生成文本并支持选择模型
+- 使用GPT API生成文本并支持选择模型
 - 支持设置access token调用chatGPT web接口（使用该方法免费，建议配合chatGPT-plus）
+- 支持OpenAI官方API和Azure OpenAI API
 - 内置用于翻译、总结、润色和学术写作的提示
 - 支持多种语言
 - 可以自定义提示并保存以供将来使用
@@ -39,8 +40,11 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 
 ### 账户要求
 
-官方API需要一个OpenAI api key，你可以从[https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)获取
+官方API需要一个OpenAI api key，你可以从[https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)获取。
+
 网页API需要一个chatGPT网站的access token，你可以参考[access token](#how-to-get-access-token)获取
+
+Azure OpenAI需要首先申请资格，请前往[Azure OpenAI API申请网址](https://go.microsoft.com/fwlink/?linkid=2222006&clcid=0x409&culture=en-us&country=us)申请资格。
 
 ## 快速开始
 

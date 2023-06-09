@@ -19,6 +19,7 @@ Word GPT Plus is a word add-in which integrates the chatGPT model into Microsoft
 - Utilize the GPT-3.5 API to generate text and support select models
 - Support chatGPT web api using access Token, it's FREE!
 - Built-in prompts for translation, summarization, polishing, and academic writing
+- Support Azure OpenAI API
 - Support for multiple languages
 - Custom prompts can be set and saved for future use
 - Ability for users to set temperature and max tokens
@@ -35,13 +36,15 @@ Word GPT Plus is a word add-in which integrates the chatGPT model into Microsoft
 - Edge WebView2 Runtime [https://developer.microsoft.com/en-us/microsoft-edge/webview2/](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
 - if you use self-hosted service, you need Node.js 16+
 
+**Note: office add-in can only used in docx file, not support doc file.**
+
 ### account
 
 Official API need an OpenAI api key, you can get it from [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)
 
 Web API need an access token of chatGPT website, you can get it from [access token](#how-to-get-access-token)
 
-**Note: office add-in can only used in docx file, not support doc file.**
+You need to apply for qualification first, please go to [Azure OpenAI API application website](https://go.microsoft.com/fwlink/?linkid=2222006&clcid=0x409&culture=en-us&country=us) to apply for qualification.
 
 ## Getting Started
 
