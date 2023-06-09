@@ -1,3 +1,18 @@
+## :tada: 0.2.4 (2023-06-09)
+
+
+### :sparkles: Features
+
+* **custom:** add support for azure openai api ([61226d1](https://github.com/Kuingsmile/word-GPT-Plus/commit/61226d1))
+* **custom:** optimize azure openai api ([72e9ffa](https://github.com/Kuingsmile/word-GPT-Plus/commit/72e9ffa))
+
+
+### :bug: Bug Fixes
+
+* **custom:** remove timeout ([ddf6f05](https://github.com/Kuingsmile/word-GPT-Plus/commit/ddf6f05))
+
+
+
 ## :tada: 0.2.3 (2023-05-06)
 
 
