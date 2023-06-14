@@ -1,3 +1,12 @@
+## :tada: 0.2.5 (2023-06-14)
+
+
+### :sparkles: Features
+
+* **custom:** add gpt 3.5 16k model ([0881018](https://github.com/Kuingsmile/word-GPT-Plus/commit/0881018))
+
+
+
 ## :tada: 0.2.4 (2023-06-09)
 
 
