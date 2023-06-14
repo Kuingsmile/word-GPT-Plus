@@ -388,7 +388,7 @@
 import { onBeforeMount, ref } from 'vue'
 import { AxiosProxyConfig } from 'axios'
 import { useRouter } from 'vue-router'
-import { localStorageKey, languageMap, buildInPrompt } from '@/utils/constant'
+import { localStorageKey, languageMap, buildInPrompt, availableModels } from '@/utils/constant'
 import { promptDbInstance } from '@/store/promtStore'
 import { IStringKeyMap } from '@/types'
 import { CirclePlus, Remove } from '@element-plus/icons-vue'
@@ -534,31 +534,39 @@ function handelPromptChange (val: string) {
 }
 
 onBeforeMount(async () => {
-  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' | 'azure' ?? 'web-api'
-  replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) ?? 'English'
-  localLanguage.value = localStorage.getItem(localStorageKey.localLanguage) ?? 'en'
-  apiKey.value = localStorage.getItem(localStorageKey.apiKey) ?? ''
-  accessToken.value = localStorage.getItem(localStorageKey.accessToken) ?? ''
-  azureAPIKey.value = localStorage.getItem(localStorageKey.azureAPIKey) ?? ''
-  webModel.value = localStorage.getItem(localStorageKey.webModel) ?? 'default'
+  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' | 'azure' || 'web-api'
+  replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
+  localLanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
+  apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
+  accessToken.value = localStorage.getItem(localStorageKey.accessToken) || ''
+  azureAPIKey.value = localStorage.getItem(localStorageKey.azureAPIKey) || ''
+  webModel.value = localStorage.getItem(localStorageKey.webModel) || 'default'
   temperature.value = Number(localStorage.getItem(localStorageKey.temperature)) || 0.7
   maxTokens.value = Number(localStorage.getItem(localStorageKey.maxTokens)) || 800
-  model.value = localStorage.getItem(localStorageKey.model) ?? 'gpt-3.5-turbo'
-  basePath.value = localStorage.getItem(localStorageKey.basePath) ?? ''
+  const modelTemp = localStorage.getItem(localStorageKey.model) || availableModels['gpt-3.5']
+  if (Object.keys(availableModels).includes(modelTemp)) {
+    model.value = availableModels[modelTemp]
+  } else if (Object.values(availableModels).includes(modelTemp)) {
+    model.value = modelTemp
+  } else {
+    model.value = availableModels['gpt-3.5']
+  }
+  console.log(model.value)
+  basePath.value = localStorage.getItem(localStorageKey.basePath) || ''
   proxy.value = localStorage.getItem(localStorageKey.enableProxy) === 'false'
     ? false
     : JSON.parse(localStorage.getItem(localStorageKey.proxy) || 'false')
-  azureAPIEndpoint.value = localStorage.getItem(localStorageKey.azureAPIEndpoint) ?? ''
-  azureDeploymentName.value = localStorage.getItem(localStorageKey.azureDeploymentName) ?? ''
+  azureAPIEndpoint.value = localStorage.getItem(localStorageKey.azureAPIEndpoint) || ''
+  azureDeploymentName.value = localStorage.getItem(localStorageKey.azureDeploymentName) || ''
   azureMaxTokens.value = Number(localStorage.getItem(localStorageKey.azureMaxTokens)) || 800
   azureTemperature.value = Number(localStorage.getItem(localStorageKey.azureTemperature)) || 0.7
-  insertType.value = localStorage.getItem(localStorageKey.insertType) ?? 'replace' as 'replace' | 'append' | 'newLine' | 'NoAction'
-  systemPrompt.value = localStorage.getItem(localStorageKey.defaultSystemPrompt) ?? 'Act like a personal assistant.'
+  insertType.value = localStorage.getItem(localStorageKey.insertType) || 'replace' as 'replace' | 'append' | 'newLine' | 'NoAction'
+  systemPrompt.value = localStorage.getItem(localStorageKey.defaultSystemPrompt) || 'Act like a personal assistant.'
   await getSystemPromptList()
   if (systemPromptList.value.find((item) => item.value === systemPrompt.value)) {
     systemPromptSelected.value = systemPrompt.value
   }
-  prompt.value = localStorage.getItem(localStorageKey.defaultPrompt) ?? ''
+  prompt.value = localStorage.getItem(localStorageKey.defaultPrompt) || ''
   await getPromptList()
   if (promptList.value.find((item) => item.value === prompt.value)) {
     promptSelected.value = prompt.value

@@ -514,11 +514,13 @@ function initData () {
   webModel.value = localStorage.getItem(localStorageKey.webModel) || 'default'
   // official API
   apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
-  const modelTemp = localStorage.getItem(localStorageKey.model) || 'gpt-3.5-turbo'
+  const modelTemp = localStorage.getItem(localStorageKey.model) || availableModels['gpt-3.5']
   if (Object.keys(availableModels).includes(modelTemp)) {
     model.value = availableModels[modelTemp]
-  } else {
+  } else if (Object.values(availableModels).includes(modelTemp)) {
     model.value = modelTemp
+  } else {
+    model.value = availableModels['gpt-3.5']
   }
   temperature.value = forceNumber(localStorage.getItem(localStorageKey.temperature)) || 0.7
   maxTokens.value = forceNumber(localStorage.getItem(localStorageKey.maxTokens)) || 800
