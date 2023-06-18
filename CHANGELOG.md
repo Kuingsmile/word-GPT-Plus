@@ -1,3 +1,12 @@
+## :tada: 0.2.6 (2023-06-18)
+
+
+### :sparkles: Features
+
+* **custom:** add support for PALM2 API ([2f091fc](https://github.com/Kuingsmile/word-GPT-Plus/commit/2f091fc))
+
+
+
 ## :tada: 0.2.5 (2023-06-14)
 
 
