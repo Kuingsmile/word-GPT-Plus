@@ -65,6 +65,11 @@ export const availableModelsForPlus: IStringKeyMap = {
   'gpt4(plus)': 'gpt4'
 }
 
+// palm api 可用的模型
+export const availableModelsForPalm: IStringKeyMap = {
+  'text-bison-001': 'text-bison-001'
+}
+
 export enum localStorageKey {
   // common
   api = 'api',
@@ -86,6 +91,12 @@ export enum localStorageKey {
   azureDeploymentName = 'azureDeploymentName',
   azureMaxTokens = 'azureMaxTokens',
   azureTemperature = 'azureTemperature',
+  // palm api
+  palmAPIKey = 'palmAPIKey',
+  palmAPIEndpoint = 'palmAPIEndpoint',
+  palmMaxTokens = 'palmMaxTokens',
+  palmTemperature = 'palmTemperature',
+  palmModel = 'palmModel',
   // proxy
   enableProxy = 'enableProxy',
   proxy = 'proxy',

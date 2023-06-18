@@ -200,6 +200,7 @@
           {{ $t('start') }}
         </el-button>
         <el-button
+          v-if="['web-api', 'azure', 'official'].includes(api)"
           class="api-button"
           type="success"
           size="default"
@@ -388,7 +389,7 @@
 import { onBeforeMount, ref } from 'vue'
 import { AxiosProxyConfig } from 'axios'
 import { useRouter } from 'vue-router'
-import { localStorageKey, languageMap, buildInPrompt, availableModels } from '@/utils/constant'
+import { localStorageKey, languageMap, buildInPrompt, availableModels, availableModelsForPalm } from '@/utils/constant'
 import { promptDbInstance } from '@/store/promtStore'
 import { IStringKeyMap } from '@/types'
 import { CirclePlus, Remove } from '@element-plus/icons-vue'
@@ -402,10 +403,11 @@ const replyLanguageList = Object.values(languageMap).map((key) => ({
   value: key
 }))
 
-const api = ref<'web-api' | 'official' | 'azure'>('web-api')
+const api = ref<'web-api' | 'official' | 'azure' | 'palm'>('web-api')
 const apiKey = ref('')
 const accessToken = ref('')
 const azureAPIKey = ref('')
+const palmAPIKey = ref('')
 
 const localLanguage = ref('en')
 const replyLanguage = ref('English')
@@ -422,6 +424,11 @@ const azureAPIEndpoint = ref('')
 const azureDeploymentName = ref('')
 const azureMaxTokens = ref(800)
 const azureTemperature = ref(0.7)
+
+const palmAPIEndpoint = ref('https://generativelanguage.googleapis.com/v1beta2')
+const palmMaxTokens = ref(800)
+const palmTemperature = ref(0.7)
+const palmModel = ref('text-bison-001')
 
 const systemPrompt = ref('')
 const systemPromptSelected = ref('')
@@ -534,12 +541,13 @@ function handelPromptChange (val: string) {
 }
 
 onBeforeMount(async () => {
-  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' | 'azure' || 'web-api'
+  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' | 'azure' | 'palm' || 'web-api'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
   localLanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
   apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
   accessToken.value = localStorage.getItem(localStorageKey.accessToken) || ''
   azureAPIKey.value = localStorage.getItem(localStorageKey.azureAPIKey) || ''
+  palmAPIKey.value = localStorage.getItem(localStorageKey.palmAPIKey) || ''
   webModel.value = localStorage.getItem(localStorageKey.webModel) || 'default'
   temperature.value = Number(localStorage.getItem(localStorageKey.temperature)) || 0.7
   maxTokens.value = Number(localStorage.getItem(localStorageKey.maxTokens)) || 800
@@ -551,7 +559,6 @@ onBeforeMount(async () => {
   } else {
     model.value = availableModels['gpt-3.5']
   }
-  console.log(model.value)
   basePath.value = localStorage.getItem(localStorageKey.basePath) || ''
   proxy.value = localStorage.getItem(localStorageKey.enableProxy) === 'false'
     ? false
@@ -560,6 +567,17 @@ onBeforeMount(async () => {
   azureDeploymentName.value = localStorage.getItem(localStorageKey.azureDeploymentName) || ''
   azureMaxTokens.value = Number(localStorage.getItem(localStorageKey.azureMaxTokens)) || 800
   azureTemperature.value = Number(localStorage.getItem(localStorageKey.azureTemperature)) || 0.7
+  palmAPIEndpoint.value = localStorage.getItem(localStorageKey.palmAPIEndpoint) || 'https://generativelanguage.googleapis.com/v1beta2'
+  palmMaxTokens.value = Number(localStorage.getItem(localStorageKey.palmMaxTokens)) || 800
+  palmTemperature.value = Number(localStorage.getItem(localStorageKey.palmTemperature)) || 0.7
+  const palmModelTemp = localStorage.getItem(localStorageKey.palmModel) || availableModelsForPalm['text-bison-001']
+  if (Object.keys(availableModelsForPalm).includes(palmModelTemp)) {
+    palmModel.value = availableModelsForPalm[palmModelTemp]
+  } else if (Object.values(availableModelsForPalm).includes(palmModelTemp)) {
+    palmModel.value = palmModelTemp
+  } else {
+    palmModel.value = availableModelsForPalm['text-bison-001']
+  }
   insertType.value = localStorage.getItem(localStorageKey.insertType) || 'replace' as 'replace' | 'append' | 'newLine' | 'NoAction'
   systemPrompt.value = localStorage.getItem(localStorageKey.defaultSystemPrompt) || 'Act like a personal assistant.'
   await getSystemPromptList()
@@ -663,6 +681,18 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
       azureMaxTokens.value,
       azureTemperature.value
     )
+  } else if (api.value === 'palm' && palmAPIKey.value) {
+    await API.palm.createChatCompletionStream(
+      palmAPIKey.value,
+      palmAPIEndpoint.value,
+      palmModel.value,
+      `${systemMessage}\n${userMessage}`,
+      result,
+      errorIssue,
+      loading,
+      palmMaxTokens.value,
+      palmTemperature.value
+    )
   } else {
     ElMessage.error('Set API Key or Access Token first')
     return
@@ -682,7 +712,8 @@ function checkApiKey () {
     type: api.value,
     accessToken: accessToken.value,
     apiKey: apiKey.value,
-    azureAPIKey: azureAPIKey.value
+    azureAPIKey: azureAPIKey.value,
+    palmAPIKey: palmAPIKey.value
   }
   if (!checkAuth(auth)) {
     ElMessage.error('Set API Key or Access Token first')

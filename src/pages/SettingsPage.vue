@@ -183,6 +183,91 @@
             />
           </el-form-item>
           <el-form-item
+            v-if="api === 'palm'"
+          >
+            <template #label>
+              <span>
+                {{ $t('apiKey') }}
+              </span>
+            </template>
+            <el-input
+              v-model="palmAPIKey"
+              :placeholder="$t('apiKeyDescription')"
+              size="small"
+              @blur="handlePalmAPIKeyChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'palm'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingPalmEndpoint') }}
+              </span>
+            </template>
+            <el-input
+              v-model="palmAPIEndpoint"
+              :placeholder="$t('settingPalmEndpoint')"
+              size="small"
+              @blur="handlePalmAPIEndpointChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'palm'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingTemperature') }}
+              </span>
+            </template>
+            <el-input-number
+              v-model="palmTemperature"
+              :min="0"
+              :max="2"
+              :step="0.1"
+              size="small"
+              @change="handlePalmTemperatureChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'palm'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingMaxTokens') }}
+              </span>
+            </template>
+            <el-input-number
+              v-model="palmMaxTokens"
+              :min="1"
+              :step="1"
+              size="small"
+              @change="handlePalmMaxTokensChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'palm'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingModel') }}
+              </span>
+            </template>
+            <el-select
+              v-model="palmModel"
+              size="small"
+              :placeholder="$t('settingModel')"
+              @change="handlePalmModelChange"
+            >
+              <el-option
+                v-for="item in palmModelList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item
             v-if="api === 'official'"
           >
             <template #label>
@@ -424,7 +509,7 @@
 <script lang="ts" setup>
 import { onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { languageMap, availableModels, localStorageKey, availableModelsForPlus } from '@/utils/constant'
+import { languageMap, availableModels, localStorageKey, availableModelsForPlus, availableModelsForPalm } from '@/utils/constant'
 import { useRouter } from 'vue-router'
 import { AxiosProxyConfig } from 'axios'
 
@@ -456,7 +541,12 @@ const webModelList = Object.keys(availableModelsForPlus).map((key) => ({
   value: availableModels[key]
 }))
 
-const api = ref<'official' | 'web-api' | 'azure'>('web-api')
+const palmModelList = Object.keys(availableModelsForPalm).map((key) => ({
+  label: key,
+  value: availableModelsForPalm[key]
+}))
+
+const api = ref<'official' | 'web-api' | 'azure' | 'palm'>('web-api')
 const currentUILanguage = ref('en')
 const replyLanguage = ref('English')
 // web API
@@ -474,6 +564,12 @@ const azureAPIEndpoint = ref('')
 const azureDeploymentName = ref('')
 const azureMaxTokens = ref(800)
 const azureTemperature = ref(0.7)
+// palm API
+const palmAPIKey = ref('')
+const palmAPIEndpoint = ref('https://generativelanguage.googleapis.com/v1beta2')
+const palmModel = ref(availableModelsForPalm['text-bison-001'])
+const palmTemperature = ref(0.7)
+const palmMaxTokens = ref(800)
 // proxy
 const enableProxy = ref(false)
 const proxyHost = ref('')
@@ -495,6 +591,10 @@ const apiList = [
   {
     label: 'azure',
     value: 'azure'
+  },
+  {
+    label: 'palm',
+    value: 'palm'
   }
 ]
 
@@ -531,6 +631,19 @@ function initData () {
   azureDeploymentName.value = localStorage.getItem(localStorageKey.azureDeploymentName) || ''
   azureMaxTokens.value = forceNumber(localStorage.getItem(localStorageKey.azureMaxTokens)) || 800
   azureTemperature.value = forceNumber(localStorage.getItem(localStorageKey.azureTemperature)) || 0.7
+  // palm API
+  palmAPIKey.value = localStorage.getItem(localStorageKey.palmAPIKey) || ''
+  palmAPIEndpoint.value = localStorage.getItem(localStorageKey.palmAPIEndpoint) || 'https://generativelanguage.googleapis.com/v1beta2'
+  palmMaxTokens.value = forceNumber(localStorage.getItem(localStorageKey.palmMaxTokens)) || 800
+  palmTemperature.value = forceNumber(localStorage.getItem(localStorageKey.palmTemperature)) || 0.7
+  const palmModelTemp = localStorage.getItem(localStorageKey.palmModel) || availableModelsForPalm['text-bison-001']
+  if (Object.keys(availableModelsForPalm).includes(palmModelTemp)) {
+    palmModel.value = availableModelsForPalm[palmModelTemp]
+  } else if (Object.values(availableModelsForPalm).includes(palmModelTemp)) {
+    palmModel.value = palmModelTemp
+  } else {
+    palmModel.value = availableModelsForPalm['text-bison-001']
+  }
   // proxy
   enableProxy.value = localStorage.getItem(localStorageKey.enableProxy) === 'true'
   proxyHost.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').host || ''
@@ -601,6 +714,26 @@ function handleAzureMaxTokensChange () {
 
 function handleAzureTemperatureChange () {
   localStorage.setItem(localStorageKey.azureTemperature, azureTemperature.value.toString())
+}
+
+function handlePalmAPIKeyChange () {
+  localStorage.setItem(localStorageKey.palmAPIKey, palmAPIKey.value)
+}
+
+function handlePalmAPIEndpointChange () {
+  localStorage.setItem(localStorageKey.palmAPIEndpoint, palmAPIEndpoint.value)
+}
+
+function handlePalmMaxTokensChange () {
+  localStorage.setItem(localStorageKey.palmMaxTokens, palmMaxTokens.value.toString())
+}
+
+function handlePalmTemperatureChange () {
+  localStorage.setItem(localStorageKey.palmTemperature, palmTemperature.value.toString())
+}
+
+function handlePalmModelChange (val: string) {
+  localStorage.setItem(localStorageKey.palmModel, val)
 }
 
 function handleEnableProxyChange () {

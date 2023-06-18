@@ -39,7 +39,7 @@ async function createChatCompletionStream (
     })
     data = response.data
     if (response.status === 200) {
-      result.value = data.choices[0].message?.content.replace(/\\n/g, '\n') ?? ''
+      result.value = data.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
       historyDialog.value.push({
         role: 'assistant',
         content: result.value
