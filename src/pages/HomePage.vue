@@ -670,16 +670,18 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
       }
     ]
     await API.azure.createChatCompletionStream(
-      azureAPIKey.value,
-      azureAPIEndpoint.value,
-      azureDeploymentName.value,
-      historyDialog.value,
-      result,
-      historyDialog,
-      errorIssue,
-      loading,
-      azureMaxTokens.value,
-      azureTemperature.value
+      {
+        azureAPIKey: azureAPIKey.value,
+        azureAPIEndpoint: azureAPIEndpoint.value,
+        azureDeploymentName: azureDeploymentName.value,
+        messages: historyDialog.value,
+        result,
+        historyDialog,
+        errorIssue,
+        loading,
+        maxTokens: azureMaxTokens.value,
+        temperature: azureTemperature.value
+      }
     )
   } else if (api.value === 'palm' && palmAPIKey.value) {
     await API.palm.createChatCompletionStream(
@@ -784,16 +786,18 @@ async function continueChat () {
         content: 'continue'
       })
       await API.azure.createChatCompletionStream(
-        azureAPIKey.value,
-        azureAPIEndpoint.value,
-        azureDeploymentName.value,
-        historyDialog.value,
-        result,
-        historyDialog,
-        errorIssue,
-        loading,
-        azureMaxTokens.value,
-        azureTemperature.value
+        {
+          azureAPIKey: azureAPIKey.value,
+          azureAPIEndpoint: azureAPIEndpoint.value,
+          azureDeploymentName: azureDeploymentName.value,
+          messages: historyDialog.value,
+          result,
+          historyDialog,
+          errorIssue,
+          loading,
+          maxTokens: azureMaxTokens.value,
+          temperature: azureTemperature.value
+        }
       )
     } catch (error) {
       result.value = String(error)

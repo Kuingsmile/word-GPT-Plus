@@ -12,11 +12,7 @@ async function createChatCompletionStream (
   maxTokens?: number,
   temperature?: number
 ): Promise<void> {
-  let formatedEndpoint = palmAPIEndpoint
-  if (/^https?:\/\//.test(palmAPIEndpoint)) {
-    formatedEndpoint = palmAPIEndpoint.replace(/^https?:\/\//, '')
-  }
-  formatedEndpoint = formatedEndpoint.replace(/\/$/, '')
+  const formatedEndpoint = palmAPIEndpoint.replace(/^https?:\/\//, '').replace(/\/$/, '')
   const url = `https://${formatedEndpoint}/models/${palmModel}:generateText`
   const headers = {
     'Content-Type': 'application/json'
@@ -39,9 +35,8 @@ async function createChatCompletionStream (
     })
     if (response.status !== 200) {
       throw new Error(`Status code: ${response.status}`)
-    } else {
-      result.value = response.data?.candidates[0]?.output || ''
     }
+    result.value = response.data?.candidates[0]?.output || ''
   } catch (error) {
     console.error(error)
     result.value = String(error)
