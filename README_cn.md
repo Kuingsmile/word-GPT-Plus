@@ -19,6 +19,7 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 - 使用GPT API生成文本并支持选择模型
 - 支持设置access token调用chatGPT web接口（使用该方法免费，建议配合chatGPT-plus）
 - 支持OpenAI官方API和Azure OpenAI API
+- 支持Google PALM2 API
 - 内置用于翻译、总结、润色和学术写作的提示
 - 支持多种语言
 - 可以自定义提示并保存以供将来使用
@@ -46,11 +47,13 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 
 Azure OpenAI需要首先申请资格，请前往[Azure OpenAI API申请网址](https://go.microsoft.com/fwlink/?linkid=2222006&clcid=0x409&culture=en-us&country=us)申请资格。
 
+Google PALM2 API需要前往[Google AI](https://developers.generativeai.google/)申请，申请后目前公测阶段使用是免费的。
+
 ## 快速开始
 
 有两种方法可以安装 Word GPT Plus：通过我的免费web服务，或者自己搭建服务。
 
-我强烈建议使用我的web服务，因为它安装简单快捷，也不需要安装额外的依赖项。此外，你将随时可以访问到最新版本的 Word GPT Plus。
+我建议使用我的web服务，因为它安装简单快捷，也不需要安装额外的依赖项。此外，你将随时可以访问到最新版本的 Word GPT Plus。
 
 由于所有数据都是使用localStorage保存的，所以你的隐私是受到保护的。
 
@@ -102,6 +105,10 @@ yarn run serve
 11. 点击**插入** -> **获取加载项** -> **共享目录**，选择 **Word GPT**.
 12. 享受 Word GPT Plus 的强大功能吧！
 ![image](https://user-images.githubusercontent.com/96409857/234744280-9d9f13cf-536b-4fb5-adfa-cbec262d56a2.png)
+
+## 如何填写access token或者API key
+
+进入Word GPT Plus后，点击主页的橙色`设置`按钮，进入设置页面，即可切换API和填写access token或者API key。
 
 ## 如何获取access token
 

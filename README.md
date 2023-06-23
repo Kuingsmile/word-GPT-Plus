@@ -20,6 +20,7 @@ Word GPT Plus is a word add-in which integrates the chatGPT model into Microsoft
 - Support chatGPT web api using access Token, it's FREE!
 - Built-in prompts for translation, summarization, polishing, and academic writing
 - Support Azure OpenAI API
+- Support Google PALM2 API
 - Support for multiple languages
 - Custom prompts can be set and saved for future use
 - Ability for users to set temperature and max tokens
@@ -46,11 +47,13 @@ Web API need an access token of chatGPT website, you can get it from [access tok
 
 You need to apply for qualification first, please go to [Azure OpenAI API application website](https://go.microsoft.com/fwlink/?linkid=2222006&clcid=0x409&culture=en-us&country=us) to apply for qualification.
 
+You need to go to [Google AI](https://developers.generativeai.google/) to apply for qualification for Google PALM2 API.
+
 ## Getting Started
 
 There are two ways to install Word GPT Plus: through my free hosting service, or by self-hosting it.
 
-I highly recommend utilizing my hosting service as it is both user-friendly and requires no installation of additional dependencies. Furthermore, you will have access to the most up-to-date version of Word GPT Plus at all times.
+I recommend utilizing my hosting service as it is both user-friendly and requires no installation of additional dependencies. Furthermore, you will have access to the most up-to-date version of Word GPT Plus at all times.
 
 Rest assured that your privacy is protected as all data is saved using localStorage.
 
@@ -104,6 +107,10 @@ You can find instructions provided by MicroSoft at the following link: [sideload
 11. Click **Insert** > **My Add-ins** > **Shared Folder**, choose **GPT Plus**, and then choose **Add**.
 12. Enjoy it!
 ![image](https://user-images.githubusercontent.com/96409857/234744280-9d9f13cf-536b-4fb5-adfa-cbec262d56a2.png)
+
+## How to fill in access token or API key
+
+After entering Word GPT Plus, click the orange `Settings` button on the homepage to enter the settings page, where you can switch APIs and fill in access tokens or API keys.
 
 ## How to get access token
 
