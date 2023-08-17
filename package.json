@@ -1,6 +1,6 @@
 {
   "name": "word-gpt-plus",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --port 3000",
@@ -10,14 +10,14 @@
     "release": "bump-version"
   },
   "dependencies": {
-    "@azure/openai": "^1.0.0-beta.2",
+    "@azure/openai": "^1.0.0-beta.4",
     "@element-plus/icons-vue": "^2.1.0",
     "axios": "^1.4.0",
     "chatgpt": "^5.2.5",
     "core-js": "^3.30.2",
     "dexie": "^3.2.4",
     "element-plus": "^2.3.9",
-    "openai": "^3.2.1",
+    "openai": "^4.0.0",
     "unfetch": "^5.0.0",
     "vue": "^3.3.4",
     "vue-class-component": "^8.0.0-0",
@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@picgo/bump-version": "^1.1.2",
-    "@types/office-js": "^1.0.333",
+    "@types/office-js": "^1.0.338",
     "@typescript-eslint/eslint-plugin": "^5.59.7",
     "@typescript-eslint/parser": "^5.59.7",
     "@vue/cli-plugin-babel": "^5.0.8",

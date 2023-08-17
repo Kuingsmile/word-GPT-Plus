@@ -387,7 +387,6 @@
 
 <script lang="ts" setup>
 import { onBeforeMount, ref } from 'vue'
-import { AxiosProxyConfig } from 'axios'
 import { useRouter } from 'vue-router'
 import { localStorageKey, languageMap, buildInPrompt, availableModels, availableModelsForPalm } from '@/utils/constant'
 import { promptDbInstance } from '@/store/promtStore'
@@ -418,7 +417,6 @@ const temperature = ref(0.7)
 const maxTokens = ref(800)
 const model = ref('gpt-3.5-turbo')
 const basePath = ref('')
-const proxy = ref<AxiosProxyConfig | false>(false)
 
 const azureAPIEndpoint = ref('')
 const azureDeploymentName = ref('')
@@ -560,9 +558,6 @@ onBeforeMount(async () => {
     model.value = availableModels['gpt-3.5']
   }
   basePath.value = localStorage.getItem(localStorageKey.basePath) || ''
-  proxy.value = localStorage.getItem(localStorageKey.enableProxy) === 'false'
-    ? false
-    : JSON.parse(localStorage.getItem(localStorageKey.proxy) || 'false')
   azureAPIEndpoint.value = localStorage.getItem(localStorageKey.azureAPIEndpoint) || ''
   azureDeploymentName.value = localStorage.getItem(localStorageKey.azureDeploymentName) || ''
   azureMaxTokens.value = Number(localStorage.getItem(localStorageKey.azureMaxTokens)) || 800
@@ -642,8 +637,7 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
       loading,
       maxTokens.value,
       temperature.value,
-      model.value,
-      proxy.value
+      model.value
     )
   } else if (api.value === 'web-api' && accessToken.value) {
     const config = API.webapi.setUnofficalConfig(accessToken.value)
@@ -771,8 +765,7 @@ async function continueChat () {
         loading,
         maxTokens.value,
         temperature.value,
-        model.value,
-        proxy.value
+        model.value
       )
     } catch (error) {
       result.value = String(error)

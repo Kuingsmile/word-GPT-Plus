@@ -379,130 +379,9 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item
-            v-if="api === 'official'"
-          >
-            <template #label>
-              <span>
-                {{ $t('settingProxy') }}
-              </span>
-            </template>
-            <el-button
-              type="primary"
-              round
-              plain
-              size="small"
-              @click="proxyVisible = true"
-            >
-              {{ $t('settingClickToShow') }}
-            </el-button>
-          </el-form-item>
         </el-form>
       </el-row>
     </el-row>
-    <el-dialog
-      v-model="proxyVisible"
-      width="100%"
-      :title="$t('settingProxy')"
-      :modal-append-to-body="false"
-      center
-    >
-      <el-form
-        label-position="top"
-        label-width="120px"
-      >
-        <el-form-item>
-          <template #label>
-            <span>
-              {{ $t('settingEnableProxy') }}
-            </span>
-          </template>
-          <el-switch
-            v-model="enableProxy"
-            :active-text="$t('settingOpen')"
-            :inactive-text="$t('settingClose')"
-            @change="handleEnableProxyChange"
-          />
-        </el-form-item>
-        <template v-if="enableProxy">
-          <el-form-item>
-            <template #label>
-              <span>
-                {{ $t('settingProxyProtocol') }}
-              </span>
-            </template>
-            <el-input
-              v-model="proxyProtocol"
-              :placeholder="$t('settingProxyProtocol')"
-              size="small"
-            />
-          </el-form-item>
-          <el-form-item>
-            <template #label>
-              <span>
-                {{ $t('settingProxyHost') }}
-              </span>
-            </template>
-            <el-input
-              v-model="proxyHost"
-              :placeholder="$t('settingProxyHost')"
-              size="small"
-            />
-          </el-form-item>
-          <el-form-item>
-            <template #label>
-              <span>
-                {{ $t('settingProxyPort') }}
-              </span>
-            </template>
-            <el-input
-              v-model="proxyPort"
-              :placeholder="$t('settingProxyPort')"
-              size="small"
-            />
-          </el-form-item>
-          <el-form-item>
-            <template #label>
-              <span>
-                {{ $t('settingProxyUsername') }}
-              </span>
-            </template>
-            <el-input
-              v-model="proxyUsername"
-              :placeholder="$t('settingProxyUsername')"
-              size="small"
-            />
-          </el-form-item>
-          <el-form-item>
-            <template #label>
-              <span>
-                {{ $t('settingProxyPassword') }}
-              </span>
-            </template>
-            <el-input
-              v-model="proxyPassword"
-              :placeholder="$t('settingProxyPassword')"
-              size="small"
-            />
-          </el-form-item>
-        </template>
-      </el-form>
-      <template #footer>
-        <el-button
-          round
-          @click="cancelProxySetting"
-        >
-          {{ $t('cancel') }}
-        </el-button>
-        <el-button
-          type="primary"
-          round
-          @click="confirmProxySetting"
-        >
-          {{ $t('confirm') }}
-        </el-button>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
@@ -511,7 +390,6 @@ import { onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { languageMap, availableModels, localStorageKey, availableModelsForPlus, availableModelsForPalm } from '@/utils/constant'
 import { useRouter } from 'vue-router'
-import { AxiosProxyConfig } from 'axios'
 
 const router = useRouter()
 
@@ -570,14 +448,6 @@ const palmAPIEndpoint = ref('https://generativelanguage.googleapis.com/v1beta2')
 const palmModel = ref(availableModelsForPalm['text-bison-001'])
 const palmTemperature = ref(0.7)
 const palmMaxTokens = ref(800)
-// proxy
-const enableProxy = ref(false)
-const proxyHost = ref('')
-const proxyPort = ref('')
-const proxyUsername = ref('')
-const proxyPassword = ref('')
-const proxyProtocol = ref('http')
-const proxyVisible = ref(false)
 
 const apiList = [
   {
@@ -644,13 +514,6 @@ function initData () {
   } else {
     palmModel.value = availableModelsForPalm['text-bison-001']
   }
-  // proxy
-  enableProxy.value = localStorage.getItem(localStorageKey.enableProxy) === 'true'
-  proxyHost.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').host || ''
-  proxyPort.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').port || ''
-  proxyUsername.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').username || ''
-  proxyPassword.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').password || ''
-  proxyProtocol.value = JSON.parse(localStorage.getItem(localStorageKey.proxy) || '{}').protocol || 'http'
 }
 
 // common
@@ -734,30 +597,6 @@ function handlePalmTemperatureChange () {
 
 function handlePalmModelChange (val: string) {
   localStorage.setItem(localStorageKey.palmModel, val)
-}
-
-function handleEnableProxyChange () {
-  localStorage.setItem(localStorageKey.enableProxy, enableProxy.value.toString())
-}
-
-function cancelProxySetting () {
-  proxyVisible.value = false
-}
-
-function confirmProxySetting () {
-  proxyVisible.value = false
-  const proxyToSave: AxiosProxyConfig = {
-    host: proxyHost.value,
-    port: forceNumber(proxyPort.value),
-    protocol: proxyProtocol.value
-  }
-  if (proxyUsername.value && proxyPassword.value) {
-    proxyToSave.auth = {
-      username: proxyUsername.value,
-      password: proxyPassword.value
-    }
-  }
-  localStorage.setItem(localStorageKey.proxy, JSON.stringify(proxyToSave))
 }
 
 function backToHome () {

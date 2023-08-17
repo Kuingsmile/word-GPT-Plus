@@ -1,16 +1,14 @@
-import { Configuration, CreateChatCompletionRequest, OpenAIApi } from 'openai'
-import { AxiosProxyConfig } from 'axios'
+import OpenAI, { ClientOptions } from 'openai'
 import { availableModels } from '@/utils/constant'
 import { Ref } from 'vue'
 
-function setConfig (apiKey: string, basePath?: string): Configuration {
-  const config = new Configuration({ apiKey, basePath })
-  delete config.baseOptions.headers['User-Agent']
+function setConfig (apiKey: string, basePath?: string): ClientOptions {
+  const config = { apiKey, basePath, dangerouslyAllowBrowser: true }
   return config
 }
 
 async function createChatCompletionStream (
-  config: Configuration,
+  config: ClientOptions,
   messages: any[],
   result: Ref<string>,
   historyDialog: Ref<any[]>,
@@ -18,40 +16,36 @@ async function createChatCompletionStream (
   loading: Ref<boolean>,
   maxTokens?: number,
   temperature?: number,
-  model?: string,
-  proxy?: AxiosProxyConfig | false
+  model?: string
 ): Promise<void> {
-  const openai = new OpenAIApi(config)
+  const openai = new OpenAI(config)
   if (Object.keys(availableModels).includes(model ?? '')) {
     model = availableModels[model ?? '']
   }
-  const requestConfig: CreateChatCompletionRequest = {
+  const requestConfig = {
     model: model ?? 'gpt-3.5-turbo',
     messages,
     temperature: temperature ?? 0.7,
     max_tokens: maxTokens ?? 800
   }
   let response
-  let data
   try {
-    response = await openai.createChatCompletion(requestConfig, {
-      proxy: proxy ?? false
+    response = await openai.chat.completions.create(requestConfig)
+    result.value = response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
+    historyDialog.value.push({
+      role: 'assistant',
+      content: result.value
     })
-    data = response.data
-    if (response.status === 200) {
-      result.value = data.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
-      historyDialog.value.push({
-        role: 'assistant',
-        content: result.value
-      })
-    } else {
-      result.value = response.statusText?.toString() ?? 'error'
-      errorIssue.value = true
-    }
   } catch (error) {
-    result.value = String(error)
-    errorIssue.value = true
-    console.error(error)
+    if (error instanceof OpenAI.APIError) {
+      result.value = error.message
+      errorIssue.value = true
+      console.error(error.message)
+    } else {
+      result.value = String(error)
+      errorIssue.value = true
+      console.error(error)
+    }
   }
   loading.value = false
 }
