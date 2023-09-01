@@ -10,14 +10,14 @@
     "release": "bump-version"
   },
   "dependencies": {
-    "@azure/openai": "^1.0.0-beta.5",
+    "@azure/openai": "1.0.0-beta.4",
     "@element-plus/icons-vue": "^2.1.0",
     "axios": "^1.5.0",
     "chatgpt": "^5.2.5",
     "core-js": "^3.32.1",
     "dexie": "^3.2.4",
     "element-plus": "^2.3.12",
-    "openai": "^4.0.0",
+    "openai": "^4.3.1",
     "unfetch": "^5.0.0",
     "vue": "^3.3.4",
     "vue-class-component": "^8.0.0-rc.1",
