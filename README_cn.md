@@ -68,7 +68,7 @@ Google PALM2 API需要前往[Google AI](https://developers.generativeai.google/)
 **你可以将 `msq.pub` 添加到你的代理软件的规则中，或者使用自己搭建的服务。**
 
 1. 下载`manifest.xml`文件并保存到你的电脑上，例如 `C:\Users\username\Documents\WordGPT`.
-  - 下载: [release/other/manifest.xml](https://release.piclist.cn/release/other/manifest.xml)
+  - 下载: [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml)
 2. 按照下面的 [旁加载插件](#旁加载插件) 说明安装插件。
 
 ### 自己搭建服务
@@ -80,6 +80,8 @@ git clone https://github.com/Kuingsmile/Word-GPT-Plus.git
 yarn
 yarn run serve
 ```
+
+[manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml)
 
 然后，按照下面的 [旁加载插件](#旁加载插件) 说明安装插件。
 

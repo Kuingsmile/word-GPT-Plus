@@ -69,7 +69,7 @@ This service is built using Cloudflare Pages, domain name: [https://word.msq.pub
 
 1. Download the add-in `manifest.xml` file and Save it to a directory on your computer, such as `C:\Users\username\Documents\WordGPT`.
 
-  - download: [release/other/manifest.xml](https://release.piclist.cn/release/other/manifest.xml)
+  - download: [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml)
 
 2. Follow the [Sideload add-in](#sideload-add-in) instructions below to install the add-in.
 
@@ -82,6 +82,8 @@ git clone https://github.com/Kuingsmile/Word-GPT-Plus.git
 yarn
 yarn run serve
 ```
+
+[manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml)
 
 Then, follow the [Sideload add-in](#sideload-add-in) instructions below to install the add-in.
 
