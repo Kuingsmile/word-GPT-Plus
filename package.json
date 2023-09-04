@@ -18,7 +18,7 @@
     "core-js": "^3.32.1",
     "dexie": "^3.2.4",
     "element-plus": "^2.3.12",
-    "openai": "^4.3.1",
+    "openai": "^4.4.0",
     "unfetch": "^5.0.0",
     "vue": "^3.3.4",
     "vue-class-component": "^8.0.0-rc.1",

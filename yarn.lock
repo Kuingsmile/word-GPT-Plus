@@ -7031,10 +7031,10 @@ open@^8.0.2, open@^8.0.9:
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
 
-openai@^4.3.1:
-  version "4.3.1"
-  resolved "https://registry.npmjs.org/openai/-/openai-4.3.1.tgz#800dd4bfb7dc764a956042197896725f39b6a08d"
-  integrity sha512-64iI2LbJLk0Ss4Nv5IrdGFe6ALNnKlMuXoGuH525bJYxdupJfDCAtra/Jigex1z8it0U82M87tR2TMGU+HYeFQ==
+openai@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.npmjs.org/openai/-/openai-4.4.0.tgz#dbaab326eb044ddec479951b245850c482678031"
+  integrity sha512-JN0t628Kh95T0IrXl0HdBqnlJg+4Vq0Bnh55tio+dfCnyzHvMLiWyCM9m726MAJD2YkDU4/8RQB6rNbEq9ct2w==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
