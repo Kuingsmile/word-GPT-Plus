@@ -52,6 +52,7 @@
         </template>
         <el-input
           v-model="prompt"
+          autofocus
           clearable
           size="small"
           :placeholder="$t('homePromptDescription')"

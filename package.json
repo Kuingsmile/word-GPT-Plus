@@ -17,12 +17,12 @@
     "chatgpt": "^5.2.5",
     "core-js": "^3.32.2",
     "dexie": "^3.2.4",
-    "element-plus": "^2.3.12",
-    "openai": "^4.6.0",
+    "element-plus": "^2.3.14",
+    "openai": "^4.7.0",
     "unfetch": "^5.0.0",
     "vue": "^3.3.4",
     "vue-class-component": "^8.0.0-rc.1",
-    "vue-i18n": "^9.4.0",
+    "vue-i18n": "^9.4.1",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
