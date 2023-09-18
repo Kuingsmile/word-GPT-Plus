@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@picgo/bump-version": "^1.1.2",
-    "@types/office-js": "^1.0.342",
+    "@types/office-js": "^1.0.343",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
     "@typescript-eslint/parser": "^6.7.0",
     "@vue/cli-plugin-babel": "^5.0.8",
@@ -36,7 +36,7 @@
     "@vue/cli-plugin-typescript": "^5.0.8",
     "@vue/cli-service": "^5.0.8",
     "@vue/eslint-config-standard": "^8.0.1",
-    "@vue/eslint-config-typescript": "^11.0.3",
+    "@vue/eslint-config-typescript": "^12.0.0",
     "dpdm": "^3.14.0",
     "eslint": "^8.49.0",
     "eslint-plugin-vue": "^9.17.0",
