@@ -20,7 +20,7 @@
     "element-plus": "^2.4.1",
     "openai": "^4.10.0",
     "unfetch": "^5.0.0",
-    "vue": "^3.3.5",
+    "vue": "^3.3.6",
     "vue-class-component": "^8.0.0-rc.1",
     "vue-i18n": "^9.5.0",
     "vue-router": "^4.2.5"
