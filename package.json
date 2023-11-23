@@ -3,7 +3,7 @@
   "version": "0.2.7",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --port 3001",
+    "serve": "vue-cli-service serve --port 3000",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --fix",
     "cz": "git-cz",
@@ -13,9 +13,9 @@
   "dependencies": {
     "@azure/openai": "1.0.0-beta.4",
     "@element-plus/icons-vue": "^2.1.0",
-    "axios": "^1.6.1",
+    "axios": "^1.6.2",
     "chatgpt": "^5.2.5",
-    "core-js": "^3.33.2",
+    "core-js": "^3.33.3",
     "dexie": "^3.2.4",
     "element-plus": "^2.4.2",
     "openai": "^4.10.0",
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@picgo/bump-version": "^1.1.2",
-    "@types/office-js": "^1.0.357",
+    "@types/office-js": "^1.0.361",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "@vue/cli-plugin-babel": "^5.0.8",
