@@ -424,7 +424,7 @@ const palmModelList = Object.keys(availableModelsForPalm).map((key) => ({
   value: availableModelsForPalm[key]
 }))
 
-const api = ref<'official' | 'web-api' | 'azure' | 'palm'>('web-api')
+const api = ref<'official' | 'web-api' | 'azure' | 'palm'>('official')
 const currentUILanguage = ref('en')
 const replyLanguage = ref('English')
 // web API
@@ -451,10 +451,6 @@ const palmMaxTokens = ref(800)
 
 const apiList = [
   {
-    label: 'web-api',
-    value: 'web-api'
-  },
-  {
     label: 'official',
     value: 'official'
   },
@@ -476,7 +472,7 @@ onBeforeMount(() => {
 
 function initData () {
   // common
-  api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'web-api' | 'azure' || 'web-api'
+  api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'web-api' | 'azure'| 'palm' || 'official'
   currentUILanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
   // web API

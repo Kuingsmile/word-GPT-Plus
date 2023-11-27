@@ -403,7 +403,7 @@ const replyLanguageList = Object.values(languageMap).map((key) => ({
   value: key
 }))
 
-const api = ref<'web-api' | 'official' | 'azure' | 'palm'>('web-api')
+const api = ref<'web-api' | 'official' | 'azure' | 'palm'>('official')
 const apiKey = ref('')
 const accessToken = ref('')
 const azureAPIKey = ref('')
@@ -540,7 +540,7 @@ function handelPromptChange (val: string) {
 }
 
 onBeforeMount(async () => {
-  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' | 'azure' | 'palm' || 'web-api'
+  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' | 'azure' | 'palm' || 'official'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
   localLanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
   apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
