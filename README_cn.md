@@ -17,7 +17,6 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 ## 特色功能
 
 - 使用GPT API生成文本并支持选择模型
-- 支持设置access token调用chatGPT web接口（使用该方法免费，建议配合chatGPT-plus）
 - 支持OpenAI官方API和Azure OpenAI API
 - 支持Google PALM2 API
 - 内置用于翻译、总结、润色和学术写作的提示
@@ -42,8 +41,6 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 ### 账户要求
 
 官方API需要一个OpenAI api key，你可以从[https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)获取。
-
-网页API需要一个chatGPT网站的access token，你可以参考[access token](#how-to-get-access-token)获取
 
 Azure OpenAI需要首先申请资格，请前往[Azure OpenAI API申请网址](https://go.microsoft.com/fwlink/?linkid=2222006&clcid=0x409&culture=en-us&country=us)申请资格。
 
@@ -108,30 +105,9 @@ yarn run serve
 12. 享受 Word GPT Plus 的强大功能吧！
 ![image](https://user-images.githubusercontent.com/96409857/234744280-9d9f13cf-536b-4fb5-adfa-cbec262d56a2.png)
 
-## 如何填写access token或者API key
+## 如何填写API key
 
-进入Word GPT Plus后，点击主页的橙色`设置`按钮，进入设置页面，即可切换API和填写access token或者API key。
-
-## 如何获取access token
-
-### email + password 账户
-
-为了使用 ChatGPT web API，你需要一个来自 ChatGPT webapp 的 OpenAI access token。你可以使用以下任何方法，这些方法都需要一个 email 和 password 并返回一个 access token：
-
-- Node.js libs
-  - [ericlewis/openai-authenticator](https://github.com/ericlewis/openai-authenticator)
-  - [michael-dm/openai-token](https://github.com/michael-dm/openai-token)
-  - [allanoricil/chat-gpt-authenticator](https://github.com/AllanOricil/chat-gpt-authenticator)
-- Python libs
-  - [acheong08/OpenAIAuth](https://github.com/acheong08/OpenAIAuth)
-
-这些库适用于 email + password 账户（也就是说，它们不支持通过 Microsoft / Google 进行身份验证的账户）。
-
-### Microsoft / Google 账户
-
-如果你使用的是 Microsoft / Google 账户，你可以通过登录 ChatGPT webapp 并打开 `https://chat.openai.com/api/auth/session` 来手动获取 accessToken，这将返回一个包含你的 accessToken 字符串的 JSON 对象。
-
-**Access token 只有几天的有效期。**
+进入Word GPT Plus后，点击主页的橙色`设置`按钮，进入设置页面，即可切换API和填写API key。
 
 ## 贡献
 

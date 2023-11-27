@@ -17,7 +17,6 @@ Word GPT Plus is a word add-in which integrates the chatGPT model into Microsoft
 ## Features
 
 - Utilize the GPT-3.5 API to generate text and support select models
-- Support chatGPT web api using access Token, it's FREE!
 - Built-in prompts for translation, summarization, polishing, and academic writing
 - Support Azure OpenAI API
 - Support Google PALM2 API
@@ -42,8 +41,6 @@ Word GPT Plus is a word add-in which integrates the chatGPT model into Microsoft
 ### account
 
 Official API need an OpenAI api key, you can get it from [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)
-
-Web API need an access token of chatGPT website, you can get it from [access token](#how-to-get-access-token)
 
 You need to apply for qualification first, please go to [Azure OpenAI API application website](https://go.microsoft.com/fwlink/?linkid=2222006&clcid=0x409&culture=en-us&country=us) to apply for qualification.
 
@@ -110,30 +107,9 @@ You can find instructions provided by MicroSoft at the following link: [sideload
 12. Enjoy it!
 ![image](https://user-images.githubusercontent.com/96409857/234744280-9d9f13cf-536b-4fb5-adfa-cbec262d56a2.png)
 
-## How to fill in access token or API key
+## How to fill in API key
 
-After entering Word GPT Plus, click the orange `Settings` button on the homepage to enter the settings page, where you can switch APIs and fill in access tokens or API keys.
-
-## How to get access token
-
-### email + password accounts
-
-To use ChatGPT web API, you'll need an OpenAI access token from the ChatGPT webapp. To do this, you can use any of the following methods which take an email and password and return an access token:
-
-- Node.js libs
-  - [ericlewis/openai-authenticator](https://github.com/ericlewis/openai-authenticator)
-  - [michael-dm/openai-token](https://github.com/michael-dm/openai-token)
-  - [allanoricil/chat-gpt-authenticator](https://github.com/AllanOricil/chat-gpt-authenticator)
-- Python libs
-  - [acheong08/OpenAIAuth](https://github.com/acheong08/OpenAIAuth)
-
-These libraries work with email + password accounts (e.g., they do not support accounts where you auth via Microsoft / Google).
-
-### Microsoft / Google accounts
-
-Alternatively, you can manually get an accessToken by logging in to the ChatGPT webapp and then opening `https://chat.openai.com/api/auth/session`, which will return a JSON object containing your accessToken string.
-
-**Access tokens last for days.**
+After entering Word GPT Plus, click the orange `Settings` button on the homepage to enter the settings page, where you can switch APIs and fill in API keys.
 
 ## Contributing
 
