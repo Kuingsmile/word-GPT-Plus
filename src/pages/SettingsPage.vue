@@ -246,6 +246,76 @@
             />
           </el-form-item>
           <el-form-item
+            v-if="api === 'gemini'"
+          >
+            <template #label>
+              <span>
+                {{ $t('apiKey') }}
+              </span>
+            </template>
+            <el-input
+              v-model="geminiAPIKey"
+              :placeholder="$t('apiKeyDescription')"
+              size="small"
+              @blur="handleGeminiAPIKeyChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'gemini'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingTemperature') }}
+              </span>
+            </template>
+            <el-input-number
+              v-model="geminiTemperature"
+              :min="0"
+              :max="1"
+              :step="0.1"
+              size="small"
+              @change="handleGeminiTemperatureChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'gemini'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingMaxTokens') }}
+              </span>
+            </template>
+            <el-input-number
+              v-model="geminiMaxTokens"
+              :min="1"
+              :step="1"
+              size="small"
+              @change="handleGeminiMaxTokensChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'gemini'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingModel') }}
+              </span>
+            </template>
+            <el-select
+              v-model="geminiModel"
+              size="small"
+              :placeholder="$t('settingModel')"
+              @change="handleGeminiModelChange"
+            >
+              <el-option
+                v-for="item in geminiModelList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item
             v-if="api === 'palm'"
           >
             <template #label>
@@ -388,8 +458,9 @@
 <script lang="ts" setup>
 import { onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { languageMap, availableModels, localStorageKey, availableModelsForPlus, availableModelsForPalm } from '@/utils/constant'
+import { languageMap, availableModels, localStorageKey, availableModelsForPlus, availableModelsForPalm, availableModelsForGemini } from '@/utils/constant'
 import { useRouter } from 'vue-router'
+import { forceNumber } from '@/utils/common'
 
 const router = useRouter()
 
@@ -424,7 +495,12 @@ const palmModelList = Object.keys(availableModelsForPalm).map((key) => ({
   value: availableModelsForPalm[key]
 }))
 
-const api = ref<'official' | 'web-api' | 'azure' | 'palm'>('official')
+const geminiModelList = Object.keys(availableModelsForGemini).map((key) => ({
+  label: key,
+  value: availableModelsForGemini[key]
+}))
+
+const api = ref<'official' | 'web-api' | 'azure' | 'palm' | 'gemini'>('official')
 const currentUILanguage = ref('en')
 const replyLanguage = ref('English')
 // web API
@@ -448,6 +524,11 @@ const palmAPIEndpoint = ref('https://generativelanguage.googleapis.com/v1beta2')
 const palmModel = ref(availableModelsForPalm['text-bison-001'])
 const palmTemperature = ref(0.7)
 const palmMaxTokens = ref(800)
+// gemini API
+const geminiAPIKey = ref('')
+const geminiModel = ref(availableModelsForGemini['gemini-pro'])
+const geminiTemperature = ref(0.7)
+const geminiMaxTokens = ref(800)
 
 const apiList = [
   {
@@ -461,6 +542,10 @@ const apiList = [
   {
     label: 'palm',
     value: 'palm'
+  },
+  {
+    label: 'gemini',
+    value: 'gemini'
   }
 ]
 
@@ -472,7 +557,7 @@ onBeforeMount(() => {
 
 function initData () {
   // common
-  api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'web-api' | 'azure'| 'palm' || 'official'
+  api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'web-api' | 'azure'| 'palm' | 'gemini' || 'official'
   currentUILanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
   // web API
@@ -509,6 +594,18 @@ function initData () {
     palmModel.value = palmModelTemp
   } else {
     palmModel.value = availableModelsForPalm['text-bison-001']
+  }
+  // gemini API
+  geminiAPIKey.value = localStorage.getItem(localStorageKey.geminiAPIKey) || ''
+  geminiMaxTokens.value = forceNumber(localStorage.getItem(localStorageKey.geminiMaxTokens)) || 800
+  geminiTemperature.value = forceNumber(localStorage.getItem(localStorageKey.geminiTemperature)) || 0.7
+  const geminiModelTemp = localStorage.getItem(localStorageKey.geminiModel) || availableModelsForGemini['gemini-pro']
+  if (Object.keys(availableModelsForGemini).includes(geminiModelTemp)) {
+    geminiModel.value = availableModelsForGemini[geminiModelTemp]
+  } else if (Object.values(availableModelsForGemini).includes(geminiModelTemp)) {
+    geminiModel.value = geminiModelTemp
+  } else {
+    geminiModel.value = availableModelsForGemini['gemini-pro']
   }
 }
 
@@ -595,15 +692,24 @@ function handlePalmModelChange (val: string) {
   localStorage.setItem(localStorageKey.palmModel, val)
 }
 
-function backToHome () {
-  router.push('/')
+function handleGeminiAPIKeyChange () {
+  localStorage.setItem(localStorageKey.geminiAPIKey, geminiAPIKey.value)
 }
 
-function forceNumber (val: any) {
-  if (val === '') {
-    return 0
-  }
-  return isNaN(Number(val)) ? 0 : Number(val)
+function handleGeminiMaxTokensChange () {
+  localStorage.setItem(localStorageKey.geminiMaxTokens, geminiMaxTokens.value.toString())
+}
+
+function handleGeminiTemperatureChange () {
+  localStorage.setItem(localStorageKey.geminiTemperature, geminiTemperature.value.toString())
+}
+
+function handleGeminiModelChange (val: string) {
+  localStorage.setItem(localStorageKey.geminiModel, val)
+}
+
+function backToHome () {
+  router.push('/')
 }
 
 </script>

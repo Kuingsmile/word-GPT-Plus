@@ -201,7 +201,7 @@
           {{ $t('start') }}
         </el-button>
         <el-button
-          v-if="['web-api', 'azure', 'official'].includes(api)"
+          v-if="['web-api', 'azure', 'official', 'gemini'].includes(api)"
           class="api-button"
           type="success"
           size="default"
@@ -389,13 +389,13 @@
 <script lang="ts" setup>
 import { onBeforeMount, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { localStorageKey, languageMap, buildInPrompt, availableModels, availableModelsForPalm } from '@/utils/constant'
+import { localStorageKey, languageMap, buildInPrompt, availableModels, availableModelsForPalm, availableModelsForGemini } from '@/utils/constant'
 import { promptDbInstance } from '@/store/promtStore'
 import { IStringKeyMap } from '@/types'
 import { CirclePlus, Remove } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { ChatGPTUnofficialProxyAPI, ChatMessage } from 'chatgpt'
-import { checkAuth } from '@/utils/common'
+import { checkAuth, forceNumber } from '@/utils/common'
 import API from '@/api'
 
 const replyLanguageList = Object.values(languageMap).map((key) => ({
@@ -403,11 +403,12 @@ const replyLanguageList = Object.values(languageMap).map((key) => ({
   value: key
 }))
 
-const api = ref<'web-api' | 'official' | 'azure' | 'palm'>('official')
+const api = ref<'web-api' | 'official' | 'azure' | 'palm' | 'gemini'>('official')
 const apiKey = ref('')
 const accessToken = ref('')
 const azureAPIKey = ref('')
 const palmAPIKey = ref('')
+const geminiAPIKey = ref('')
 
 const localLanguage = ref('en')
 const replyLanguage = ref('English')
@@ -428,6 +429,10 @@ const palmAPIEndpoint = ref('https://generativelanguage.googleapis.com/v1beta2')
 const palmMaxTokens = ref(800)
 const palmTemperature = ref(0.7)
 const palmModel = ref('text-bison-001')
+
+const geminiMaxTokens = ref(800)
+const geminiTemperature = ref(0.7)
+const geminiModel = ref('gemini-pro')
 
 const systemPrompt = ref('')
 const systemPromptSelected = ref('')
@@ -540,16 +545,17 @@ function handelPromptChange (val: string) {
 }
 
 onBeforeMount(async () => {
-  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' | 'azure' | 'palm' || 'official'
+  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' | 'azure' | 'palm' | 'gemini' || 'official'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
   localLanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
   apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
   accessToken.value = localStorage.getItem(localStorageKey.accessToken) || ''
   azureAPIKey.value = localStorage.getItem(localStorageKey.azureAPIKey) || ''
   palmAPIKey.value = localStorage.getItem(localStorageKey.palmAPIKey) || ''
+  geminiAPIKey.value = localStorage.getItem(localStorageKey.geminiAPIKey) || ''
   webModel.value = localStorage.getItem(localStorageKey.webModel) || 'default'
-  temperature.value = Number(localStorage.getItem(localStorageKey.temperature)) || 0.7
-  maxTokens.value = Number(localStorage.getItem(localStorageKey.maxTokens)) || 800
+  temperature.value = forceNumber(localStorage.getItem(localStorageKey.temperature)) || 0.7
+  maxTokens.value = forceNumber(localStorage.getItem(localStorageKey.maxTokens)) || 800
   const modelTemp = localStorage.getItem(localStorageKey.model) || availableModels['gpt-3.5']
   if (Object.keys(availableModels).includes(modelTemp)) {
     model.value = availableModels[modelTemp]
@@ -561,11 +567,11 @@ onBeforeMount(async () => {
   basePath.value = localStorage.getItem(localStorageKey.basePath) || ''
   azureAPIEndpoint.value = localStorage.getItem(localStorageKey.azureAPIEndpoint) || ''
   azureDeploymentName.value = localStorage.getItem(localStorageKey.azureDeploymentName) || ''
-  azureMaxTokens.value = Number(localStorage.getItem(localStorageKey.azureMaxTokens)) || 800
-  azureTemperature.value = Number(localStorage.getItem(localStorageKey.azureTemperature)) || 0.7
+  azureMaxTokens.value = forceNumber(localStorage.getItem(localStorageKey.azureMaxTokens)) || 800
+  azureTemperature.value = forceNumber(localStorage.getItem(localStorageKey.azureTemperature)) || 0.7
   palmAPIEndpoint.value = localStorage.getItem(localStorageKey.palmAPIEndpoint) || 'https://generativelanguage.googleapis.com/v1beta2'
-  palmMaxTokens.value = Number(localStorage.getItem(localStorageKey.palmMaxTokens)) || 800
-  palmTemperature.value = Number(localStorage.getItem(localStorageKey.palmTemperature)) || 0.7
+  palmMaxTokens.value = forceNumber(localStorage.getItem(localStorageKey.palmMaxTokens)) || 800
+  palmTemperature.value = forceNumber(localStorage.getItem(localStorageKey.palmTemperature)) || 0.7
   const palmModelTemp = localStorage.getItem(localStorageKey.palmModel) || availableModelsForPalm['text-bison-001']
   if (Object.keys(availableModelsForPalm).includes(palmModelTemp)) {
     palmModel.value = availableModelsForPalm[palmModelTemp]
@@ -573,6 +579,16 @@ onBeforeMount(async () => {
     palmModel.value = palmModelTemp
   } else {
     palmModel.value = availableModelsForPalm['text-bison-001']
+  }
+  geminiMaxTokens.value = forceNumber(localStorage.getItem(localStorageKey.geminiMaxTokens)) || 800
+  geminiTemperature.value = forceNumber(localStorage.getItem(localStorageKey.geminiTemperature)) || 0.7
+  const geminiModelTemp = localStorage.getItem(localStorageKey.geminiModel) || availableModelsForGemini['gemini-pro']
+  if (Object.keys(availableModelsForGemini).includes(geminiModelTemp)) {
+    geminiModel.value = availableModelsForGemini[geminiModelTemp]
+  } else if (Object.values(availableModelsForGemini).includes(geminiModelTemp)) {
+    geminiModel.value = geminiModelTemp
+  } else {
+    geminiModel.value = availableModelsForGemini['gemini-pro']
   }
   insertType.value = localStorage.getItem(localStorageKey.insertType) || 'replace' as 'replace' | 'append' | 'newLine' | 'NoAction'
   systemPrompt.value = localStorage.getItem(localStorageKey.defaultSystemPrompt) || 'Act like a personal assistant.'
@@ -690,6 +706,30 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
       palmMaxTokens.value,
       palmTemperature.value
     )
+  } else if (api.value === 'gemini' && geminiAPIKey.value) {
+    historyDialog.value = [
+      {
+        role: 'user',
+        parts: systemMessage + '\n' + userMessage
+      },
+      {
+        role: 'model',
+        parts: 'Hi, what can I help you?'
+      }
+    ]
+    await API.gemini.createChatCompletionStream(
+      {
+        geminiAPIKey: geminiAPIKey.value,
+        messages: userMessage,
+        result,
+        historyDialog,
+        errorIssue,
+        loading,
+        maxTokens: geminiMaxTokens.value,
+        temperature: geminiTemperature.value,
+        geminiModel: geminiModel.value
+      }
+    )
   } else {
     ElMessage.error('Set API Key or Access Token first')
     return
@@ -710,7 +750,8 @@ function checkApiKey () {
     accessToken: accessToken.value,
     apiKey: apiKey.value,
     azureAPIKey: azureAPIKey.value,
-    palmAPIKey: palmAPIKey.value
+    palmAPIKey: palmAPIKey.value,
+    geminiAPIKey: geminiAPIKey.value
   }
   if (!checkAuth(auth)) {
     ElMessage.error('Set API Key or Access Token first')
@@ -791,6 +832,36 @@ async function continueChat () {
           loading,
           maxTokens: azureMaxTokens.value,
           temperature: azureTemperature.value
+        }
+      )
+    } catch (error) {
+      result.value = String(error)
+      errorIssue.value = true
+      console.error(error)
+    }
+  } else if (api.value === 'gemini') {
+    try {
+      historyDialog.value.push(...[
+        {
+          role: 'user',
+          parts: 'continue'
+        },
+        {
+          role: 'model',
+          parts: 'OK, I will continue to help you.'
+        }
+      ])
+      await API.gemini.createChatCompletionStream(
+        {
+          geminiAPIKey: geminiAPIKey.value,
+          messages: 'continue',
+          result,
+          historyDialog,
+          errorIssue,
+          loading,
+          maxTokens: geminiMaxTokens.value,
+          temperature: geminiTemperature.value,
+          geminiModel: geminiModel.value
         }
       )
     } catch (error) {

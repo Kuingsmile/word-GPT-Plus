@@ -20,6 +20,7 @@ Word GPT Plus is a word add-in which integrates the chatGPT model into Microsoft
 - Built-in prompts for translation, summarization, polishing, and academic writing
 - Support Azure OpenAI API
 - Support Google PALM2 API
+- Support Google Gemini Pro API
 - Support for multiple languages
 - Custom prompts can be set and saved for future use
 - Ability for users to set temperature and max tokens
@@ -45,6 +46,8 @@ Official API need an OpenAI api key, you can get it from [https://platform.opena
 You need to apply for qualification first, please go to [Azure OpenAI API application website](https://go.microsoft.com/fwlink/?linkid=2222006&clcid=0x409&culture=en-us&country=us) to apply for qualification.
 
 You need to go to [Google AI](https://developers.generativeai.google/) to apply for qualification for Google PALM2 API.
+
+Google Gemini Pro API's api key is the same as Google PALM2 API's api key, and the free version is currently limited to 60 requests per minute.
 
 ## Getting Started
 

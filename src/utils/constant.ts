@@ -72,6 +72,11 @@ export const availableModelsForPalm: IStringKeyMap = {
   'text-bison-001': 'text-bison-001'
 }
 
+// Gemini API 可用的模型
+export const availableModelsForGemini: IStringKeyMap = {
+  'gemini-pro': 'gemini-pro'
+}
+
 export enum localStorageKey {
   // common
   api = 'api',
@@ -99,6 +104,11 @@ export enum localStorageKey {
   palmMaxTokens = 'palmMaxTokens',
   palmTemperature = 'palmTemperature',
   palmModel = 'palmModel',
+  // gemini api
+  geminiAPIKey = 'geminiAPIKey',
+  geminiMaxTokens = 'geminiMaxTokens',
+  geminiTemperature = 'geminiTemperature',
+  geminiModel = 'geminiModel',
   // proxy
   enableProxy = 'enableProxy',
   proxy = 'proxy',
