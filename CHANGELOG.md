@@ -1,3 +1,17 @@
+# :tada: 0.3.0 (2023-12-14)
+
+
+### :sparkles: Features
+
+* **custom:** add support for google gemini pro api ([591b78d](https://github.com/Kuingsmile/word-GPT-Plus/commit/591b78d))
+
+
+### :pencil: Documentation
+
+* **custom:** remove support for web api ([1b4b035](https://github.com/Kuingsmile/word-GPT-Plus/commit/1b4b035))
+
+
+
 ## :tada: 0.2.6 (2023-06-18)
 
 
