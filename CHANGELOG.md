@@ -1,3 +1,12 @@
+## :tada: 0.3.1 (2024-01-15)
+
+
+### :bug: Bug Fixes
+
+* **custom:** fix forward domain bug ([34052a4](https://github.com/Kuingsmile/word-GPT-Plus/commit/34052a4)), closes [#36](https://github.com/Kuingsmile/word-GPT-Plus/issues/36)
+
+
+
 # :tada: 0.3.0 (2023-12-14)
 
 
