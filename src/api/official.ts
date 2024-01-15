@@ -3,7 +3,7 @@ import { availableModels } from '@/utils/constant'
 import { Ref } from 'vue'
 
 function setConfig (apiKey: string, basePath?: string): ClientOptions {
-  const config = { apiKey, basePath, dangerouslyAllowBrowser: true }
+  const config = { apiKey, baseURL: basePath, dangerouslyAllowBrowser: true }
   return config
 }
 
