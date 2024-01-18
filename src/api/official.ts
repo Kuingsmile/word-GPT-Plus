@@ -3,7 +3,7 @@ import { availableModels } from '@/utils/constant'
 import { Ref } from 'vue'
 
 function setConfig (apiKey: string, basePath?: string): ClientOptions {
-  const config = { apiKey, baseURL: basePath, dangerouslyAllowBrowser: true }
+  const config = { apiKey, baseURL: basePath || 'https://api.openai.com/v1', dangerouslyAllowBrowser: true }
   return config
 }
 
