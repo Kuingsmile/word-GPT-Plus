@@ -73,6 +73,8 @@ Google Gemini Pro API的api key与Google PALM2 API的api key相同，目前免�
 
 ### 自己搭建服务
 
+#### 本地运行
+
 如果你想要自己搭建服务，你需要克隆这个仓库并安装依赖项，然后运行项目。需要 Node.js 16+。
 
 ```bash
@@ -82,6 +84,17 @@ yarn run serve
 ```
 
 [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml)
+
+#### docker运行
+
+你也可以使用docker运行服务，首先docker pull镜像，然后运行容器。
+
+```bash
+docker pull kuingsmile/word-gpt-plus
+docker run -d -p 3000:80 kuingsmile/word-gpt-plus
+```
+
+manifest.xml需要修改所有的`[localhost:3000](http://localhost:3000)`为你的服务器地址。
 
 然后，按照下面的 [旁加载插件](#旁加载插件) 说明安装插件。
 

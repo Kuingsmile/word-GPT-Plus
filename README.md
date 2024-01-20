@@ -61,6 +61,8 @@ However, if you desire faster speeds and possess expertise with Node.js, self-ho
 
 ### Service hosted by me
 
+#### localhost
+
 This service is built using Cloudflare Pages, domain name: [https://word.msq.pub](https://word.msq.pub)
 
 **For China users, there maybe some network problems, please use `ping word.msq.pub` to see if you can access the domain.**
@@ -72,6 +74,19 @@ This service is built using Cloudflare Pages, domain name: [https://word.msq.pub
   - download: [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml)
 
 2. Follow the [Sideload add-in](#sideload-add-in) instructions below to install the add-in.
+
+#### docker
+
+You can also use docker to run the service, first docker pull the image, then run the container.
+
+```bash
+docker pull kuingsmile/word-gpt-plus
+docker run -d -p 3000:80 kuingsmile/word-gpt-plus
+```
+
+You need to modify all `[localhost:3000](http://localhost:3000)` in manifest.xml to your server address.
+
+Follow the [Sideload add-in](#sideload-add-in) instructions below to install the add-in.
 
 ### Self-hosted
 
