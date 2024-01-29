@@ -54,7 +54,7 @@ export const availableModels: IStringKeyMap = {
   'gpt-3.5-16k-0613': 'gpt-3.5-turbo-16k-0613',
   'text-davinci-003': 'text-davinci-003',
   gtp4: 'gpt-4',
-  'gpt-4-turbo': 'gpt-4-0125-preview',
+  'gpt-4-turbo-preview': 'gpt-4-turbo-preview',
   'gpt-4-1106-preview': 'gpt-4-1106-preview',
   'gpt4-0613': 'gpt-4-0613',
   'gpt4-32k': 'gpt-4-32k',
