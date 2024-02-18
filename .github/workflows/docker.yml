@@ -29,6 +29,7 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: kuingsmile/word-gpt-plus:latest
+        platforms: linux/amd64,linux/arm64
 
     - name: Build and Push Docker Image with Tag
       if: startsWith(github.ref, 'refs/tags/')
@@ -38,3 +39,4 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: kuingsmile/word-gpt-plus:${{ github.ref_name }}
+        platforms: linux/amd64,linux/arm64
