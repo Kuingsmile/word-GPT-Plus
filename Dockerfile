@@ -1,10 +1,13 @@
 # 第一阶段：使用Node.js 18版本构建Vue项目
-FROM node:18 as build-stage
+FROM node:18-alpine3.19 as build-stage
 WORKDIR /app
 
 # 复制项目文件并安装依赖
 COPY package.json yarn.lock ./
-RUN yarn
+RUN yarn config set network-timeout 300000
+RUN apk add g++ make py3-pip
+RUN yarn global add node-gyp
+RUN yarn install
 COPY . .
 RUN yarn run build
 
