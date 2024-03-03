@@ -139,7 +139,7 @@ export const buildInPrompt = {
   },
   academic: {
     system: (language: string) => `As an academic paper writing assistant, Reply in ${language}`,
-    user: (text: string, language: string) => `I want you to act as an professional spelling and grammer corrector and improver.
+    user: (text: string, language: string) => `I want you to act as a professional spelling and grammar corrector and improver.
     I want you to replace my simplified A0-level words and sentences with more beautiful and elegant,
     upper level ${language} words and sentences.
     Keep the meaning same, but make them more literary and improve my expression in the style of SCI papers.
@@ -151,6 +151,13 @@ export const buildInPrompt = {
     user: (text: string, language: string) => `Summarize the following text into 100 words,
     making it easy to read and comprehend. The summary should be concise, clear,
     and capture the main points of the text. Avoid using complex sentence structures or technical jargon.
+    Respond in ${language}. Please begin by editing the following text: ${text}`
+  },
+  grammar: {
+    system: (language: string) => `Act like you are an expert grammar checker. Look for mistakes and make sentences more fluent, Reply in ${language}`,
+    user: (text: string, language: string) => `Please analyze the following text for a wide range of grammatical aspects and provide corrections. Be thorough in identifying and fixing any grammatical mistakes, including checking for correct punctuation usage, ensuring proper sentence structure, enhancing readability, identifying and correcting spelling mistakes, and verifying subject-verb agreement. Your assistance in ensuring the grammatical accuracy of the text is highly appreciated. Please be thorough in your examination, and provide comprehensive corrections to enhance the overall grammatical integrity of the text.
+
+    Just reply to user input with the correct grammar, DO NOT reply to the context of the question of the user input. If the user input is grammatically correct and fluent, just reply “sounds good”.
     Respond in ${language}. Please begin by editing the following text: ${text}`
   }
 }

@@ -174,6 +174,15 @@
         type="primary"
         size="small"
         :disabled="loading"
+        @click="grammar"
+      >
+        {{ $t('grammar') }}
+      </el-button>
+      <el-button
+        class="api-button"
+        type="primary"
+        size="small"
+        :disabled="loading"
         @click="academic"
       >
         {{ $t('academic') }}
@@ -616,7 +625,7 @@ function handelInsertTypeChange (val: string) {
 async function template (taskType: keyof typeof buildInPrompt | 'custom') {
   loading.value = true
   let systemMessage
-  let userMessage
+  let userMessage = ''
   const getSeletedText = async () => {
     return Word.run(async (context) => {
       const range = context.document.getSelection()
@@ -627,8 +636,16 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
   }
   const selectedText = await getSeletedText()
   if (taskType === 'custom') {
-    systemMessage = systemPrompt.value
-    userMessage = `Reply in ${replyLanguage.value} ${prompt.value} ${selectedText}`
+    if (systemPrompt.value.includes('{language}')) {
+      systemMessage = systemPrompt.value.replace('{language}', replyLanguage.value)
+    } else {
+      systemMessage = systemPrompt.value
+    }
+    if (userMessage.includes('{text}')) {
+      userMessage = userMessage.replace('{text}', selectedText)
+    } else {
+      userMessage = `Reply in ${replyLanguage.value} ${prompt.value} ${selectedText}`
+    }
   } else {
     systemMessage = buildInPrompt[taskType].system(replyLanguage.value)
     userMessage = buildInPrompt[taskType].user(selectedText, replyLanguage.value)
@@ -778,6 +795,11 @@ function polish () {
 function academic () {
   if (!checkApiKey()) return
   template('academic')
+}
+
+function grammar () {
+  if (!checkApiKey()) return
+  template('grammar')
 }
 
 function settings () {
