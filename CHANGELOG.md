@@ -1,3 +1,12 @@
+## :tada: 0.3.4 (2024-03-03)
+
+
+### :sparkles: Features
+
+* **custom:** add grammar button and functionality ([7ba38ca](https://github.com/Kuingsmile/word-GPT-Plus/commit/7ba38ca)), closes [#47](https://github.com/Kuingsmile/word-GPT-Plus/issues/47)
+
+
+
 ## :tada: 0.3.1 (2024-01-15)
 
 
