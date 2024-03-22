@@ -78,6 +78,25 @@ export const availableModelsForGemini: IStringKeyMap = {
   'gemini-pro': 'gemini-pro'
 }
 
+// Ollama API 可用的模型
+export const availableModelsForOllama: IStringKeyMap = {
+  llama2: 'llama2',
+  mistral: 'mistral',
+  'dolphin-phi': 'dolphin-phi',
+  phi: 'phi',
+  'neural-chat': 'neural-chat',
+  'starlinh-lm': 'starlinh-lm',
+  codellama: 'codellama',
+  'llama2-uncensored': 'llama2-uncensored',
+  'llama2:13b': 'llama2:13b',
+  'llama2:70b': 'llama2:70b',
+  'orca-mini': 'orca-mini',
+  vicuna: 'vicuna',
+  llava: 'llava',
+  'gemma:2b': 'gemma:2b',
+  'gemma:7b': 'gemma:7b'
+}
+
 export enum localStorageKey {
   // common
   api = 'api',
@@ -110,6 +129,10 @@ export enum localStorageKey {
   geminiMaxTokens = 'geminiMaxTokens',
   geminiTemperature = 'geminiTemperature',
   geminiModel = 'geminiModel',
+  // ollama api
+  ollamaEndpoint = 'ollamaEndpoint',
+  ollamaModel = 'ollamaModel',
+  ollamaTemperature = 'ollamaTemperature',
   // proxy
   enableProxy = 'enableProxy',
   proxy = 'proxy',

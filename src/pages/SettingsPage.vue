@@ -90,6 +90,28 @@
             />
           </el-form-item>
           <el-form-item
+            v-if="false"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingModel') }}
+              </span>
+            </template>
+            <el-select
+              v-model="webModel"
+              size="small"
+              :placeholder="$t('settingModel')"
+              @change="handleWebModelChange"
+            >
+              <el-option
+                v-for="item in webModelList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item
             v-if="api === 'official'"
           >
             <template #label>
@@ -102,6 +124,76 @@
               :placeholder="$t('apiKeyDescription')"
               size="small"
               @blur="handleApiKeyChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'official'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingBasePath') }}
+              </span>
+            </template>
+            <el-input
+              v-model="basePath"
+              :placeholder="$t('settingBasePath')"
+              size="small"
+              @blur="handleBasePathChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'official'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingModel') }}
+              </span>
+            </template>
+            <el-select
+              v-model="model"
+              size="small"
+              :placeholder="$t('settingModel')"
+              @change="handleModelChange"
+            >
+              <el-option
+                v-for="item in modelList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'official'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingTemperature') }}
+              </span>
+            </template>
+            <el-input-number
+              v-model="temperature"
+              :min="0"
+              :max="2"
+              :step="0.1"
+              size="small"
+              @change="handleTemperatureChange"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'official'"
+          >
+            <template #label>
+              <span>
+                {{ $t('settingMaxTokens') }}
+              </span>
+            </template>
+            <el-input-number
+              v-model="maxTokens"
+              :min="1"
+              :step="1"
+              size="small"
+              @change="handleMaxTokensChange"
             />
           </el-form-item>
           <el-form-item
@@ -217,6 +309,28 @@
           >
             <template #label>
               <span>
+                {{ $t('settingModel') }}
+              </span>
+            </template>
+            <el-select
+              v-model="palmModel"
+              size="small"
+              :placeholder="$t('settingModel')"
+              @change="handlePalmModelChange"
+            >
+              <el-option
+                v-for="item in palmModelList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'palm'"
+          >
+            <template #label>
+              <span>
                 {{ $t('settingTemperature') }}
               </span>
             </template>
@@ -316,44 +430,22 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            v-if="api === 'palm'"
+            v-if="api === 'ollama'"
           >
             <template #label>
               <span>
-                {{ $t('settingModel') }}
-              </span>
-            </template>
-            <el-select
-              v-model="palmModel"
-              size="small"
-              :placeholder="$t('settingModel')"
-              @change="handlePalmModelChange"
-            >
-              <el-option
-                v-for="item in palmModelList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            v-if="api === 'official'"
-          >
-            <template #label>
-              <span>
-                {{ $t('settingBasePath') }}
+                {{ $t('settingOllamaEndpoint') }}
               </span>
             </template>
             <el-input
-              v-model="basePath"
-              :placeholder="$t('settingBasePath')"
+              v-model="ollamaEndpoint"
+              :placeholder="$t('settingOllamaEndpoint')"
               size="small"
-              @blur="handleBasePathChange"
+              @blur="handleOllamaEndpointChange"
             />
           </el-form-item>
           <el-form-item
-            v-if="api === 'official'"
+            v-if="api === 'ollama'"
           >
             <template #label>
               <span>
@@ -361,13 +453,13 @@
               </span>
             </template>
             <el-select
-              v-model="model"
+              v-model="ollamaModel"
               size="small"
               :placeholder="$t('settingModel')"
-              @change="handleModelChange"
+              @change="handleOllamaModelChange"
             >
               <el-option
-                v-for="item in modelList"
+                v-for="item in ollamaModelList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -375,29 +467,7 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            v-if="false"
-          >
-            <template #label>
-              <span>
-                {{ $t('settingModel') }}
-              </span>
-            </template>
-            <el-select
-              v-model="webModel"
-              size="small"
-              :placeholder="$t('settingModel')"
-              @change="handleWebModelChange"
-            >
-              <el-option
-                v-for="item in webModelList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            v-if="api === 'official'"
+            v-if="api === 'ollama'"
           >
             <template #label>
               <span>
@@ -405,28 +475,12 @@
               </span>
             </template>
             <el-input-number
-              v-model="temperature"
+              v-model="ollamaTemperature"
               :min="0"
-              :max="2"
+              :max="1"
               :step="0.1"
               size="small"
-              @change="handleTemperatureChange"
-            />
-          </el-form-item>
-          <el-form-item
-            v-if="api === 'official'"
-          >
-            <template #label>
-              <span>
-                {{ $t('settingMaxTokens') }}
-              </span>
-            </template>
-            <el-input-number
-              v-model="maxTokens"
-              :min="1"
-              :step="1"
-              size="small"
-              @change="handleMaxTokensChange"
+              @change="handleOllamaTemperatureChange"
             />
           </el-form-item>
           <el-form-item>
@@ -458,7 +512,7 @@
 <script lang="ts" setup>
 import { onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { languageMap, availableModels, localStorageKey, availableModelsForPlus, availableModelsForPalm, availableModelsForGemini } from '@/utils/constant'
+import { languageMap, availableModels, localStorageKey, availableModelsForPlus, availableModelsForPalm, availableModelsForGemini, availableModelsForOllama } from '@/utils/constant'
 import { useRouter } from 'vue-router'
 import { forceNumber } from '@/utils/common'
 
@@ -500,7 +554,12 @@ const geminiModelList = Object.keys(availableModelsForGemini).map((key) => ({
   value: availableModelsForGemini[key]
 }))
 
-const api = ref<'official' | 'web-api' | 'azure' | 'palm' | 'gemini'>('official')
+const ollamaModelList = Object.keys(availableModelsForOllama).map((key) => ({
+  label: key,
+  value: availableModelsForOllama[key]
+}))
+
+const api = ref<'official' | 'web-api' | 'azure' | 'palm' | 'gemini' | 'ollama'>('official')
 const currentUILanguage = ref('en')
 const replyLanguage = ref('English')
 // web API
@@ -529,6 +588,10 @@ const geminiAPIKey = ref('')
 const geminiModel = ref(availableModelsForGemini['gemini-pro'])
 const geminiTemperature = ref(0.7)
 const geminiMaxTokens = ref(800)
+// ollama API
+const ollamaEndpoint = ref('')
+const ollamaModel = ref(availableModelsForOllama.llama2)
+const ollamaTemperature = ref(0.7)
 
 const apiList = [
   {
@@ -546,6 +609,10 @@ const apiList = [
   {
     label: 'gemini',
     value: 'gemini'
+  },
+  {
+    label: 'ollama',
+    value: 'ollama'
   }
 ]
 
@@ -557,7 +624,7 @@ onBeforeMount(() => {
 
 function initData () {
   // common
-  api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'web-api' | 'azure'| 'palm' | 'gemini' || 'official'
+  api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'web-api' | 'azure'| 'palm' | 'gemini' | 'ollama' || 'official'
   currentUILanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
   // web API
@@ -607,6 +674,17 @@ function initData () {
   } else {
     geminiModel.value = availableModelsForGemini['gemini-pro']
   }
+  // ollama API
+  ollamaEndpoint.value = localStorage.getItem(localStorageKey.ollamaEndpoint) || ''
+  const ollamaModelTemp = localStorage.getItem(localStorageKey.ollamaModel) || availableModelsForOllama.llama2
+  if (Object.keys(availableModelsForOllama).includes(ollamaModelTemp)) {
+    ollamaModel.value = availableModelsForOllama[ollamaModelTemp]
+  } else if (Object.values(availableModelsForOllama).includes(ollamaModelTemp)) {
+    ollamaModel.value = ollamaModelTemp
+  } else {
+    ollamaModel.value = availableModelsForOllama.llama2
+  }
+  ollamaTemperature.value = forceNumber(localStorage.getItem(localStorageKey.ollamaTemperature)) || 0.7
 }
 
 // common
@@ -706,6 +784,18 @@ function handleGeminiTemperatureChange () {
 
 function handleGeminiModelChange (val: string) {
   localStorage.setItem(localStorageKey.geminiModel, val)
+}
+
+function handleOllamaEndpointChange () {
+  localStorage.setItem(localStorageKey.ollamaEndpoint, ollamaEndpoint.value)
+}
+
+function handleOllamaModelChange (val: string) {
+  localStorage.setItem(localStorageKey.ollamaModel, val)
+}
+
+function handleOllamaTemperatureChange () {
+  localStorage.setItem(localStorageKey.ollamaTemperature, ollamaTemperature.value.toString())
 }
 
 function backToHome () {

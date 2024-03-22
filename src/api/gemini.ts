@@ -24,7 +24,6 @@ async function createChatCompletionStream (options: ChatCompletionStreamOptions)
     const model = genAI.getGenerativeModel({
       model: options.geminiModel ?? 'gemini-pro'
     })
-    console.log('historyDialog', options.historyDialog.value)
     const chat = model.startChat({
       history: options.historyDialog.value,
       generationConfig
@@ -32,8 +31,6 @@ async function createChatCompletionStream (options: ChatCompletionStreamOptions)
     const result = await chat.sendMessage(options.messages)
     const response = await result.response
     const text = response.text()
-    console.log('text', text)
-    console.log('response', response)
     updateResultAndHistory(text, options.messages, options.result, options.historyDialog)
   } catch (error: any) {
     handleError(error, options.result, options.errorIssue)

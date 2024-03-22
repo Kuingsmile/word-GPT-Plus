@@ -210,7 +210,7 @@
           {{ $t('start') }}
         </el-button>
         <el-button
-          v-if="['web-api', 'azure', 'official', 'gemini'].includes(api)"
+          v-if="['web-api', 'azure', 'official', 'gemini', 'ollama'].includes(api)"
           class="api-button"
           type="success"
           size="default"
@@ -398,7 +398,7 @@
 <script lang="ts" setup>
 import { onBeforeMount, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { localStorageKey, languageMap, buildInPrompt, availableModels, availableModelsForPalm, availableModelsForGemini } from '@/utils/constant'
+import { localStorageKey, languageMap, buildInPrompt, availableModels, availableModelsForPalm, availableModelsForGemini, availableModelsForOllama } from '@/utils/constant'
 import { promptDbInstance } from '@/store/promtStore'
 import { IStringKeyMap } from '@/types'
 import { CirclePlus, Remove } from '@element-plus/icons-vue'
@@ -412,7 +412,7 @@ const replyLanguageList = Object.values(languageMap).map((key) => ({
   value: key
 }))
 
-const api = ref<'web-api' | 'official' | 'azure' | 'palm' | 'gemini'>('official')
+const api = ref<'web-api' | 'official' | 'azure' | 'palm' | 'gemini' | 'ollama'>('official')
 const apiKey = ref('')
 const accessToken = ref('')
 const azureAPIKey = ref('')
@@ -442,6 +442,10 @@ const palmModel = ref('text-bison-001')
 const geminiMaxTokens = ref(800)
 const geminiTemperature = ref(0.7)
 const geminiModel = ref('gemini-pro')
+
+const ollamaEndpoint = ref('')
+const ollamaModel = ref('llama2')
+const ollamaTemperature = ref(0.7)
 
 const systemPrompt = ref('')
 const systemPromptSelected = ref('')
@@ -554,7 +558,7 @@ function handelPromptChange (val: string) {
 }
 
 onBeforeMount(async () => {
-  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' | 'azure' | 'palm' | 'gemini' || 'official'
+  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' | 'azure' | 'palm' | 'gemini' | 'ollama' || 'official'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
   localLanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
   apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
@@ -599,6 +603,16 @@ onBeforeMount(async () => {
   } else {
     geminiModel.value = availableModelsForGemini['gemini-pro']
   }
+  ollamaEndpoint.value = localStorage.getItem(localStorageKey.ollamaEndpoint) || ''
+  const ollamaModelTemp = localStorage.getItem(localStorageKey.ollamaModel) || availableModelsForOllama.llama2
+  if (Object.keys(availableModelsForOllama).includes(ollamaModelTemp)) {
+    ollamaModel.value = availableModelsForOllama[ollamaModelTemp]
+  } else if (Object.values(availableModelsForOllama).includes(ollamaModelTemp)) {
+    ollamaModel.value = ollamaModelTemp
+  } else {
+    ollamaModel.value = availableModelsForOllama.llama2
+  }
+  ollamaTemperature.value = forceNumber(localStorage.getItem(localStorageKey.ollamaTemperature)) || 0.7
   insertType.value = localStorage.getItem(localStorageKey.insertType) || 'replace' as 'replace' | 'append' | 'newLine' | 'NoAction'
   systemPrompt.value = localStorage.getItem(localStorageKey.defaultSystemPrompt) || 'Act like a personal assistant.'
   await getSystemPromptList()
@@ -747,6 +761,23 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
         geminiModel: geminiModel.value
       }
     )
+  } else if (api.value === 'ollama' && ollamaEndpoint.value) {
+    historyDialog.value = [
+      {
+        role: 'user',
+        content: systemMessage + '\n' + userMessage
+      }
+    ]
+    await API.ollama.createChatCompletionStream(
+      ollamaEndpoint.value,
+      ollamaModel.value,
+      historyDialog.value,
+      result,
+      historyDialog,
+      errorIssue,
+      loading,
+      ollamaTemperature.value
+    )
   } else {
     ElMessage.error('Set API Key or Access Token first')
     return
@@ -885,6 +916,27 @@ async function continueChat () {
           temperature: geminiTemperature.value,
           geminiModel: geminiModel.value
         }
+      )
+    } catch (error) {
+      result.value = String(error)
+      errorIssue.value = true
+      console.error(error)
+    }
+  } else if (api.value === 'ollama') {
+    try {
+      historyDialog.value.push({
+        role: 'user',
+        content: 'continue'
+      })
+      await API.ollama.createChatCompletionStream(
+        ollamaEndpoint.value,
+        ollamaModel.value,
+        historyDialog.value,
+        result,
+        historyDialog,
+        errorIssue,
+        loading,
+        ollamaTemperature.value
       )
     } catch (error) {
       result.value = String(error)

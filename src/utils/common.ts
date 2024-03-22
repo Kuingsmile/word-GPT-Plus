@@ -1,5 +1,5 @@
 export interface Auth {
-  type: 'web-api' | 'official' | 'azure' | 'palm' | 'gemini';
+  type: 'web-api' | 'official' | 'azure' | 'palm' | 'gemini' | 'ollama'
   [propName: string]: any;
 }
 
@@ -10,7 +10,8 @@ export function checkAuth (auth: Auth): boolean {
       (auth.type === 'official' && !!auth.apiKey) ||
       (auth.type === 'azure' && !!auth.azureAPIKey) ||
       (auth.type === 'palm' && !!auth.palmAPIKey) ||
-      (auth.type === 'gemini' && !!auth.geminiAPIKey))
+      (auth.type === 'gemini' && !!auth.geminiAPIKey) ||
+      (auth.type === 'ollama'))
   )
 }
 
