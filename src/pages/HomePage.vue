@@ -741,11 +741,19 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
     historyDialog.value = [
       {
         role: 'user',
-        parts: systemMessage + '\n' + userMessage
+        parts: [
+          {
+            text: systemMessage + '\n' + userMessage
+          }
+        ]
       },
       {
         role: 'model',
-        parts: 'Hi, what can I help you?'
+        parts: [
+          {
+            text: 'Hi, what can I help you?'
+          }
+        ]
       }
     ]
     await API.gemini.createChatCompletionStream(
@@ -897,11 +905,19 @@ async function continueChat () {
       historyDialog.value.push(...[
         {
           role: 'user',
-          parts: 'continue'
+          parts: [
+            {
+              text: 'continue'
+            }
+          ]
         },
         {
           role: 'model',
-          parts: 'OK, I will continue to help you.'
+          parts: [
+            {
+              text: 'OK, I will continue to help you.'
+            }
+          ]
         }
       ])
       await API.gemini.createChatCompletionStream(

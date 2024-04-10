@@ -23,6 +23,9 @@ async function createChatCompletionStream (options: ChatCompletionStreamOptions)
     const genAI = new GoogleGenerativeAI(apiKey)
     const model = genAI.getGenerativeModel({
       model: options.geminiModel ?? 'gemini-pro'
+    },
+    {
+      apiVersion: 'v1beta'
     })
     const chat = model.startChat({
       history: options.historyDialog.value,
@@ -48,11 +51,19 @@ function updateResultAndHistory (
   historyDialog.value.push(...[
     {
       role: 'user',
-      parts: userText
+      parts: [
+        {
+          text: userText
+        }
+      ]
     },
     {
       role: 'model',
-      parts: text
+      parts: [
+        {
+          text
+        }
+      ]
     }])
 }
 

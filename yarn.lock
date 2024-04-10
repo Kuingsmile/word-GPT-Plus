@@ -1342,10 +1342,10 @@
   resolved "https://registry.npmjs.org/@floating-ui/utils/-/utils-0.1.1.tgz#1a5b1959a528e374e8037c4396c3e825d6cf4a83"
   integrity sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==
 
-"@google/generative-ai@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@google/generative-ai/-/generative-ai-0.1.1.tgz#ecf0cd832620527f0e35c3aecc17c058d8ba52b8"
-  integrity sha512-cbzKa8mT9YkTrT4XUuENIuvlqiJjwDgcD2Ks4L99Az9dWLgdXn8xnETEAZLOpqzoGx+1PuATZqlUnVRAeLbMgA==
+"@google/generative-ai@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@google/generative-ai/-/generative-ai-0.5.0.tgz#3495e9499a57d698a3ef3a0e590914341ec68099"
+  integrity sha512-uxfN3mROgVxb+9KrlVHIiglcWgNE86pVTS9TRkGS6hMvQoZ5TrB1TIMcW5ZYWxlRhMwtmEdJnNMUxSqM3Qp/Ag==
 
 "@hapi/hoek@^9.0.0":
   version "9.3.0"
@@ -1748,10 +1748,10 @@
   resolved "https://registry.npmjs.org/@types/normalize-package-data/-/normalize-package-data-2.4.1.tgz#d3357479a0fdfdd5907fe67e17e0a85c906e1301"
   integrity sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==
 
-"@types/office-js@^1.0.377":
-  version "1.0.377"
-  resolved "https://registry.yarnpkg.com/@types/office-js/-/office-js-1.0.377.tgz#838d0e0fc52d4f2f7911e22d6313b69ccddd7867"
-  integrity sha512-q8hB7tmTqRkxmB8voriZe7MNyrvZhtpo+BN60ZcZNyZubp0IgDg4e23HvY1KKXCECEUDi3DCIcABS09OF6mLrg==
+"@types/office-js@^1.0.380":
+  version "1.0.380"
+  resolved "https://registry.yarnpkg.com/@types/office-js/-/office-js-1.0.380.tgz#d4195eddbb78505dd896c368f41d277900f36e47"
+  integrity sha512-5YYFIkuTeYaagjo1+4S8UCPteDnSKOXQYTtcsoNI5waTdNUCorGFihFhBtCBZEuhdltHovTnJFV0/m32bOOScA==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"

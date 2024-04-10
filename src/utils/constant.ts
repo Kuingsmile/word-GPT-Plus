@@ -75,7 +75,8 @@ export const availableModelsForPalm: IStringKeyMap = {
 
 // Gemini API 可用的模型
 export const availableModelsForGemini: IStringKeyMap = {
-  'gemini-pro': 'gemini-pro'
+  'gemini-pro': 'gemini-pro',
+  'gemini-1.5-pro': 'gemini-1.5-pro-latest'
 }
 
 // Ollama API 可用的模型
