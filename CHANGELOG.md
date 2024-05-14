@@ -1,3 +1,12 @@
+## :tada: 0.4.3 (2024-05-14)
+
+
+### :sparkles: Features
+
+* **custom:** add gpt-4o ([da4f5de](https://github.com/Kuingsmile/word-GPT-Plus/commit/da4f5de))
+
+
+
 ## :tada: 0.3.4 (2024-03-03)
 
 
