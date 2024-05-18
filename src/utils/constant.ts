@@ -76,26 +76,36 @@ export const availableModelsForPalm: IStringKeyMap = {
 // Gemini API 可用的模型
 export const availableModelsForGemini: IStringKeyMap = {
   'gemini-pro': 'gemini-pro',
+  'gemini-1.5-flash': 'gemini-1.5-flash',
   'gemini-1.5-pro': 'gemini-1.5-pro-latest'
 }
 
 // Ollama API 可用的模型
 export const availableModelsForOllama: IStringKeyMap = {
+  llama3: 'llama3',
   llama2: 'llama2',
+  phi3: 'phi3',
+  wizardlm2: 'wizardlm2',
   mistral: 'mistral',
+  'llama2-uncensored': 'llama2-uncensored',
+  'llama2:13b': 'llama2:13b',
+  'llama2:70b': 'llama2:70b',
+  'gemma:2b': 'gemma:2b',
+  'gemma:7b': 'gemma:7b',
+  qwen: 'qwen',
+  codegemma: 'codegemma',
+  'command-r': 'command-r',
+  'command-r-plus': 'command-r-plus',
+  llava: 'llava',
+  codellama: 'codellama',
+  yi: 'yi',
+  codeqwen: 'codeqwen',
   'dolphin-phi': 'dolphin-phi',
   phi: 'phi',
   'neural-chat': 'neural-chat',
   'starlinh-lm': 'starlinh-lm',
-  codellama: 'codellama',
-  'llama2-uncensored': 'llama2-uncensored',
-  'llama2:13b': 'llama2:13b',
-  'llama2:70b': 'llama2:70b',
   'orca-mini': 'orca-mini',
-  vicuna: 'vicuna',
-  llava: 'llava',
-  'gemma:2b': 'gemma:2b',
-  'gemma:7b': 'gemma:7b'
+  vicuna: 'vicuna'
 }
 
 export enum localStorageKey {
