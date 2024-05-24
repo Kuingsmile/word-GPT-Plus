@@ -210,7 +210,7 @@
           {{ $t('start') }}
         </el-button>
         <el-button
-          v-if="['web-api', 'azure', 'official', 'gemini', 'ollama'].includes(api)"
+          v-if="[ 'azure', 'official', 'gemini', 'ollama'].includes(api)"
           class="api-button"
           type="success"
           size="default"
@@ -403,7 +403,6 @@ import { promptDbInstance } from '@/store/promtStore'
 import { IStringKeyMap } from '@/types'
 import { CirclePlus, Remove } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { ChatGPTUnofficialProxyAPI, ChatMessage } from 'chatgpt'
 import { checkAuth, forceNumber } from '@/utils/common'
 import API from '@/api'
 
@@ -412,41 +411,49 @@ const replyLanguageList = Object.values(languageMap).map((key) => ({
   value: key
 }))
 
-const api = ref<'web-api' | 'official' | 'azure' | 'palm' | 'gemini' | 'ollama'>('official')
+const api = ref<'official' | 'azure' | 'palm' | 'gemini' | 'ollama'>('official')
 const apiKey = ref('')
-const accessToken = ref('')
 const azureAPIKey = ref('')
 const palmAPIKey = ref('')
 const geminiAPIKey = ref('')
 
+// language
 const localLanguage = ref('en')
 const replyLanguage = ref('English')
 
-const webModel = ref('default')
-
+// official
 const temperature = ref(0.7)
 const maxTokens = ref(800)
 const model = ref('gpt-3.5-turbo')
+const customModel = ref('')
 const basePath = ref('')
 
+// azure
 const azureAPIEndpoint = ref('')
 const azureDeploymentName = ref('')
 const azureMaxTokens = ref(800)
 const azureTemperature = ref(0.7)
 
+// palm
 const palmAPIEndpoint = ref('https://generativelanguage.googleapis.com/v1beta2')
 const palmMaxTokens = ref(800)
 const palmTemperature = ref(0.7)
 const palmModel = ref('text-bison-001')
+const palmCustomModel = ref('')
 
+// gemini
 const geminiMaxTokens = ref(800)
 const geminiTemperature = ref(0.7)
 const geminiModel = ref('gemini-pro')
+const geminiCustomModel = ref('')
 
+// ollama
 const ollamaEndpoint = ref('')
 const ollamaModel = ref('llama2')
 const ollamaTemperature = ref(0.7)
+const ollamaCustomModel = ref('')
 
+// system prompt
 const systemPrompt = ref('')
 const systemPromptSelected = ref('')
 const systemPromptList = ref<IStringKeyMap[]>([])
@@ -456,6 +463,7 @@ const addSystemPromptValue = ref('')
 const removeSystemPromptVisible = ref(false)
 const removeSystemPromptValue = ref<any[]>([])
 
+// user prompt
 const prompt = ref('')
 const promptSelected = ref('')
 const promptList = ref<IStringKeyMap[]>([])
@@ -465,16 +473,16 @@ const addPromptValue = ref('')
 const removePromptVisible = ref(false)
 const removePromptValue = ref<any[]>([])
 
+// result
 const result = ref('res')
 const loading = ref(false)
 const router = useRouter()
 const historyDialog = ref<any[]>([])
-const parentMessageId = ref('')
-const conversationId = ref('')
 
 const jsonIssue = ref(false)
 const errorIssue = ref(false)
 
+// insert type
 const insertType = ref('replace')
 const insertTypeList = [
   {
@@ -558,15 +566,13 @@ function handelPromptChange (val: string) {
 }
 
 onBeforeMount(async () => {
-  api.value = localStorage.getItem(localStorageKey.api) as 'web-api' | 'official' | 'azure' | 'palm' | 'gemini' | 'ollama' || 'official'
+  api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'azure' | 'palm' | 'gemini' | 'ollama' || 'official'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
   localLanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
   apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
-  accessToken.value = localStorage.getItem(localStorageKey.accessToken) || ''
   azureAPIKey.value = localStorage.getItem(localStorageKey.azureAPIKey) || ''
   palmAPIKey.value = localStorage.getItem(localStorageKey.palmAPIKey) || ''
   geminiAPIKey.value = localStorage.getItem(localStorageKey.geminiAPIKey) || ''
-  webModel.value = localStorage.getItem(localStorageKey.webModel) || 'default'
   temperature.value = forceNumber(localStorage.getItem(localStorageKey.temperature)) || 0.7
   maxTokens.value = forceNumber(localStorage.getItem(localStorageKey.maxTokens)) || 800
   const modelTemp = localStorage.getItem(localStorageKey.model) || availableModels['gpt-3.5']
@@ -577,6 +583,7 @@ onBeforeMount(async () => {
   } else {
     model.value = availableModels['gpt-3.5']
   }
+  customModel.value = localStorage.getItem(localStorageKey.customModel) || ''
   basePath.value = localStorage.getItem(localStorageKey.basePath) || ''
   azureAPIEndpoint.value = localStorage.getItem(localStorageKey.azureAPIEndpoint) || ''
   azureDeploymentName.value = localStorage.getItem(localStorageKey.azureDeploymentName) || ''
@@ -593,6 +600,7 @@ onBeforeMount(async () => {
   } else {
     palmModel.value = availableModelsForPalm['text-bison-001']
   }
+  palmCustomModel.value = localStorage.getItem(localStorageKey.palmCustomModel) || ''
   geminiMaxTokens.value = forceNumber(localStorage.getItem(localStorageKey.geminiMaxTokens)) || 800
   geminiTemperature.value = forceNumber(localStorage.getItem(localStorageKey.geminiTemperature)) || 0.7
   const geminiModelTemp = localStorage.getItem(localStorageKey.geminiModel) || availableModelsForGemini['gemini-pro']
@@ -603,6 +611,7 @@ onBeforeMount(async () => {
   } else {
     geminiModel.value = availableModelsForGemini['gemini-pro']
   }
+  geminiCustomModel.value = localStorage.getItem(localStorageKey.geminiCustomModel) || ''
   ollamaEndpoint.value = localStorage.getItem(localStorageKey.ollamaEndpoint) || ''
   const ollamaModelTemp = localStorage.getItem(localStorageKey.ollamaModel) || availableModelsForOllama.llama2
   if (Object.keys(availableModelsForOllama).includes(ollamaModelTemp)) {
@@ -612,6 +621,7 @@ onBeforeMount(async () => {
   } else {
     ollamaModel.value = availableModelsForOllama.llama2
   }
+  ollamaCustomModel.value = localStorage.getItem(localStorageKey.ollamaCustomModel) || ''
   ollamaTemperature.value = forceNumber(localStorage.getItem(localStorageKey.ollamaTemperature)) || 0.7
   insertType.value = localStorage.getItem(localStorageKey.insertType) || 'replace' as 'replace' | 'append' | 'newLine' | 'NoAction'
   systemPrompt.value = localStorage.getItem(localStorageKey.defaultSystemPrompt) || 'Act like a personal assistant.'
@@ -685,20 +695,7 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
       loading,
       maxTokens.value,
       temperature.value,
-      model.value
-    )
-  } else if (api.value === 'web-api' && accessToken.value) {
-    const config = API.webapi.setUnofficalConfig(accessToken.value)
-    await API.webapi.createChatCompletionUnoffical(
-      config,
-      [systemMessage, userMessage],
-      parentMessageId,
-      conversationId,
-      jsonIssue,
-      errorIssue,
-      result,
-      insertType,
-      loading
+      customModel.value || model.value
     )
   } else if (api.value === 'azure' && azureAPIKey.value) {
     historyDialog.value = [
@@ -729,7 +726,7 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
     await API.palm.createChatCompletionStream(
       palmAPIKey.value,
       palmAPIEndpoint.value,
-      palmModel.value,
+      palmCustomModel.value || palmModel.value,
       `${systemMessage}\n${userMessage}`,
       result,
       errorIssue,
@@ -766,7 +763,7 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
         loading,
         maxTokens: geminiMaxTokens.value,
         temperature: geminiTemperature.value,
-        geminiModel: geminiModel.value
+        geminiModel: geminiCustomModel.value || geminiModel.value
       }
     )
   } else if (api.value === 'ollama' && ollamaEndpoint.value) {
@@ -778,7 +775,7 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
     ]
     await API.ollama.createChatCompletionStream(
       ollamaEndpoint.value,
-      ollamaModel.value,
+      ollamaCustomModel.value || ollamaModel.value,
       historyDialog.value,
       result,
       historyDialog,
@@ -803,7 +800,6 @@ async function template (taskType: keyof typeof buildInPrompt | 'custom') {
 function checkApiKey () {
   const auth = {
     type: api.value,
-    accessToken: accessToken.value,
     apiKey: apiKey.value,
     azureAPIKey: azureAPIKey.value,
     palmAPIKey: palmAPIKey.value,
@@ -853,155 +849,99 @@ function StartChat () {
 async function continueChat () {
   if (!checkApiKey()) return
   loading.value = true
-  if (api.value === 'official') {
-    historyDialog.value.push({
-      role: 'user',
-      content: 'continue'
-    })
-    try {
-      await API.official.createChatCompletionStream(
-        API.official.setConfig(apiKey.value, basePath.value),
-        historyDialog.value,
-        result,
-        historyDialog,
-        errorIssue,
-        loading,
-        maxTokens.value,
-        temperature.value,
-        model.value
-      )
-    } catch (error) {
-      result.value = String(error)
-      errorIssue.value = true
-      console.error(error)
-    }
-  } else if (api.value === 'azure') {
-    try {
-      historyDialog.value.push({
-        role: 'user',
-        content: 'continue'
-      })
-      await API.azure.createChatCompletionStream(
-        {
-          azureAPIKey: azureAPIKey.value,
-          azureAPIEndpoint: azureAPIEndpoint.value,
-          azureDeploymentName: azureDeploymentName.value,
-          messages: historyDialog.value,
-          result,
-          historyDialog,
-          errorIssue,
-          loading,
-          maxTokens: azureMaxTokens.value,
-          temperature: azureTemperature.value
-        }
-      )
-    } catch (error) {
-      result.value = String(error)
-      errorIssue.value = true
-      console.error(error)
-    }
-  } else if (api.value === 'gemini') {
-    try {
-      historyDialog.value.push(...[
-        {
+  try {
+    switch (api.value) {
+      case 'official':
+        historyDialog.value.push({
           role: 'user',
-          parts: [
-            {
-              text: 'continue'
-            }
-          ]
-        },
-        {
-          role: 'model',
-          parts: [
-            {
-              text: 'OK, I will continue to help you.'
-            }
-          ]
-        }
-      ])
-      await API.gemini.createChatCompletionStream(
-        {
-          geminiAPIKey: geminiAPIKey.value,
-          messages: 'continue',
+          content: 'continue'
+        })
+
+        await API.official.createChatCompletionStream(
+          API.official.setConfig(apiKey.value, basePath.value),
+          historyDialog.value,
           result,
           historyDialog,
           errorIssue,
           loading,
-          maxTokens: geminiMaxTokens.value,
-          temperature: geminiTemperature.value,
-          geminiModel: geminiModel.value
-        }
-      )
-    } catch (error) {
-      result.value = String(error)
-      errorIssue.value = true
-      console.error(error)
-    }
-  } else if (api.value === 'ollama') {
-    try {
-      historyDialog.value.push({
-        role: 'user',
-        content: 'continue'
-      })
-      await API.ollama.createChatCompletionStream(
-        ollamaEndpoint.value,
-        ollamaModel.value,
-        historyDialog.value,
-        result,
-        historyDialog,
-        errorIssue,
-        loading,
-        ollamaTemperature.value
-      )
-    } catch (error) {
-      result.value = String(error)
-      errorIssue.value = true
-      console.error(error)
-    }
-  } else if (api.value === 'web-api') {
-    try {
-      const config = API.webapi.setUnofficalConfig(accessToken.value)
-      const unOfficalAPI = new ChatGPTUnofficialProxyAPI(config)
-      const response = await unOfficalAPI.sendMessage(
-        'continue',
-        {
-          parentMessageId: parentMessageId.value,
-          conversationId: conversationId.value,
-          onProgress: (partialResponse: ChatMessage) => {
-            result.value = partialResponse.text
+          maxTokens.value,
+          temperature.value,
+          customModel.value || model.value
+        )
+        break
+      case 'azure':
+        historyDialog.value.push({
+          role: 'user',
+          content: 'continue'
+        })
+        await API.azure.createChatCompletionStream(
+          {
+            azureAPIKey: azureAPIKey.value,
+            azureAPIEndpoint: azureAPIEndpoint.value,
+            azureDeploymentName: azureDeploymentName.value,
+            messages: historyDialog.value,
+            result,
+            historyDialog,
+            errorIssue,
+            loading,
+            maxTokens: azureMaxTokens.value,
+            temperature: azureTemperature.value
           }
-        }
-      )
-      parentMessageId.value = response.parentMessageId ?? ''
-      conversationId.value = response.conversationId ?? ''
-      loading.value = false
-    } catch (error) {
-      console.error(error)
-      if (String(error).includes('SyntaxError') && String(error).includes('JSON')) {
-        let count = 0
-        let oldResult = ''
-        jsonIssue.value = true
-        const interval = setInterval(() => {
-          if (count > 30) {
-            clearInterval(interval)
-            jsonIssue.value = false
-            loading.value = false
-            API.common.insertResult(result, insertType)
+        )
+        break
+      case 'gemini':
+        historyDialog.value.push(...[
+          {
+            role: 'user',
+            parts: [
+              {
+                text: 'continue'
+              }
+            ]
+          },
+          {
+            role: 'model',
+            parts: [
+              {
+                text: 'OK, I will continue to help you.'
+              }
+            ]
           }
-          if (oldResult !== result.value) {
-            oldResult = result.value
-            count = 0
-          } else {
-            count++
+        ])
+        await API.gemini.createChatCompletionStream(
+          {
+            geminiAPIKey: geminiAPIKey.value,
+            messages: 'continue',
+            result,
+            historyDialog,
+            errorIssue,
+            loading,
+            maxTokens: geminiMaxTokens.value,
+            temperature: geminiTemperature.value,
+            geminiModel: geminiCustomModel.value || geminiModel.value
           }
-        }, 100)
-      } else {
-        result.value = String(error)
-        errorIssue.value = true
-        loading.value = false
-      }
+        )
+        break
+      case 'ollama':
+        historyDialog.value.push({
+          role: 'user',
+          content: 'continue'
+        })
+        await API.ollama.createChatCompletionStream(
+          ollamaEndpoint.value,
+          ollamaCustomModel.value || ollamaModel.value,
+          historyDialog.value,
+          result,
+          historyDialog,
+          errorIssue,
+          loading,
+          ollamaTemperature.value
+        )
     }
+  } catch (error) {
+    result.value = String(error)
+    errorIssue.value = true
+    console.error(error)
   }
   if (errorIssue.value === true) {
     errorIssue.value = false

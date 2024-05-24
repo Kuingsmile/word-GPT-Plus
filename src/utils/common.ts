@@ -1,13 +1,12 @@
 export interface Auth {
-  type: 'web-api' | 'official' | 'azure' | 'palm' | 'gemini' | 'ollama'
+  type: 'official' | 'azure' | 'palm' | 'gemini' | 'ollama'
   [propName: string]: any;
 }
 
 export function checkAuth (auth: Auth): boolean {
   return (
     auth &&
-    ((auth.type === 'web-api' && !!auth.accessToken) ||
-      (auth.type === 'official' && !!auth.apiKey) ||
+    ((auth.type === 'official' && !!auth.apiKey) ||
       (auth.type === 'azure' && !!auth.azureAPIKey) ||
       (auth.type === 'palm' && !!auth.palmAPIKey) ||
       (auth.type === 'gemini' && !!auth.geminiAPIKey) ||

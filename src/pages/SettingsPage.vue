@@ -74,44 +74,6 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            v-if="api === 'web-api'"
-          >
-            <template #label>
-              <span>
-                {{ $t('accessToken') }}
-              </span>
-            </template>
-            <el-input
-              v-model="accessToken"
-              :placeholder="$t('accessTokenDescription')"
-              size="small"
-              clearable
-              @blur="handleAccessTokenChange"
-            />
-          </el-form-item>
-          <el-form-item
-            v-if="false"
-          >
-            <template #label>
-              <span>
-                {{ $t('settingModel') }}
-              </span>
-            </template>
-            <el-select
-              v-model="webModel"
-              size="small"
-              :placeholder="$t('settingModel')"
-              @change="handleWebModelChange"
-            >
-              <el-option
-                v-for="item in webModelList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item
             v-if="api === 'official'"
           >
             <template #label>
@@ -162,6 +124,21 @@
                 :value="item.value"
               />
             </el-select>
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'official'"
+          >
+            <template #label>
+              <span>
+                {{ $t('inputModel') }}
+              </span>
+            </template>
+            <el-input
+              v-model="customModel"
+              :placeholder="$t('inputModelDescription')"
+              size="small"
+              @blur="handleCustomModel"
+            />
           </el-form-item>
           <el-form-item
             v-if="api === 'official'"
@@ -331,6 +308,21 @@
           >
             <template #label>
               <span>
+                {{ $t('inputModel') }}
+              </span>
+            </template>
+            <el-input
+              v-model="palmCustomModel"
+              :placeholder="$t('inputModelDescription')"
+              size="small"
+              @blur="handlePalmCustomModel"
+            />
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'palm'"
+          >
+            <template #label>
+              <span>
                 {{ $t('settingTemperature') }}
               </span>
             </template>
@@ -430,6 +422,21 @@
             </el-select>
           </el-form-item>
           <el-form-item
+            v-if="api === 'gemini'"
+          >
+            <template #label>
+              <span>
+                {{ $t('inputModel') }}
+              </span>
+            </template>
+            <el-input
+              v-model="geminiCustomModel"
+              :placeholder="$t('inputModelDescription')"
+              size="small"
+              @blur="handleGeminiCustomModel"
+            />
+          </el-form-item>
+          <el-form-item
             v-if="api === 'ollama'"
           >
             <template #label>
@@ -465,6 +472,21 @@
                 :value="item.value"
               />
             </el-select>
+          </el-form-item>
+          <el-form-item
+            v-if="api === 'ollama'"
+          >
+            <template #label>
+              <span>
+                {{ $t('inputModel') }}
+              </span>
+            </template>
+            <el-input
+              v-model="ollamaCustomModel"
+              :placeholder="$t('inputModelDescription')"
+              size="small"
+              @blur="handleOllamaCustomModel"
+            />
           </el-form-item>
           <el-form-item
             v-if="api === 'ollama'"
@@ -512,7 +534,7 @@
 <script lang="ts" setup>
 import { onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { languageMap, availableModels, localStorageKey, availableModelsForPlus, availableModelsForPalm, availableModelsForGemini, availableModelsForOllama } from '@/utils/constant'
+import { languageMap, availableModels, localStorageKey, availableModelsForPalm, availableModelsForGemini, availableModelsForOllama } from '@/utils/constant'
 import { useRouter } from 'vue-router'
 import { forceNumber } from '@/utils/common'
 
@@ -539,11 +561,6 @@ const modelList = Object.keys(availableModels).map((key) => ({
   value: availableModels[key]
 }))
 
-const webModelList = Object.keys(availableModelsForPlus).map((key) => ({
-  label: key,
-  value: availableModels[key]
-}))
-
 const palmModelList = Object.keys(availableModelsForPalm).map((key) => ({
   label: key,
   value: availableModelsForPalm[key]
@@ -559,14 +576,12 @@ const ollamaModelList = Object.keys(availableModelsForOllama).map((key) => ({
   value: availableModelsForOllama[key]
 }))
 
-const api = ref<'official' | 'web-api' | 'azure' | 'palm' | 'gemini' | 'ollama'>('official')
+const api = ref<'official' | 'azure' | 'palm' | 'gemini' | 'ollama'>('official')
 const currentUILanguage = ref('en')
 const replyLanguage = ref('English')
-// web API
-const accessToken = ref('')
-const webModel = ref('default')
 // official API
 const model = ref(availableModels['gpt-3.5'])
+const customModel = ref('')
 const apiKey = ref('')
 const temperature = ref(0.7)
 const maxTokens = ref(800)
@@ -581,17 +596,20 @@ const azureTemperature = ref(0.7)
 const palmAPIKey = ref('')
 const palmAPIEndpoint = ref('https://generativelanguage.googleapis.com/v1beta2')
 const palmModel = ref(availableModelsForPalm['text-bison-001'])
+const palmCustomModel = ref('')
 const palmTemperature = ref(0.7)
 const palmMaxTokens = ref(800)
 // gemini API
 const geminiAPIKey = ref('')
 const geminiModel = ref(availableModelsForGemini['gemini-pro'])
+const geminiCustomModel = ref('')
 const geminiTemperature = ref(0.7)
 const geminiMaxTokens = ref(800)
 // ollama API
 const ollamaEndpoint = ref('')
 const ollamaModel = ref(availableModelsForOllama.llama2)
 const ollamaTemperature = ref(0.7)
+const ollamaCustomModel = ref('')
 
 const apiList = [
   {
@@ -624,12 +642,9 @@ onBeforeMount(() => {
 
 function initData () {
   // common
-  api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'web-api' | 'azure'| 'palm' | 'gemini' | 'ollama' || 'official'
+  api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'azure'| 'palm' | 'gemini' | 'ollama' || 'official'
   currentUILanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
-  // web API
-  accessToken.value = localStorage.getItem(localStorageKey.accessToken) || ''
-  webModel.value = localStorage.getItem(localStorageKey.webModel) || 'default'
   // official API
   apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
   const modelTemp = localStorage.getItem(localStorageKey.model) || availableModels['gpt-3.5']
@@ -640,6 +655,7 @@ function initData () {
   } else {
     model.value = availableModels['gpt-3.5']
   }
+  customModel.value = localStorage.getItem(localStorageKey.customModel) || ''
   temperature.value = forceNumber(localStorage.getItem(localStorageKey.temperature)) || 0.7
   maxTokens.value = forceNumber(localStorage.getItem(localStorageKey.maxTokens)) || 800
   basePath.value = localStorage.getItem(localStorageKey.basePath) || ''
@@ -662,6 +678,7 @@ function initData () {
   } else {
     palmModel.value = availableModelsForPalm['text-bison-001']
   }
+  palmCustomModel.value = localStorage.getItem(localStorageKey.palmCustomModel) || ''
   // gemini API
   geminiAPIKey.value = localStorage.getItem(localStorageKey.geminiAPIKey) || ''
   geminiMaxTokens.value = forceNumber(localStorage.getItem(localStorageKey.geminiMaxTokens)) || 800
@@ -674,6 +691,7 @@ function initData () {
   } else {
     geminiModel.value = availableModelsForGemini['gemini-pro']
   }
+  geminiCustomModel.value = localStorage.getItem(localStorageKey.geminiCustomModel) || ''
   // ollama API
   ollamaEndpoint.value = localStorage.getItem(localStorageKey.ollamaEndpoint) || ''
   const ollamaModelTemp = localStorage.getItem(localStorageKey.ollamaModel) || availableModelsForOllama.llama2
@@ -685,6 +703,7 @@ function initData () {
     ollamaModel.value = availableModelsForOllama.llama2
   }
   ollamaTemperature.value = forceNumber(localStorage.getItem(localStorageKey.ollamaTemperature)) || 0.7
+  ollamaCustomModel.value = localStorage.getItem(localStorageKey.ollamaCustomModel) || ''
 }
 
 // common
@@ -702,20 +721,16 @@ function handleReplyLanguageChange (val: string) {
   localStorage.setItem(localStorageKey.replyLanguage, val)
 }
 
-function handleWebModelChange (val: string) {
-  localStorage.setItem(localStorageKey.webModel, val)
-}
-
 function handleModelChange (val: string) {
   localStorage.setItem(localStorageKey.model, val)
 }
 
-function handleApiKeyChange () {
-  localStorage.setItem(localStorageKey.apiKey, apiKey.value)
+function handleCustomModel () {
+  localStorage.setItem(localStorageKey.customModel, customModel.value)
 }
 
-function handleAccessTokenChange () {
-  localStorage.setItem(localStorageKey.accessToken, accessToken.value)
+function handleApiKeyChange () {
+  localStorage.setItem(localStorageKey.apiKey, apiKey.value)
 }
 
 function handleBasePathChange () {
@@ -770,6 +785,10 @@ function handlePalmModelChange (val: string) {
   localStorage.setItem(localStorageKey.palmModel, val)
 }
 
+function handlePalmCustomModel () {
+  localStorage.setItem(localStorageKey.palmCustomModel, palmCustomModel.value)
+}
+
 function handleGeminiAPIKeyChange () {
   localStorage.setItem(localStorageKey.geminiAPIKey, geminiAPIKey.value)
 }
@@ -786,6 +805,10 @@ function handleGeminiModelChange (val: string) {
   localStorage.setItem(localStorageKey.geminiModel, val)
 }
 
+function handleGeminiCustomModel () {
+  localStorage.setItem(localStorageKey.geminiCustomModel, geminiCustomModel.value)
+}
+
 function handleOllamaEndpointChange () {
   localStorage.setItem(localStorageKey.ollamaEndpoint, ollamaEndpoint.value)
 }
@@ -796,6 +819,10 @@ function handleOllamaModelChange (val: string) {
 
 function handleOllamaTemperatureChange () {
   localStorage.setItem(localStorageKey.ollamaTemperature, ollamaTemperature.value.toString())
+}
+
+function handleOllamaCustomModel () {
+  localStorage.setItem(localStorageKey.ollamaCustomModel, ollamaCustomModel.value)
 }
 
 function backToHome () {

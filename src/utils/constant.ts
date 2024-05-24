@@ -45,7 +45,7 @@ export const languageMap: IStringKeyMap = {
   ur: 'اردو'
 }
 
-// Openai API 可用的模型
+// official API 可用的模型
 export const availableModels: IStringKeyMap = {
   'gpt-4o': 'gpt-4o',
   'gpt-3.5': 'gpt-3.5-turbo',
@@ -59,13 +59,6 @@ export const availableModels: IStringKeyMap = {
   'gpt4-0613': 'gpt-4-0613',
   'gpt4-32k': 'gpt-4-32k',
   'gpt4-32k-0613': 'gpt-4-32k-0613'
-}
-
-// Web API 可用的模型
-export const availableModelsForPlus: IStringKeyMap = {
-  default: 'text-davinci-002-render-sha',
-  'legacy(plus)': 'model=text-davinci-002-render-paid',
-  'gpt4(plus)': 'gpt4'
 }
 
 // palm api 可用的模型
@@ -114,12 +107,10 @@ export enum localStorageKey {
   localLanguage = 'localLanguage',
   replyLanguage = 'replyLanguage',
   insertType = 'insertType',
-  // web api
-  webModel = 'webModel',
-  accessToken = 'accessToken',
   // official api
   apiKey = 'apiKey',
   model = 'model',
+  customModel = 'customModel',
   temperature = 'temperature',
   maxTokens = 'maxTokens',
   basePath = 'basePath',
@@ -135,15 +126,18 @@ export enum localStorageKey {
   palmMaxTokens = 'palmMaxTokens',
   palmTemperature = 'palmTemperature',
   palmModel = 'palmModel',
+  palmCustomModel = 'palmCustomModel',
   // gemini api
   geminiAPIKey = 'geminiAPIKey',
   geminiMaxTokens = 'geminiMaxTokens',
   geminiTemperature = 'geminiTemperature',
   geminiModel = 'geminiModel',
+  geminiCustomModel = 'geminiCustomModel',
   // ollama api
   ollamaEndpoint = 'ollamaEndpoint',
   ollamaModel = 'ollamaModel',
   ollamaTemperature = 'ollamaTemperature',
+  ollamaCustomModel = 'ollamaCustomModel',
   // proxy
   enableProxy = 'enableProxy',
   proxy = 'proxy',
