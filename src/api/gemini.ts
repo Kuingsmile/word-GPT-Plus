@@ -13,7 +13,7 @@ interface ChatCompletionStreamOptions {
   geminiModel?: string
 }
 
-async function createChatCompletionStream (options: ChatCompletionStreamOptions): Promise<void> {
+async function createChatCompletionStream(options: ChatCompletionStreamOptions): Promise<void> {
   const apiKey = options.geminiAPIKey
   const generationConfig = {
     maxOutputTokens: options.maxTokens ?? 800,
@@ -21,12 +21,14 @@ async function createChatCompletionStream (options: ChatCompletionStreamOptions)
   }
   try {
     const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({
-      model: options.geminiModel ?? 'gemini-pro'
-    },
-    {
-      apiVersion: 'v1beta'
-    })
+    const model = genAI.getGenerativeModel(
+      {
+        model: options.geminiModel ?? 'gemini-pro'
+      },
+      {
+        apiVersion: 'v1beta'
+      }
+    )
     const chat = model.startChat({
       history: options.historyDialog.value,
       generationConfig
@@ -41,33 +43,31 @@ async function createChatCompletionStream (options: ChatCompletionStreamOptions)
   options.loading.value = false
 }
 
-function updateResultAndHistory (
-  text: string,
-  userText: string,
-  result: Ref<string>,
-  historyDialog: Ref<any[]>
-): void {
+function updateResultAndHistory(text: string, userText: string, result: Ref<string>, historyDialog: Ref<any[]>): void {
   result.value = text
-  historyDialog.value.push(...[
-    {
-      role: 'user',
-      parts: [
-        {
-          text: userText
-        }
-      ]
-    },
-    {
-      role: 'model',
-      parts: [
-        {
-          text
-        }
-      ]
-    }])
+  historyDialog.value.push(
+    ...[
+      {
+        role: 'user',
+        parts: [
+          {
+            text: userText
+          }
+        ]
+      },
+      {
+        role: 'model',
+        parts: [
+          {
+            text
+          }
+        ]
+      }
+    ]
+  )
 }
 
-function handleError (error: Error, result: Ref<string>, errorIssue: Ref<boolean>): void {
+function handleError(error: Error, result: Ref<string>, errorIssue: Ref<boolean>): void {
   result.value = String(error)
   errorIssue.value = true
   console.error(error)

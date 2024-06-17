@@ -10,7 +10,7 @@ window.Office.onReady(() => {
   const debounce = (fn: { apply: (arg0: any, arg1: IArguments) => void }, delay: number | undefined) => {
     let timer: any = null
     return function () {
-      // @ts-ignore
+      // @ts-expect-error ts-migrate(2538) FIXME: Type 'this' cannot be used as an index type.
       const context = this
       // eslint-disable-next-line prefer-rest-params
       const args = arguments as IArguments
@@ -23,7 +23,7 @@ window.Office.onReady(() => {
 
   const _ResizeObserver = window.ResizeObserver
   window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
-    constructor (callback: ResizeObserverCallback) {
+    constructor(callback: ResizeObserverCallback) {
       callback = debounce(callback, 16)
       super(callback)
     }

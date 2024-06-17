@@ -2,17 +2,17 @@ import Dexie, { Table } from 'dexie'
 import { IStringKeyMap } from '@/types'
 
 /*
-  * create a database for prompt and system
-  *database name: prompt
-  *structure:
-  * - table: prompt, system
-  * - key: string of prompt name
-  * - value: prompt object
-  * - primaryKey: key
-*/
+ * create a database for prompt and system
+ *database name: prompt
+ *structure:
+ * - table: prompt, system
+ * - key: string of prompt name
+ * - value: prompt object
+ * - primaryKey: key
+ */
 
 export interface IPrompt {
-  key: string,
+  key: string
   value: string
 }
 
@@ -20,7 +20,7 @@ export class PromptDb extends Dexie {
   userPrompt: Table<IPrompt, string>
   systemPrompt: Table<IPrompt, string>
 
-  constructor () {
+  constructor() {
     super('promptDb')
     const tableNames = ['userPrompt', 'systemPrompt']
     const tableNamesMap = tableNames.reduce((acc, cur) => {

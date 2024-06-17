@@ -14,16 +14,11 @@ interface ChatCompletionStreamOptions {
   temperature?: number
 }
 
-async function createChatCompletionStream (options: ChatCompletionStreamOptions): Promise<void> {
+async function createChatCompletionStream(options: ChatCompletionStreamOptions): Promise<void> {
   const client = createOpenAIClient(options.azureAPIKey, options.azureAPIEndpoint)
   const requestConfig: GetChatCompletionsOptions = createRequestConfig(options.maxTokens, options.temperature)
   try {
-    const response = await getChatCompletions(
-      client,
-      options.azureDeploymentName,
-      options.messages,
-      requestConfig
-    )
+    const response = await getChatCompletions(client, options.azureDeploymentName, options.messages, requestConfig)
     updateResultAndHistory(response, options.result, options.historyDialog)
   } catch (error: any) {
     handleError(error, options.result, options.errorIssue)
@@ -31,11 +26,11 @@ async function createChatCompletionStream (options: ChatCompletionStreamOptions)
   options.loading.value = false
 }
 
-function createOpenAIClient (apiKey: string, apiEndpoint: string): OpenAIClient {
+function createOpenAIClient(apiKey: string, apiEndpoint: string): OpenAIClient {
   return new OpenAIClient(apiEndpoint, new AzureKeyCredential(apiKey))
 }
 
-function createRequestConfig (maxTokens?: number, temperature?: number): GetChatCompletionsOptions {
+function createRequestConfig(maxTokens?: number, temperature?: number): GetChatCompletionsOptions {
   return {
     maxTokens: maxTokens ?? 800,
     temperature: temperature ?? 0.7,
@@ -43,20 +38,16 @@ function createRequestConfig (maxTokens?: number, temperature?: number): GetChat
   }
 }
 
-async function getChatCompletions (
+async function getChatCompletions(
   client: OpenAIClient,
   deploymentName: string,
   messages: any[],
   config: GetChatCompletionsOptions
 ): Promise<ChatCompletions> {
-  return await client.getChatCompletions(deploymentName, messages, config) as ChatCompletions
+  return (await client.getChatCompletions(deploymentName, messages, config)) as ChatCompletions
 }
 
-function updateResultAndHistory (
-  response: ChatCompletions,
-  result: Ref<string>,
-  historyDialog: Ref<any[]>
-): void {
+function updateResultAndHistory(response: ChatCompletions, result: Ref<string>, historyDialog: Ref<any[]>): void {
   const content = response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
   result.value = content
   historyDialog.value.push({
@@ -65,7 +56,7 @@ function updateResultAndHistory (
   })
 }
 
-function handleError (error: Error, result: Ref<string>, errorIssue: Ref<boolean>): void {
+function handleError(error: Error, result: Ref<string>, errorIssue: Ref<boolean>): void {
   result.value = String(error)
   errorIssue.value = true
   console.error(error)

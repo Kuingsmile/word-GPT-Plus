@@ -7,7 +7,8 @@ module.exports = {
   extends: [
     'plugin:vue/vue3-recommended',
     '@vue/standard',
-    '@vue/typescript'
+    '@vue/typescript/recommended',
+    '@vue/eslint-config-prettier'
   ],
   plugins: ['@typescript-eslint'],
   rules: {
@@ -17,8 +18,17 @@ module.exports = {
     'no-async-promise-executor': 'off',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
-    '@typescript-eslint/indent': ['error', 2],
-    'vue/no-v-html': 'off'
+    '@typescript-eslint/indent': 'off',
+    '@typescript-eslint/no-this-alias': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    'vue/no-v-html': 'off',
+    'prettier/prettier': [
+      'error',
+      {},
+      {
+        usePrettierrc: true
+      }
+    ]
   },
   parserOptions: {
     parser: '@typescript-eslint/parser'

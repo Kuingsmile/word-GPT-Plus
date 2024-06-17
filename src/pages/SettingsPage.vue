@@ -1,38 +1,15 @@
 <template>
   <div id="setting">
-    <el-row
-      class="view-title"
-      align="middle"
-      justify="center"
-      style="font-size: 20px;color: black;"
-    >
+    <el-row class="view-title" align="middle" justify="center" style="font-size: 20px; color: black">
       {{ $t('settings') }}
     </el-row>
-    <el-row
-      class="setting-list"
-      style="margin-top: 20px;"
-    >
-      <el-col
-        :span="20"
-        :offset="2"
-      />
-      <el-row
-        style="width: 100%;display: flex;justify-content: center;align-items: center;flex-direction: column;"
-      >
-        <el-button
-          type="primary"
-          round
-          plain
-          style="margin-bottom: 5px;width: 100%;"
-          @click="backToHome"
-        >
+    <el-row class="setting-list" style="margin-top: 20px">
+      <el-col :span="20" :offset="2" />
+      <el-row style="width: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column">
+        <el-button type="primary" round plain style="margin-bottom: 5px; width: 100%" @click="backToHome">
           {{ $t('backToHome') }}
         </el-button>
-        <el-form
-          label-position="left"
-          size="default"
-          label-width="50%"
-        >
+        <el-form label-position="left" size="default" label-width="50%">
           <el-form-item>
             <template #label>
               <span>
@@ -45,12 +22,7 @@
               :placeholder="$t('settingChooseLanguage')"
               @change="handleLocalLanguageChange"
             >
-              <el-option
-                v-for="item in languageList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in languageList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -59,38 +31,19 @@
                 {{ $t('chooseAPI') }}
               </span>
             </template>
-            <el-select
-              v-model="api"
-              size="small"
-              :placeholder="$t('chooseAPIDescription')"
-              @change="handleApiChange"
-            >
-              <el-option
-                v-for="item in apiList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+            <el-select v-model="api" size="small" :placeholder="$t('chooseAPIDescription')" @change="handleApiChange">
+              <el-option v-for="item in apiList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item
-            v-if="api === 'official'"
-          >
+          <el-form-item v-if="api === 'official'">
             <template #label>
               <span>
                 {{ $t('apiKey') }}
               </span>
             </template>
-            <el-input
-              v-model="apiKey"
-              :placeholder="$t('apiKeyDescription')"
-              size="small"
-              @blur="handleApiKeyChange"
-            />
+            <el-input v-model="apiKey" :placeholder="$t('apiKeyDescription')" size="small" @blur="handleApiKeyChange" />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'official'"
-          >
+          <el-form-item v-if="api === 'official'">
             <template #label>
               <span>
                 {{ $t('settingBasePath') }}
@@ -103,31 +56,17 @@
               @blur="handleBasePathChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'official'"
-          >
+          <el-form-item v-if="api === 'official'">
             <template #label>
               <span>
                 {{ $t('settingModel') }}
               </span>
             </template>
-            <el-select
-              v-model="model"
-              size="small"
-              :placeholder="$t('settingModel')"
-              @change="handleModelChange"
-            >
-              <el-option
-                v-for="item in modelList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+            <el-select v-model="model" size="small" :placeholder="$t('settingModel')" @change="handleModelChange">
+              <el-option v-for="item in modelList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item
-            v-if="api === 'official'"
-          >
+          <el-form-item v-if="api === 'official'">
             <template #label>
               <span>
                 {{ $t('inputModel') }}
@@ -140,9 +79,7 @@
               @blur="handleCustomModel"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'official'"
-          >
+          <el-form-item v-if="api === 'official'">
             <template #label>
               <span>
                 {{ $t('settingTemperature') }}
@@ -157,25 +94,15 @@
               @change="handleTemperatureChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'official'"
-          >
+          <el-form-item v-if="api === 'official'">
             <template #label>
               <span>
                 {{ $t('settingMaxTokens') }}
               </span>
             </template>
-            <el-input-number
-              v-model="maxTokens"
-              :min="1"
-              :step="1"
-              size="small"
-              @change="handleMaxTokensChange"
-            />
+            <el-input-number v-model="maxTokens" :min="1" :step="1" size="small" @change="handleMaxTokensChange" />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'azure'"
-          >
+          <el-form-item v-if="api === 'azure'">
             <template #label>
               <span>
                 {{ $t('apiKey') }}
@@ -188,9 +115,7 @@
               @blur="handleAzureAPIKeyChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'azure'"
-          >
+          <el-form-item v-if="api === 'azure'">
             <template #label>
               <span>
                 {{ $t('settingAzureEndpoint') }}
@@ -203,9 +128,7 @@
               @blur="handleAzureAPIEndpointChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'azure'"
-          >
+          <el-form-item v-if="api === 'azure'">
             <template #label>
               <span>
                 {{ $t('settingAzureDeploymentName') }}
@@ -218,9 +141,7 @@
               @blur="handleAzureDeploymentNameChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'azure'"
-          >
+          <el-form-item v-if="api === 'azure'">
             <template #label>
               <span>
                 {{ $t('settingTemperature') }}
@@ -235,9 +156,7 @@
               @change="handleAzureTemperatureChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'azure'"
-          >
+          <el-form-item v-if="api === 'azure'">
             <template #label>
               <span>
                 {{ $t('settingMaxTokens') }}
@@ -251,9 +170,7 @@
               @change="handleAzureMaxTokensChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'palm'"
-          >
+          <el-form-item v-if="api === 'palm'">
             <template #label>
               <span>
                 {{ $t('apiKey') }}
@@ -266,9 +183,7 @@
               @blur="handlePalmAPIKeyChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'palm'"
-          >
+          <el-form-item v-if="api === 'palm'">
             <template #label>
               <span>
                 {{ $t('settingPalmEndpoint') }}
@@ -281,9 +196,7 @@
               @blur="handlePalmAPIEndpointChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'palm'"
-          >
+          <el-form-item v-if="api === 'palm'">
             <template #label>
               <span>
                 {{ $t('settingModel') }}
@@ -295,17 +208,10 @@
               :placeholder="$t('settingModel')"
               @change="handlePalmModelChange"
             >
-              <el-option
-                v-for="item in palmModelList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in palmModelList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item
-            v-if="api === 'palm'"
-          >
+          <el-form-item v-if="api === 'palm'">
             <template #label>
               <span>
                 {{ $t('inputModel') }}
@@ -318,9 +224,7 @@
               @blur="handlePalmCustomModel"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'palm'"
-          >
+          <el-form-item v-if="api === 'palm'">
             <template #label>
               <span>
                 {{ $t('settingTemperature') }}
@@ -335,9 +239,7 @@
               @change="handlePalmTemperatureChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'palm'"
-          >
+          <el-form-item v-if="api === 'palm'">
             <template #label>
               <span>
                 {{ $t('settingMaxTokens') }}
@@ -351,9 +253,7 @@
               @change="handlePalmMaxTokensChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'gemini'"
-          >
+          <el-form-item v-if="api === 'gemini'">
             <template #label>
               <span>
                 {{ $t('apiKey') }}
@@ -366,9 +266,7 @@
               @blur="handleGeminiAPIKeyChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'gemini'"
-          >
+          <el-form-item v-if="api === 'gemini'">
             <template #label>
               <span>
                 {{ $t('settingTemperature') }}
@@ -383,9 +281,7 @@
               @change="handleGeminiTemperatureChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'gemini'"
-          >
+          <el-form-item v-if="api === 'gemini'">
             <template #label>
               <span>
                 {{ $t('settingMaxTokens') }}
@@ -399,9 +295,7 @@
               @change="handleGeminiMaxTokensChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'gemini'"
-          >
+          <el-form-item v-if="api === 'gemini'">
             <template #label>
               <span>
                 {{ $t('settingModel') }}
@@ -413,17 +307,10 @@
               :placeholder="$t('settingModel')"
               @change="handleGeminiModelChange"
             >
-              <el-option
-                v-for="item in geminiModelList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in geminiModelList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item
-            v-if="api === 'gemini'"
-          >
+          <el-form-item v-if="api === 'gemini'">
             <template #label>
               <span>
                 {{ $t('inputModel') }}
@@ -436,9 +323,7 @@
               @blur="handleGeminiCustomModel"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'ollama'"
-          >
+          <el-form-item v-if="api === 'ollama'">
             <template #label>
               <span>
                 {{ $t('settingOllamaEndpoint') }}
@@ -451,9 +336,7 @@
               @blur="handleOllamaEndpointChange"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'ollama'"
-          >
+          <el-form-item v-if="api === 'ollama'">
             <template #label>
               <span>
                 {{ $t('settingModel') }}
@@ -465,17 +348,10 @@
               :placeholder="$t('settingModel')"
               @change="handleOllamaModelChange"
             >
-              <el-option
-                v-for="item in ollamaModelList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in ollamaModelList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item
-            v-if="api === 'ollama'"
-          >
+          <el-form-item v-if="api === 'ollama'">
             <template #label>
               <span>
                 {{ $t('inputModel') }}
@@ -488,9 +364,7 @@
               @blur="handleOllamaCustomModel"
             />
           </el-form-item>
-          <el-form-item
-            v-if="api === 'ollama'"
-          >
+          <el-form-item v-if="api === 'ollama'">
             <template #label>
               <span>
                 {{ $t('settingTemperature') }}
@@ -517,12 +391,7 @@
               :placeholder="$t('settingReplyLanguage')"
               @change="handleReplyLanguageChange"
             >
-              <el-option
-                v-for="item in replyLanguageList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in replyLanguageList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
         </el-form>
@@ -534,7 +403,14 @@
 <script lang="ts" setup>
 import { onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { languageMap, availableModels, localStorageKey, availableModelsForPalm, availableModelsForGemini, availableModelsForOllama } from '@/utils/constant'
+import {
+  languageMap,
+  availableModels,
+  localStorageKey,
+  availableModelsForPalm,
+  availableModelsForGemini,
+  availableModelsForOllama
+} from '@/utils/constant'
 import { useRouter } from 'vue-router'
 import { forceNumber } from '@/utils/common'
 
@@ -551,27 +427,27 @@ const languageList = [
   }
 ]
 
-const replyLanguageList = Object.values(languageMap).map((key) => ({
+const replyLanguageList = Object.values(languageMap).map(key => ({
   label: key,
   value: key
 }))
 
-const modelList = Object.keys(availableModels).map((key) => ({
+const modelList = Object.keys(availableModels).map(key => ({
   label: availableModels[key],
   value: availableModels[key]
 }))
 
-const palmModelList = Object.keys(availableModelsForPalm).map((key) => ({
+const palmModelList = Object.keys(availableModelsForPalm).map(key => ({
   label: key,
   value: availableModelsForPalm[key]
 }))
 
-const geminiModelList = Object.keys(availableModelsForGemini).map((key) => ({
+const geminiModelList = Object.keys(availableModelsForGemini).map(key => ({
   label: key,
   value: availableModelsForGemini[key]
 }))
 
-const ollamaModelList = Object.keys(availableModelsForOllama).map((key) => ({
+const ollamaModelList = Object.keys(availableModelsForOllama).map(key => ({
   label: key,
   value: availableModelsForOllama[key]
 }))
@@ -640,9 +516,10 @@ onBeforeMount(() => {
   initData()
 })
 
-function initData () {
+function initData() {
   // common
-  api.value = localStorage.getItem(localStorageKey.api) as 'official' | 'azure'| 'palm' | 'gemini' | 'ollama' || 'official'
+  api.value =
+    (localStorage.getItem(localStorageKey.api) as 'official' | 'azure' | 'palm' | 'gemini' | 'ollama') || 'official'
   currentUILanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
   replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
   // official API
@@ -667,7 +544,8 @@ function initData () {
   azureTemperature.value = forceNumber(localStorage.getItem(localStorageKey.azureTemperature)) || 0.7
   // palm API
   palmAPIKey.value = localStorage.getItem(localStorageKey.palmAPIKey) || ''
-  palmAPIEndpoint.value = localStorage.getItem(localStorageKey.palmAPIEndpoint) || 'https://generativelanguage.googleapis.com/v1beta2'
+  palmAPIEndpoint.value =
+    localStorage.getItem(localStorageKey.palmAPIEndpoint) || 'https://generativelanguage.googleapis.com/v1beta2'
   palmMaxTokens.value = forceNumber(localStorage.getItem(localStorageKey.palmMaxTokens)) || 800
   palmTemperature.value = forceNumber(localStorage.getItem(localStorageKey.palmTemperature)) || 0.7
   const palmModelTemp = localStorage.getItem(localStorageKey.palmModel) || availableModelsForPalm['text-bison-001']
@@ -708,130 +586,129 @@ function initData () {
 
 // common
 
-function handleApiChange (val: string) {
+function handleApiChange(val: string) {
   localStorage.setItem(localStorageKey.api, val)
 }
 
-function handleLocalLanguageChange (val: string) {
+function handleLocalLanguageChange(val: string) {
   locale.value = val
   localStorage.setItem(localStorageKey.localLanguage, val)
 }
 
-function handleReplyLanguageChange (val: string) {
+function handleReplyLanguageChange(val: string) {
   localStorage.setItem(localStorageKey.replyLanguage, val)
 }
 
-function handleModelChange (val: string) {
+function handleModelChange(val: string) {
   localStorage.setItem(localStorageKey.model, val)
 }
 
-function handleCustomModel () {
+function handleCustomModel() {
   localStorage.setItem(localStorageKey.customModel, customModel.value)
 }
 
-function handleApiKeyChange () {
+function handleApiKeyChange() {
   localStorage.setItem(localStorageKey.apiKey, apiKey.value)
 }
 
-function handleBasePathChange () {
+function handleBasePathChange() {
   localStorage.setItem(localStorageKey.basePath, basePath.value)
 }
 
-function handleTemperatureChange () {
+function handleTemperatureChange() {
   localStorage.setItem(localStorageKey.temperature, temperature.value.toString())
 }
 
-function handleMaxTokensChange () {
+function handleMaxTokensChange() {
   localStorage.setItem(localStorageKey.maxTokens, maxTokens.value.toString())
 }
 
-function handleAzureAPIKeyChange () {
+function handleAzureAPIKeyChange() {
   localStorage.setItem(localStorageKey.azureAPIKey, azureAPIKey.value)
 }
 
-function handleAzureAPIEndpointChange () {
+function handleAzureAPIEndpointChange() {
   localStorage.setItem(localStorageKey.azureAPIEndpoint, azureAPIEndpoint.value)
 }
 
-function handleAzureDeploymentNameChange () {
+function handleAzureDeploymentNameChange() {
   localStorage.setItem(localStorageKey.azureDeploymentName, azureDeploymentName.value)
 }
 
-function handleAzureMaxTokensChange () {
+function handleAzureMaxTokensChange() {
   localStorage.setItem(localStorageKey.azureMaxTokens, azureMaxTokens.value.toString())
 }
 
-function handleAzureTemperatureChange () {
+function handleAzureTemperatureChange() {
   localStorage.setItem(localStorageKey.azureTemperature, azureTemperature.value.toString())
 }
 
-function handlePalmAPIKeyChange () {
+function handlePalmAPIKeyChange() {
   localStorage.setItem(localStorageKey.palmAPIKey, palmAPIKey.value)
 }
 
-function handlePalmAPIEndpointChange () {
+function handlePalmAPIEndpointChange() {
   localStorage.setItem(localStorageKey.palmAPIEndpoint, palmAPIEndpoint.value)
 }
 
-function handlePalmMaxTokensChange () {
+function handlePalmMaxTokensChange() {
   localStorage.setItem(localStorageKey.palmMaxTokens, palmMaxTokens.value.toString())
 }
 
-function handlePalmTemperatureChange () {
+function handlePalmTemperatureChange() {
   localStorage.setItem(localStorageKey.palmTemperature, palmTemperature.value.toString())
 }
 
-function handlePalmModelChange (val: string) {
+function handlePalmModelChange(val: string) {
   localStorage.setItem(localStorageKey.palmModel, val)
 }
 
-function handlePalmCustomModel () {
+function handlePalmCustomModel() {
   localStorage.setItem(localStorageKey.palmCustomModel, palmCustomModel.value)
 }
 
-function handleGeminiAPIKeyChange () {
+function handleGeminiAPIKeyChange() {
   localStorage.setItem(localStorageKey.geminiAPIKey, geminiAPIKey.value)
 }
 
-function handleGeminiMaxTokensChange () {
+function handleGeminiMaxTokensChange() {
   localStorage.setItem(localStorageKey.geminiMaxTokens, geminiMaxTokens.value.toString())
 }
 
-function handleGeminiTemperatureChange () {
+function handleGeminiTemperatureChange() {
   localStorage.setItem(localStorageKey.geminiTemperature, geminiTemperature.value.toString())
 }
 
-function handleGeminiModelChange (val: string) {
+function handleGeminiModelChange(val: string) {
   localStorage.setItem(localStorageKey.geminiModel, val)
 }
 
-function handleGeminiCustomModel () {
+function handleGeminiCustomModel() {
   localStorage.setItem(localStorageKey.geminiCustomModel, geminiCustomModel.value)
 }
 
-function handleOllamaEndpointChange () {
+function handleOllamaEndpointChange() {
   localStorage.setItem(localStorageKey.ollamaEndpoint, ollamaEndpoint.value)
 }
 
-function handleOllamaModelChange (val: string) {
+function handleOllamaModelChange(val: string) {
   localStorage.setItem(localStorageKey.ollamaModel, val)
 }
 
-function handleOllamaTemperatureChange () {
+function handleOllamaTemperatureChange() {
   localStorage.setItem(localStorageKey.ollamaTemperature, ollamaTemperature.value.toString())
 }
 
-function handleOllamaCustomModel () {
+function handleOllamaCustomModel() {
   localStorage.setItem(localStorageKey.ollamaCustomModel, ollamaCustomModel.value)
 }
 
-function backToHome () {
+function backToHome() {
   router.push('/')
 }
-
 </script>
 
-<style lang='stylus'>
+<style lang="stylus">
 #setting
   height 100%
   overflow-y auto

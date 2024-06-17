@@ -2,12 +2,12 @@ import OpenAI, { ClientOptions } from 'openai'
 import { availableModels } from '@/utils/constant'
 import { Ref } from 'vue'
 
-function setConfig (apiKey: string, basePath?: string): ClientOptions {
+function setConfig(apiKey: string, basePath?: string): ClientOptions {
   const config = { apiKey, baseURL: basePath || 'https://api.openai.com/v1', dangerouslyAllowBrowser: true }
   return config
 }
 
-async function createChatCompletionStream (
+async function createChatCompletionStream(
   config: ClientOptions,
   messages: any[],
   result: Ref<string>,

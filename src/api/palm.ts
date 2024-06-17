@@ -1,7 +1,7 @@
 import { Ref } from 'vue'
 import axios from 'axios'
 
-async function createChatCompletionStream (
+async function createChatCompletionStream(
   palmAPIKey: string,
   palmAPIEndpoint: string,
   palmModel: string,

@@ -1,20 +1,20 @@
 export interface Auth {
   type: 'official' | 'azure' | 'palm' | 'gemini' | 'ollama'
-  [propName: string]: any;
+  [propName: string]: any
 }
 
-export function checkAuth (auth: Auth): boolean {
+export function checkAuth(auth: Auth): boolean {
   return (
     auth &&
     ((auth.type === 'official' && !!auth.apiKey) ||
       (auth.type === 'azure' && !!auth.azureAPIKey) ||
       (auth.type === 'palm' && !!auth.palmAPIKey) ||
       (auth.type === 'gemini' && !!auth.geminiAPIKey) ||
-      (auth.type === 'ollama'))
+      auth.type === 'ollama')
   )
 }
 
-export function forceNumber (val: any) {
+export function forceNumber(val: any) {
   if (val === '') {
     return 0
   }
