@@ -3,7 +3,11 @@ import { availableModels } from '@/utils/constant'
 import { Ref } from 'vue'
 
 function setConfig(apiKey: string, basePath?: string): ClientOptions {
-  const config = { apiKey, baseURL: basePath || 'https://api.openai.com/v1', dangerouslyAllowBrowser: true }
+  const config = {
+    apiKey,
+    baseURL: basePath || 'https://api.openai.com/v1',
+    dangerouslyAllowBrowser: true
+  }
   return config
 }
 
@@ -31,7 +35,8 @@ async function createChatCompletionStream(
   let response
   try {
     response = await openai.chat.completions.create(requestConfig)
-    result.value = response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
+    result.value =
+      response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
     historyDialog.value.push({
       role: 'assistant',
       content: result.value

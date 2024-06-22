@@ -1,7 +1,10 @@
 import { Ref } from 'vue'
 
 function insertResult(result: Ref<string>, insertType: Ref<string>): void {
-  const paragraph = result.value.replace(/\n+/g, '\n').replace(/\r+/g, '\n').split('\n')
+  const paragraph = result.value
+    .replace(/\n+/g, '\n')
+    .replace(/\r+/g, '\n')
+    .split('\n')
   switch (insertType.value) {
     case 'replace':
       Word.run(async context => {

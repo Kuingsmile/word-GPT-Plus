@@ -1,5 +1,3 @@
-import { IStringKeyMap } from '../types'
-
 export const languageMap: IStringKeyMap = {
   en: 'English',
   es: 'Español',
@@ -43,6 +41,14 @@ export const languageMap: IStringKeyMap = {
   ta: 'தமிழ்',
   te: 'తెలుగు',
   ur: 'اردو'
+}
+
+export const availableAPIs: IStringKeyMap = {
+  official: 'official',
+  azure: 'azure',
+  palm: 'palm',
+  gemini: 'gemini',
+  ollama: 'ollama'
 }
 
 // official API 可用的模型
@@ -101,54 +107,14 @@ export const availableModelsForOllama: IStringKeyMap = {
   vicuna: 'vicuna'
 }
 
-export enum localStorageKey {
-  // common
-  api = 'api',
-  localLanguage = 'localLanguage',
-  replyLanguage = 'replyLanguage',
-  insertType = 'insertType',
-  // official api
-  apiKey = 'apiKey',
-  model = 'model',
-  customModel = 'customModel',
-  temperature = 'temperature',
-  maxTokens = 'maxTokens',
-  basePath = 'basePath',
-  // azure api
-  azureAPIKey = 'azureAPIKey',
-  azureAPIEndpoint = 'azureAPIEndpoint',
-  azureDeploymentName = 'azureDeploymentName',
-  azureMaxTokens = 'azureMaxTokens',
-  azureTemperature = 'azureTemperature',
-  // palm api
-  palmAPIKey = 'palmAPIKey',
-  palmAPIEndpoint = 'palmAPIEndpoint',
-  palmMaxTokens = 'palmMaxTokens',
-  palmTemperature = 'palmTemperature',
-  palmModel = 'palmModel',
-  palmCustomModel = 'palmCustomModel',
-  // gemini api
-  geminiAPIKey = 'geminiAPIKey',
-  geminiMaxTokens = 'geminiMaxTokens',
-  geminiTemperature = 'geminiTemperature',
-  geminiModel = 'geminiModel',
-  geminiCustomModel = 'geminiCustomModel',
-  // ollama api
-  ollamaEndpoint = 'ollamaEndpoint',
-  ollamaModel = 'ollamaModel',
-  ollamaTemperature = 'ollamaTemperature',
-  ollamaCustomModel = 'ollamaCustomModel',
-  // proxy
-  enableProxy = 'enableProxy',
-  proxy = 'proxy',
-  defaultSystemPrompt = 'defaultSystemPrompt',
-  defaultPrompt = 'defaultPrompt'
-}
-
 export const buildInPrompt = {
   translate: {
-    system: (language: string) => `Act as an ${language} translator, spelling corrector and improver.`,
-    user: (text: string, language: string) => `I will speak to you in any language and you will detect the language,
+    system: (language: string) =>
+      `Act as an ${language} translator, spelling corrector and improver.`,
+    user: (
+      text: string,
+      language: string
+    ) => `I will speak to you in any language and you will detect the language,
     translate it and answer in the corrected and improved version of my text, in ${language}.
     I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, 
     upper level ${language} words and sentences.
@@ -158,15 +124,20 @@ export const buildInPrompt = {
     My first sentence is: ${text}`
   },
   polish: {
-    system: (language: string) => `As a writing improvement assistant, Reply in ${language}`,
-    user: (text: string, language: string) => `Improve the spelling, grammar, clarity, concision,
+    system: (language: string) =>
+      `As a writing improvement assistant, Reply in ${language}`,
+    user: (
+      text: string,
+      language: string
+    ) => `Improve the spelling, grammar, clarity, concision,
     and overall readability of the text provided, while breaking down long sentences, reducing repetition,
     and providing suggestions for improvement.
     Please provide only the corrected ${language} version of the text and avoid including explanations.
     Please begin by editing the following text: ${text}`
   },
   academic: {
-    system: (language: string) => `As an academic paper writing assistant, Reply in ${language}`,
+    system: (language: string) =>
+      `As an academic paper writing assistant, Reply in ${language}`,
     user: (
       text: string,
       language: string
@@ -178,8 +149,12 @@ export const buildInPrompt = {
     Please begin by editing the following text: ${text}`
   },
   summary: {
-    system: (language: string) => `As a summarization assistant, Reply in ${language}`,
-    user: (text: string, language: string) => `Summarize the following text into 100 words,
+    system: (language: string) =>
+      `As a summarization assistant, Reply in ${language}`,
+    user: (
+      text: string,
+      language: string
+    ) => `Summarize the following text into 100 words,
     making it easy to read and comprehend. The summary should be concise, clear,
     and capture the main points of the text. Avoid using complex sentence structures or technical jargon.
     Respond in ${language}. Please begin by editing the following text: ${text}`

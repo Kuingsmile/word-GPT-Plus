@@ -7,7 +7,10 @@ import 'element-plus/dist/index.css'
 
 window.Office.onReady(() => {
   const app = createApp(App)
-  const debounce = (fn: { apply: (arg0: any, arg1: IArguments) => void }, delay: number | undefined) => {
+  const debounce = (
+    fn: { apply: (arg0: any, arg1: IArguments) => void },
+    delay: number | undefined
+  ) => {
     let timer: any = null
     return function () {
       // @ts-expect-error ts-migrate(2538) FIXME: Type 'this' cannot be used as an index type.

@@ -13,7 +13,9 @@ interface ChatCompletionStreamOptions {
   geminiModel?: string
 }
 
-async function createChatCompletionStream(options: ChatCompletionStreamOptions): Promise<void> {
+async function createChatCompletionStream(
+  options: ChatCompletionStreamOptions
+): Promise<void> {
   const apiKey = options.geminiAPIKey
   const generationConfig = {
     maxOutputTokens: options.maxTokens ?? 800,
@@ -36,14 +38,24 @@ async function createChatCompletionStream(options: ChatCompletionStreamOptions):
     const result = await chat.sendMessage(options.messages)
     const response = await result.response
     const text = response.text()
-    updateResultAndHistory(text, options.messages, options.result, options.historyDialog)
+    updateResultAndHistory(
+      text,
+      options.messages,
+      options.result,
+      options.historyDialog
+    )
   } catch (error: any) {
     handleError(error, options.result, options.errorIssue)
   }
   options.loading.value = false
 }
 
-function updateResultAndHistory(text: string, userText: string, result: Ref<string>, historyDialog: Ref<any[]>): void {
+function updateResultAndHistory(
+  text: string,
+  userText: string,
+  result: Ref<string>,
+  historyDialog: Ref<any[]>
+): void {
   result.value = text
   historyDialog.value.push(
     ...[
@@ -67,7 +79,11 @@ function updateResultAndHistory(text: string, userText: string, result: Ref<stri
   )
 }
 
-function handleError(error: Error, result: Ref<string>, errorIssue: Ref<boolean>): void {
+function handleError(
+  error: Error,
+  result: Ref<string>,
+  errorIssue: Ref<boolean>
+): void {
   result.value = String(error)
   errorIssue.value = true
   console.error(error)

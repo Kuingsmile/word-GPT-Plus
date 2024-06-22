@@ -6,12 +6,14 @@ export default createRouter({
     {
       path: '/',
       name: 'Home',
-      component: () => import(/* webpackChunkName: "home" */ '../pages/HomePage.vue')
+      component: () =>
+        import(/* webpackChunkName: "home" */ '../pages/HomePage.vue')
     },
     {
       path: '/settings',
       name: 'Settings',
-      component: () => import(/* webpackChunkName: "settings" */ '../pages/SettingsPage.vue')
+      component: () =>
+        import(/* webpackChunkName: "settings" */ '../pages/SettingsPage.vue')
     },
     {
       path: '/:pathMatch(.*)*',

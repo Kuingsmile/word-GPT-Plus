@@ -16,11 +16,13 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 
 ## 特色功能
 
-- 使用GPT API生成文本并支持选择模型
-- 支持OpenAI官方API和Azure OpenAI API
-- 支持Google PALM2 API
-- 支持Google Gemini Pro API
 - 内置用于翻译、总结、润色和学术写作的提示
+- 多平台支持
+  - OpenAI API
+  - Azure OpenAI API
+  - Ollama2
+  - Google PALM2 API
+  - Google Gemini Pro API
 - 支持多种语言
 - 可以自定义提示并保存以供将来使用
 - 允许用户设置temperature和max tokens

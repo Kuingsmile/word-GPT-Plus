@@ -1,5 +1,4 @@
 import Dexie, { Table } from 'dexie'
-import { IStringKeyMap } from '@/types'
 
 /*
  * create a database for prompt and system

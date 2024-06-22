@@ -5,7 +5,12 @@
         <template #label>
           <span>{{ $t('homeSystem') }}</span>
         </template>
-        <el-input v-model="systemPrompt" clearable size="small" :placeholder="$t('homeSystemDescription')" />
+        <el-input
+          v-model="systemPrompt"
+          clearable
+          size="small"
+          :placeholder="$t('homeSystemDescription')"
+        />
         <span>
           <el-select
             v-model="systemPromptSelected"
@@ -13,7 +18,12 @@
             placeholder="Select a system prompt"
             @change="handelSystemPromptChange"
           >
-            <el-option v-for="item in systemPromptList" :key="item.value" :label="item.key" :value="item.value" />
+            <el-option
+              v-for="item in systemPromptList"
+              :key="item.value"
+              :label="item.key"
+              :value="item.value"
+            />
           </el-select>
           <el-icon
             color="#409EFF"
@@ -37,10 +47,26 @@
         <template #label>
           <span>{{ $t('homePrompt') }}</span>
         </template>
-        <el-input v-model="prompt" autofocus clearable size="small" :placeholder="$t('homePromptDescription')" />
+        <el-input
+          v-model="prompt"
+          autofocus
+          clearable
+          size="small"
+          :placeholder="$t('homePromptDescription')"
+        />
         <span>
-          <el-select v-model="promptSelected" size="small" placeholder="Select a prompt" @change="handelPromptChange">
-            <el-option v-for="item in promptList" :key="item.value" :label="item.key" :value="item.value" />
+          <el-select
+            v-model="promptSelected"
+            size="small"
+            placeholder="Select a prompt"
+            @change="handelPromptChange"
+          >
+            <el-option
+              v-for="item in promptList"
+              :key="item.value"
+              :label="item.key"
+              :value="item.value"
+            />
           </el-select>
           <el-icon
             color="#409EFF"
@@ -60,63 +86,74 @@
           </el-icon>
         </span>
       </el-form-item>
-      <el-form-item>
-        <template #label>
-          <span>{{ $t('settingReplyLanguage') }}</span>
-        </template>
-        <el-select
-          v-model="replyLanguage"
-          size="small"
-          placeholder="Select a reply language"
-          @change="handelReplyLanguageChange"
-        >
-          <el-option v-for="item in replyLanguageList" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <template #label>
-          <span>{{ $t('insertType') }}</span>
-        </template>
-        <el-select
-          v-model="insertType"
-          size="small"
-          placeholder="Select a insert type"
-          @change="handelInsertTypeChange"
-        >
-          <el-option v-for="item in insertTypeList" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
+      <SelectItem
+        v-model="settingForm.replyLanguage"
+        label="replyLanguageLabel"
+        :option-list="settingPreset.replyLanguage.optionList"
+        placeholder="replyLanguagePlaceholder"
+      />
+      <SelectItem
+        v-model="insertType"
+        label="insertType"
+        :option-list="insertTypeList"
+        placeholder="insertTypePlaceholder"
+        @change="handelInsertTypeChange"
+      />
     </el-form>
     <div style="width: 100%">
-      <el-progress v-if="loading" :percentage="50" indeterminate :duration="5" status="warning" style="widows: 100%" />
+      <el-progress
+        v-if="loading"
+        :percentage="50"
+        indeterminate
+        :duration="5"
+        status="warning"
+        style="widows: 100%"
+      />
     </div>
     <el-button-group class="input-group" style="margin-top: 5px">
-      <el-button class="api-button" type="primary" size="small" :disabled="loading" @click="translate">
-        {{ $t('translate') }}
+      <el-button
+        v-for="item in actionList"
+        :key="item"
+        class="api-button"
+        type="primary"
+        size="small"
+        :disabled="loading"
+        @click="performAction(item)"
+      >
+        {{ $t(item) }}
       </el-button>
-      <el-button class="api-button" type="primary" size="small" :disabled="loading" @click="summarize">
-        {{ $t('summarize') }}
-      </el-button>
-      <el-button class="api-button" type="primary" size="small" :disabled="loading" @click="polish">
-        {{ $t('polish') }}
-      </el-button>
-      <el-button class="api-button" type="primary" size="small" :disabled="loading" @click="grammar">
-        {{ $t('grammar') }}
-      </el-button>
-      <el-button class="api-button" type="primary" size="small" :disabled="loading" @click="academic">
-        {{ $t('academic') }}
-      </el-button>
-      <el-button class="api-button" type="warning" size="small" @click="settings">
+
+      <el-button
+        class="api-button"
+        type="warning"
+        size="small"
+        @click="settings"
+      >
         {{ $t('settings') }}
       </el-button>
     </el-button-group>
-    <div style="margin-top: 5px; align-items: center; display: flex; margin-bottom: 5px">
+    <div
+      style="
+        margin-top: 5px;
+        align-items: center;
+        display: flex;
+        margin-bottom: 5px;
+      "
+    >
       <el-button-group>
-        <el-button class="api-button" type="success" size="default" :disabled="loading" @click="StartChat">
+        <el-button
+          class="api-button"
+          type="success"
+          size="default"
+          :disabled="loading"
+          @click="StartChat"
+        >
           {{ $t('start') }}
         </el-button>
         <el-button
-          v-if="['azure', 'official', 'gemini', 'ollama'].includes(api)"
+          v-if="
+            ['azure', 'official', 'gemini', 'ollama'].includes(settingForm.api)
+          "
           class="api-button"
           type="success"
           size="default"
@@ -128,174 +165,77 @@
       </el-button-group>
     </div>
     <div class="result-group">
-      <el-input v-model="result" type="textarea" autosize :row="5" :aria-placeholder="$t('result')" />
+      <el-input
+        v-model="result"
+        type="textarea"
+        autosize
+        :row="5"
+        :aria-placeholder="$t('result')"
+      />
     </div>
-    <el-dialog v-model="addSystemPromptVisible" width="90%" :title="$t('addSystemPrompt')">
-      <el-form label-position="top" label-width="50px">
-        <el-form-item>
-          <template #label>
-            <span>{{ $t('addSystemPromptAlias') }}</span>
-          </template>
-          <el-input
-            v-model="addSystemPromptAlias"
-            clearable
-            size="small"
-            :placeholder="$t('addSystemPromptAliasDescription')"
-          />
-        </el-form-item>
-        <el-form-item>
-          <template #label>
-            <span>{{ $t('homeSystem') }}</span>
-          </template>
-          <el-input
-            v-model="addSystemPromptValue"
-            clearable
-            type="textarea"
-            size="small"
-            :placeholder="$t('addSystemPromptDescription')"
-          />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="addSystemPromptVisible = false">
-          {{ $t('cancel') }}
-        </el-button>
-        <el-button type="primary" @click="addSystemPrompt">
-          {{ $t('confirm') }}
-        </el-button>
-      </template>
-    </el-dialog>
-    <el-dialog v-model="addPromptVisible" width="90%" :title="$t('addPrompt')">
-      <el-form label-position="top" label-width="50px">
-        <el-form-item>
-          <template #label>
-            <span>{{ $t('addPromptAlias') }}</span>
-          </template>
-          <el-input v-model="addPromptAlias" clearable size="small" :placeholder="$t('addPromptAliasDescription')" />
-        </el-form-item>
-        <el-form-item>
-          <template #label>
-            <span>{{ $t('homePrompt') }}</span>
-          </template>
-          <el-input
-            v-model="addPromptValue"
-            clearable
-            type="textarea"
-            size="small"
-            :placeholder="$t('homePromptDescription')"
-          />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="addPromptVisible = false">
-          {{ $t('cancel') }}
-        </el-button>
-        <el-button type="primary" @click="addPrompt">
-          {{ $t('confirm') }}
-        </el-button>
-      </template>
-    </el-dialog>
-    <el-dialog v-model="removeSystemPromptVisible" width="90%" :title="$t('removeSystemPrompt')">
-      <el-select
-        v-model="removeSystemPromptValue"
-        multiple
-        filterable
-        size="small"
-        style="width: 100%"
-        placeholder="Select"
-      >
-        <el-option v-for="item in systemPromptList" :key="item.value" :label="item.key" :value="item.key" />
-      </el-select>
-      <template #footer>
-        <el-button @click="removeSystemPromptVisible = false">
-          {{ $t('cancel') }}
-        </el-button>
-        <el-button type="primary" @click="removeSystemPrompt">
-          {{ $t('confirm') }}
-        </el-button>
-      </template>
-    </el-dialog>
-    <el-dialog v-model="removePromptVisible" width="90%" :title="$t('removePrompt')">
-      <el-select v-model="removePromptValue" multiple filterable size="small" style="width: 100%" placeholder="Select">
-        <el-option v-for="item in promptList" :key="item.value" :label="item.key" :value="item.key" />
-      </el-select>
-      <template #footer>
-        <el-button @click="removePromptVisible = false">
-          {{ $t('cancel') }}
-        </el-button>
-        <el-button type="primary" @click="removePrompt">
-          {{ $t('confirm') }}
-        </el-button>
-      </template>
-    </el-dialog>
+    <HomePageAddDialog
+      v-model:addVisible="addSystemPromptVisible"
+      v-model:addAlias="addSystemPromptAlias"
+      v-model:addValue="addSystemPromptValue"
+      title="addSystemPrompt"
+      alias-label="addSystemPromptAlias"
+      alias-placeholder="addSystemPromptAliasDescription"
+      prompt-label="homeSystem"
+      prompt-placeholder="addSystemPromptDescription"
+      @add="addSystemPrompt"
+    />
+    <HomePageAddDialog
+      v-model:addVisible="addPromptVisible"
+      v-model:addAlias="addPromptAlias"
+      v-model:addValue="addPromptValue"
+      title="addPrompt"
+      alias-label="addPromptAlias"
+      alias-placeholder="addPromptAliasDescription"
+      prompt-label="homePrompt"
+      prompt-placeholder="homePromptDescription"
+      @add="addPrompt"
+    />
+    <HomePageDialog
+      v-model:removeVisible="removeSystemPromptVisible"
+      v-model:removeValue="removeSystemPromptValue"
+      title="removeSystemPrompt"
+      :option-list="systemPromptList"
+      @remove="removeSystemPrompt"
+    />
+    <HomePageDialog
+      v-model:removeVisible="removePromptVisible"
+      v-model:removeValue="removePromptValue"
+      title="removePrompt"
+      :option-list="promptList"
+      @remove="removePrompt"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onBeforeMount, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import {
-  localStorageKey,
-  languageMap,
-  buildInPrompt,
-  availableModels,
-  availableModelsForPalm,
-  availableModelsForGemini,
-  availableModelsForOllama
-} from '@/utils/constant'
-import { promptDbInstance } from '@/store/promtStore'
-import { IStringKeyMap } from '@/types'
-import { CirclePlus, Remove } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { checkAuth, forceNumber } from '@/utils/common'
+import { CirclePlus, Remove } from '@element-plus/icons-vue'
+import { onBeforeMount, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+
 import API from '@/api'
 
-const replyLanguageList = Object.values(languageMap).map(key => ({
-  label: key,
-  value: key
-}))
+import { buildInPrompt } from '@/utils/constant'
+import { promptDbInstance } from '@/store/promtStore'
 
-const api = ref<'official' | 'azure' | 'palm' | 'gemini' | 'ollama'>('official')
-const apiKey = ref('')
-const azureAPIKey = ref('')
-const palmAPIKey = ref('')
-const geminiAPIKey = ref('')
+import { checkAuth } from '@/utils/common'
+import { localStorageKey } from '@/utils/enum'
+import useSettingForm from '@/utils/settingForm'
+import { settingPreset } from '@/utils/settingPreset'
 
-// language
-const localLanguage = ref('en')
-const replyLanguage = ref('English')
+import SelectItem from '@/components/SelectItem.vue'
+import HomePageDialog from '@/components/HomePageDialog.vue'
+import HomePageAddDialog from '@/components/HomePageAddDialog.vue'
 
-// official
-const temperature = ref(0.7)
-const maxTokens = ref(800)
-const model = ref('gpt-3.5-turbo')
-const customModel = ref('')
-const basePath = ref('')
+const { t } = useI18n()
 
-// azure
-const azureAPIEndpoint = ref('')
-const azureDeploymentName = ref('')
-const azureMaxTokens = ref(800)
-const azureTemperature = ref(0.7)
-
-// palm
-const palmAPIEndpoint = ref('https://generativelanguage.googleapis.com/v1beta2')
-const palmMaxTokens = ref(800)
-const palmTemperature = ref(0.7)
-const palmModel = ref('text-bison-001')
-const palmCustomModel = ref('')
-
-// gemini
-const geminiMaxTokens = ref(800)
-const geminiTemperature = ref(0.7)
-const geminiModel = ref('gemini-pro')
-const geminiCustomModel = ref('')
-
-// ollama
-const ollamaEndpoint = ref('')
-const ollamaModel = ref('llama2')
-const ollamaTemperature = ref(0.7)
-const ollamaCustomModel = ref('')
+const { settingForm } = useSettingForm()
 
 // system prompt
 const systemPrompt = ref('')
@@ -327,25 +267,13 @@ const jsonIssue = ref(false)
 const errorIssue = ref(false)
 
 // insert type
-const insertType = ref('replace')
-const insertTypeList = [
-  {
-    label: 'replace',
-    value: 'replace'
-  },
-  {
-    label: 'append',
-    value: 'append'
-  },
-  {
-    label: 'newLine',
-    value: 'newLine'
-  },
-  {
-    label: 'NoAction',
-    value: 'NoAction'
-  }
-]
+const insertType = ref<insertTypes>('replace')
+const insertTypeList = ['replace', 'append', 'newLine', 'NoAction'].map(
+  item => ({
+    label: t(item),
+    value: item
+  })
+)
 
 async function getSystemPromptList() {
   const table = promptDbInstance.table('systemPrompt')
@@ -409,69 +337,22 @@ function handelPromptChange(val: string) {
   localStorage.setItem(localStorageKey.defaultPrompt, val)
 }
 
-onBeforeMount(async () => {
-  api.value =
-    (localStorage.getItem(localStorageKey.api) as 'official' | 'azure' | 'palm' | 'gemini' | 'ollama') || 'official'
-  replyLanguage.value = localStorage.getItem(localStorageKey.replyLanguage) || 'English'
-  localLanguage.value = localStorage.getItem(localStorageKey.localLanguage) || 'en'
-  apiKey.value = localStorage.getItem(localStorageKey.apiKey) || ''
-  azureAPIKey.value = localStorage.getItem(localStorageKey.azureAPIKey) || ''
-  palmAPIKey.value = localStorage.getItem(localStorageKey.palmAPIKey) || ''
-  geminiAPIKey.value = localStorage.getItem(localStorageKey.geminiAPIKey) || ''
-  temperature.value = forceNumber(localStorage.getItem(localStorageKey.temperature)) || 0.7
-  maxTokens.value = forceNumber(localStorage.getItem(localStorageKey.maxTokens)) || 800
-  const modelTemp = localStorage.getItem(localStorageKey.model) || availableModels['gpt-3.5']
-  if (Object.keys(availableModels).includes(modelTemp)) {
-    model.value = availableModels[modelTemp]
-  } else if (Object.values(availableModels).includes(modelTemp)) {
-    model.value = modelTemp
-  } else {
-    model.value = availableModels['gpt-3.5']
-  }
-  customModel.value = localStorage.getItem(localStorageKey.customModel) || ''
-  basePath.value = localStorage.getItem(localStorageKey.basePath) || ''
-  azureAPIEndpoint.value = localStorage.getItem(localStorageKey.azureAPIEndpoint) || ''
-  azureDeploymentName.value = localStorage.getItem(localStorageKey.azureDeploymentName) || ''
-  azureMaxTokens.value = forceNumber(localStorage.getItem(localStorageKey.azureMaxTokens)) || 800
-  azureTemperature.value = forceNumber(localStorage.getItem(localStorageKey.azureTemperature)) || 0.7
-  palmAPIEndpoint.value =
-    localStorage.getItem(localStorageKey.palmAPIEndpoint) || 'https://generativelanguage.googleapis.com/v1beta2'
-  palmMaxTokens.value = forceNumber(localStorage.getItem(localStorageKey.palmMaxTokens)) || 800
-  palmTemperature.value = forceNumber(localStorage.getItem(localStorageKey.palmTemperature)) || 0.7
-  const palmModelTemp = localStorage.getItem(localStorageKey.palmModel) || availableModelsForPalm['text-bison-001']
-  if (Object.keys(availableModelsForPalm).includes(palmModelTemp)) {
-    palmModel.value = availableModelsForPalm[palmModelTemp]
-  } else if (Object.values(availableModelsForPalm).includes(palmModelTemp)) {
-    palmModel.value = palmModelTemp
-  } else {
-    palmModel.value = availableModelsForPalm['text-bison-001']
-  }
-  palmCustomModel.value = localStorage.getItem(localStorageKey.palmCustomModel) || ''
-  geminiMaxTokens.value = forceNumber(localStorage.getItem(localStorageKey.geminiMaxTokens)) || 800
-  geminiTemperature.value = forceNumber(localStorage.getItem(localStorageKey.geminiTemperature)) || 0.7
-  const geminiModelTemp = localStorage.getItem(localStorageKey.geminiModel) || availableModelsForGemini['gemini-pro']
-  if (Object.keys(availableModelsForGemini).includes(geminiModelTemp)) {
-    geminiModel.value = availableModelsForGemini[geminiModelTemp]
-  } else if (Object.values(availableModelsForGemini).includes(geminiModelTemp)) {
-    geminiModel.value = geminiModelTemp
-  } else {
-    geminiModel.value = availableModelsForGemini['gemini-pro']
-  }
-  geminiCustomModel.value = localStorage.getItem(localStorageKey.geminiCustomModel) || ''
-  ollamaEndpoint.value = localStorage.getItem(localStorageKey.ollamaEndpoint) || ''
-  const ollamaModelTemp = localStorage.getItem(localStorageKey.ollamaModel) || availableModelsForOllama.llama2
-  if (Object.keys(availableModelsForOllama).includes(ollamaModelTemp)) {
-    ollamaModel.value = availableModelsForOllama[ollamaModelTemp]
-  } else if (Object.values(availableModelsForOllama).includes(ollamaModelTemp)) {
-    ollamaModel.value = ollamaModelTemp
-  } else {
-    ollamaModel.value = availableModelsForOllama.llama2
-  }
-  ollamaCustomModel.value = localStorage.getItem(localStorageKey.ollamaCustomModel) || ''
-  ollamaTemperature.value = forceNumber(localStorage.getItem(localStorageKey.ollamaTemperature)) || 0.7
+const addWatch = () => {
+  watch(
+    () => settingForm.value.replyLanguage,
+    () => {
+      localStorage.setItem('replyLanguage', settingForm.value.replyLanguage)
+    }
+  )
+}
+
+async function initData() {
   insertType.value =
-    localStorage.getItem(localStorageKey.insertType) || ('replace' as 'replace' | 'append' | 'newLine' | 'NoAction')
-  systemPrompt.value = localStorage.getItem(localStorageKey.defaultSystemPrompt) || 'Act like a personal assistant.'
+    (localStorage.getItem(localStorageKey.insertType) as insertTypes) ||
+    'replace'
+  systemPrompt.value =
+    localStorage.getItem(localStorageKey.defaultSystemPrompt) ||
+    'Act like a personal assistant.'
   await getSystemPromptList()
   if (systemPromptList.value.find(item => item.value === systemPrompt.value)) {
     systemPromptSelected.value = systemPrompt.value
@@ -481,15 +362,10 @@ onBeforeMount(async () => {
   if (promptList.value.find(item => item.value === prompt.value)) {
     promptSelected.value = prompt.value
   }
-})
-
-function handelReplyLanguageChange(val: string) {
-  replyLanguage.value = val
-  localStorage.setItem(localStorageKey.replyLanguage, val)
 }
 
-function handelInsertTypeChange(val: string) {
-  insertType.value = val as 'replace' | 'append' | 'newLine' | 'NoAction'
+function handelInsertTypeChange(val: insertTypes) {
+  insertType.value = val
   localStorage.setItem(localStorageKey.insertType, val)
 }
 
@@ -508,21 +384,35 @@ async function template(taskType: keyof typeof buildInPrompt | 'custom') {
   const selectedText = await getSeletedText()
   if (taskType === 'custom') {
     if (systemPrompt.value.includes('{language}')) {
-      systemMessage = systemPrompt.value.replace('{language}', replyLanguage.value)
+      systemMessage = systemPrompt.value.replace(
+        '{language}',
+        settingForm.value.replyLanguage
+      )
     } else {
       systemMessage = systemPrompt.value
     }
     if (userMessage.includes('{text}')) {
       userMessage = userMessage.replace('{text}', selectedText)
     } else {
-      userMessage = `Reply in ${replyLanguage.value} ${prompt.value} ${selectedText}`
+      userMessage = `Reply in ${settingForm.value.replyLanguage} ${prompt.value} ${selectedText}`
     }
   } else {
-    systemMessage = buildInPrompt[taskType].system(replyLanguage.value)
-    userMessage = buildInPrompt[taskType].user(selectedText, replyLanguage.value)
+    systemMessage = buildInPrompt[taskType].system(
+      settingForm.value.replyLanguage
+    )
+    userMessage = buildInPrompt[taskType].user(
+      selectedText,
+      settingForm.value.replyLanguage
+    )
   }
-  if (api.value === 'official' && apiKey.value) {
-    const config = API.official.setConfig(apiKey.value, basePath.value)
+  if (
+    settingForm.value.api === 'official' &&
+    settingForm.value.officialAPIKey
+  ) {
+    const config = API.official.setConfig(
+      settingForm.value.officialAPIKey,
+      settingForm.value.officialBasePath
+    )
     historyDialog.value = [
       {
         role: 'system',
@@ -540,11 +430,15 @@ async function template(taskType: keyof typeof buildInPrompt | 'custom') {
       historyDialog,
       errorIssue,
       loading,
-      maxTokens.value,
-      temperature.value,
-      customModel.value || model.value
+      settingForm.value.officialMaxTokens,
+      settingForm.value.officialTemperature,
+      settingForm.value.officialCustomModel ||
+        settingForm.value.officialModelSelect
     )
-  } else if (api.value === 'azure' && azureAPIKey.value) {
+  } else if (
+    settingForm.value.api === 'azure' &&
+    settingForm.value.azureAPIKey
+  ) {
     historyDialog.value = [
       {
         role: 'system',
@@ -556,30 +450,33 @@ async function template(taskType: keyof typeof buildInPrompt | 'custom') {
       }
     ]
     await API.azure.createChatCompletionStream({
-      azureAPIKey: azureAPIKey.value,
-      azureAPIEndpoint: azureAPIEndpoint.value,
-      azureDeploymentName: azureDeploymentName.value,
+      azureAPIKey: settingForm.value.azureAPIKey,
+      azureAPIEndpoint: settingForm.value.azureAPIEndpoint,
+      azureDeploymentName: settingForm.value.azureDeploymentName,
       messages: historyDialog.value,
       result,
       historyDialog,
       errorIssue,
       loading,
-      maxTokens: azureMaxTokens.value,
-      temperature: azureTemperature.value
+      maxTokens: settingForm.value.azureMaxTokens,
+      temperature: settingForm.value.azureTemperature
     })
-  } else if (api.value === 'palm' && palmAPIKey.value) {
+  } else if (settingForm.value.api === 'palm' && settingForm.value.palmAPIKey) {
     await API.palm.createChatCompletionStream(
-      palmAPIKey.value,
-      palmAPIEndpoint.value,
-      palmCustomModel.value || palmModel.value,
+      settingForm.value.palmAPIKey,
+      settingForm.value.palmAPIEndpoint,
+      settingForm.value.palmCustomModel || settingForm.value.palmModelSelect,
       `${systemMessage}\n${userMessage}`,
       result,
       errorIssue,
       loading,
-      palmMaxTokens.value,
-      palmTemperature.value
+      settingForm.value.palmMaxTokens,
+      settingForm.value.palmTemperature
     )
-  } else if (api.value === 'gemini' && geminiAPIKey.value) {
+  } else if (
+    settingForm.value.api === 'gemini' &&
+    settingForm.value.geminiAPIKey
+  ) {
     historyDialog.value = [
       {
         role: 'user',
@@ -599,17 +496,22 @@ async function template(taskType: keyof typeof buildInPrompt | 'custom') {
       }
     ]
     await API.gemini.createChatCompletionStream({
-      geminiAPIKey: geminiAPIKey.value,
+      geminiAPIKey: settingForm.value.geminiAPIKey,
       messages: userMessage,
       result,
       historyDialog,
       errorIssue,
       loading,
-      maxTokens: geminiMaxTokens.value,
-      temperature: geminiTemperature.value,
-      geminiModel: geminiCustomModel.value || geminiModel.value
+      maxTokens: settingForm.value.geminiMaxTokens,
+      temperature: settingForm.value.geminiTemperature,
+      geminiModel:
+        settingForm.value.geminiCustomModel ||
+        settingForm.value.geminiModelSelect
     })
-  } else if (api.value === 'ollama' && ollamaEndpoint.value) {
+  } else if (
+    settingForm.value.api === 'ollama' &&
+    settingForm.value.ollamaEndpoint
+  ) {
     historyDialog.value = [
       {
         role: 'user',
@@ -617,14 +519,15 @@ async function template(taskType: keyof typeof buildInPrompt | 'custom') {
       }
     ]
     await API.ollama.createChatCompletionStream(
-      ollamaEndpoint.value,
-      ollamaCustomModel.value || ollamaModel.value,
+      settingForm.value.ollamaEndpoint,
+      settingForm.value.ollamaCustomModel ||
+        settingForm.value.ollamaModelSelect,
       historyDialog.value,
       result,
       historyDialog,
       errorIssue,
       loading,
-      ollamaTemperature.value
+      settingForm.value.ollamaTemperature
     )
   } else {
     ElMessage.error('Set API Key or Access Token first')
@@ -642,11 +545,11 @@ async function template(taskType: keyof typeof buildInPrompt | 'custom') {
 
 function checkApiKey() {
   const auth = {
-    type: api.value,
-    apiKey: apiKey.value,
-    azureAPIKey: azureAPIKey.value,
-    palmAPIKey: palmAPIKey.value,
-    geminiAPIKey: geminiAPIKey.value
+    type: settingForm.value.api,
+    apiKey: settingForm.value.officialAPIKey,
+    azureAPIKey: settingForm.value.azureAPIKey,
+    palmAPIKey: settingForm.value.palmAPIKey,
+    geminiAPIKey: settingForm.value.geminiAPIKey
   }
   if (!checkAuth(auth)) {
     ElMessage.error('Set API Key or Access Token first')
@@ -655,29 +558,11 @@ function checkApiKey() {
   return true
 }
 
-async function translate() {
-  if (!checkApiKey()) return
-  template('translate')
-}
+const actionList = Object.keys(buildInPrompt) as (keyof typeof buildInPrompt)[]
 
-function summarize() {
+async function performAction(action: keyof typeof buildInPrompt) {
   if (!checkApiKey()) return
-  template('summary')
-}
-
-function polish() {
-  if (!checkApiKey()) return
-  template('polish')
-}
-
-function academic() {
-  if (!checkApiKey()) return
-  template('academic')
-}
-
-function grammar() {
-  if (!checkApiKey()) return
-  template('grammar')
+  template(action)
 }
 
 function settings() {
@@ -693,7 +578,7 @@ async function continueChat() {
   if (!checkApiKey()) return
   loading.value = true
   try {
-    switch (api.value) {
+    switch (settingForm.value.api) {
       case 'official':
         historyDialog.value.push({
           role: 'user',
@@ -701,15 +586,19 @@ async function continueChat() {
         })
 
         await API.official.createChatCompletionStream(
-          API.official.setConfig(apiKey.value, basePath.value),
+          API.official.setConfig(
+            settingForm.value.officialAPIKey,
+            settingForm.value.officialBasePath
+          ),
           historyDialog.value,
           result,
           historyDialog,
           errorIssue,
           loading,
-          maxTokens.value,
-          temperature.value,
-          customModel.value || model.value
+          settingForm.value.officialMaxTokens,
+          settingForm.value.officialTemperature,
+          settingForm.value.officialCustomModel ||
+            settingForm.value.officialModelSelect
         )
         break
       case 'azure':
@@ -718,16 +607,16 @@ async function continueChat() {
           content: 'continue'
         })
         await API.azure.createChatCompletionStream({
-          azureAPIKey: azureAPIKey.value,
-          azureAPIEndpoint: azureAPIEndpoint.value,
-          azureDeploymentName: azureDeploymentName.value,
+          azureAPIKey: settingForm.value.azureAPIKey,
+          azureAPIEndpoint: settingForm.value.azureAPIEndpoint,
+          azureDeploymentName: settingForm.value.azureDeploymentName,
           messages: historyDialog.value,
           result,
           historyDialog,
           errorIssue,
           loading,
-          maxTokens: azureMaxTokens.value,
-          temperature: azureTemperature.value
+          maxTokens: settingForm.value.azureMaxTokens,
+          temperature: settingForm.value.azureTemperature
         })
         break
       case 'gemini':
@@ -752,15 +641,17 @@ async function continueChat() {
           ]
         )
         await API.gemini.createChatCompletionStream({
-          geminiAPIKey: geminiAPIKey.value,
+          geminiAPIKey: settingForm.value.geminiAPIKey,
           messages: 'continue',
           result,
           historyDialog,
           errorIssue,
           loading,
-          maxTokens: geminiMaxTokens.value,
-          temperature: geminiTemperature.value,
-          geminiModel: geminiCustomModel.value || geminiModel.value
+          maxTokens: settingForm.value.geminiMaxTokens,
+          temperature: settingForm.value.geminiTemperature,
+          geminiModel:
+            settingForm.value.geminiCustomModel ||
+            settingForm.value.geminiModelSelect
         })
         break
       case 'ollama':
@@ -769,14 +660,15 @@ async function continueChat() {
           content: 'continue'
         })
         await API.ollama.createChatCompletionStream(
-          ollamaEndpoint.value,
-          ollamaCustomModel.value || ollamaModel.value,
+          settingForm.value.ollamaEndpoint,
+          settingForm.value.ollamaCustomModel ||
+            settingForm.value.ollamaModelSelect,
           historyDialog.value,
           result,
           historyDialog,
           errorIssue,
           loading,
-          ollamaTemperature.value
+          settingForm.value.ollamaTemperature
         )
     }
   } catch (error) {
@@ -791,6 +683,11 @@ async function continueChat() {
   }
   API.common.insertResult(result, insertType)
 }
+
+onBeforeMount(() => {
+  addWatch()
+  initData()
+})
 </script>
 
 <style scoped>

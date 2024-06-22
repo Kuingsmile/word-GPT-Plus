@@ -16,11 +16,13 @@ Word GPT Plus is a word add-in which integrates the chatGPT model into Microsoft
 
 ## Features
 
-- Utilize the GPT-3.5 API to generate text and support select models
 - Built-in prompts for translation, summarization, polishing, and academic writing
-- Support Azure OpenAI API
-- Support Google PALM2 API
-- Support Google Gemini Pro API
+- Multiple platforms supported
+  - OpenAI API
+  - Azure OpenAI API
+  - Ollama2
+  - Google PALM2 API
+  - Google Gemini Pro API
 - Support for multiple languages
 - Custom prompts can be set and saved for future use
 - Ability for users to set temperature and max tokens

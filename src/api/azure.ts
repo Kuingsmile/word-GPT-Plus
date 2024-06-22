@@ -1,4 +1,9 @@
-import { OpenAIClient, AzureKeyCredential, GetChatCompletionsOptions, ChatCompletions } from '@azure/openai'
+import {
+  OpenAIClient,
+  AzureKeyCredential,
+  GetChatCompletionsOptions,
+  ChatCompletions
+} from '@azure/openai'
 import { Ref } from 'vue'
 
 interface ChatCompletionStreamOptions {
@@ -14,11 +19,24 @@ interface ChatCompletionStreamOptions {
   temperature?: number
 }
 
-async function createChatCompletionStream(options: ChatCompletionStreamOptions): Promise<void> {
-  const client = createOpenAIClient(options.azureAPIKey, options.azureAPIEndpoint)
-  const requestConfig: GetChatCompletionsOptions = createRequestConfig(options.maxTokens, options.temperature)
+async function createChatCompletionStream(
+  options: ChatCompletionStreamOptions
+): Promise<void> {
+  const client = createOpenAIClient(
+    options.azureAPIKey,
+    options.azureAPIEndpoint
+  )
+  const requestConfig: GetChatCompletionsOptions = createRequestConfig(
+    options.maxTokens,
+    options.temperature
+  )
   try {
-    const response = await getChatCompletions(client, options.azureDeploymentName, options.messages, requestConfig)
+    const response = await getChatCompletions(
+      client,
+      options.azureDeploymentName,
+      options.messages,
+      requestConfig
+    )
     updateResultAndHistory(response, options.result, options.historyDialog)
   } catch (error: any) {
     handleError(error, options.result, options.errorIssue)
@@ -30,7 +48,10 @@ function createOpenAIClient(apiKey: string, apiEndpoint: string): OpenAIClient {
   return new OpenAIClient(apiEndpoint, new AzureKeyCredential(apiKey))
 }
 
-function createRequestConfig(maxTokens?: number, temperature?: number): GetChatCompletionsOptions {
+function createRequestConfig(
+  maxTokens?: number,
+  temperature?: number
+): GetChatCompletionsOptions {
   return {
     maxTokens: maxTokens ?? 800,
     temperature: temperature ?? 0.7,
@@ -44,11 +65,20 @@ async function getChatCompletions(
   messages: any[],
   config: GetChatCompletionsOptions
 ): Promise<ChatCompletions> {
-  return (await client.getChatCompletions(deploymentName, messages, config)) as ChatCompletions
+  return (await client.getChatCompletions(
+    deploymentName,
+    messages,
+    config
+  )) as ChatCompletions
 }
 
-function updateResultAndHistory(response: ChatCompletions, result: Ref<string>, historyDialog: Ref<any[]>): void {
-  const content = response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
+function updateResultAndHistory(
+  response: ChatCompletions,
+  result: Ref<string>,
+  historyDialog: Ref<any[]>
+): void {
+  const content =
+    response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
   result.value = content
   historyDialog.value.push({
     role: 'assistant',
@@ -56,7 +86,11 @@ function updateResultAndHistory(response: ChatCompletions, result: Ref<string>, 
   })
 }
 
-function handleError(error: Error, result: Ref<string>, errorIssue: Ref<boolean>): void {
+function handleError(
+  error: Error,
+  result: Ref<string>,
+  errorIssue: Ref<boolean>
+): void {
   result.value = String(error)
   errorIssue.value = true
   console.error(error)
