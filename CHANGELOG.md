@@ -1,3 +1,12 @@
+## :tada: 0.4.7 (2024-06-24)
+
+
+### :bug: Bug Fixes
+
+* **custom:** fix offical setting bug ([48fed10](https://github.com/Kuingsmile/word-GPT-Plus/commit/48fed10))
+
+
+
 ## :tada: 0.4.6 (2024-06-22)
 
 
