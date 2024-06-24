@@ -19,7 +19,7 @@ function useSettingForm() {
       return
     }
     settingForm.value[key as keyof typeof settingForm.value] =
-      localStorage.getItem(key) ||
+      localStorage.getItem(settingPreset[key].saveKey || key) ||
       settingForm.value[key as keyof typeof settingForm.value]
   })
   return { settingForm, settingFormKeys }
