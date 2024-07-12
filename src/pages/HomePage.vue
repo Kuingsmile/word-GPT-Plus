@@ -10,6 +10,7 @@
           clearable
           size="small"
           :placeholder="$t('homeSystemDescription')"
+          @blur="handelSystemPromptChange(systemPrompt)"
         />
         <span>
           <el-select
@@ -53,6 +54,7 @@
           clearable
           size="small"
           :placeholder="$t('homePromptDescription')"
+          @blur="handelPromptChange(prompt)"
         />
         <span>
           <el-select
