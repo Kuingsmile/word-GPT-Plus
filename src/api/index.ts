@@ -3,6 +3,7 @@ import azure from './azure'
 import palm from './palm'
 import common from './common'
 import gemini from './gemini'
+import groq from './groq'
 import ollama from './ollama'
 
 export default {
@@ -10,6 +11,7 @@ export default {
   azure,
   palm,
   gemini,
+  groq,
   common,
   ollama
 }

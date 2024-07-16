@@ -3,6 +3,7 @@ import { forceNumber, optionLists } from './common'
 import {
   availableModels,
   availableModelsForGemini,
+  availableModelsForGroq,
   availableModelsForOllama,
   availableModelsForPalm
 } from './constant'
@@ -50,6 +51,11 @@ export type SettingNames =
   | 'ollamaCustomModel'
   | 'ollamaModelSelect'
   | 'ollamaTemperature'
+  | 'groqAPIKey'
+  | 'groqTemperature'
+  | 'groqMaxTokens'
+  | 'groqModelSelect'
+  | 'groqCustomModel'
 
 type keyoflocalStorageKey = keyof typeof localStorageKey
 
@@ -182,5 +188,15 @@ export const settingPreset: Record<SettingNames, ISettingOption> = {
     optionLists.ollamaModelList,
     availableModelsForOllama
   ),
-  ollamaTemperature: inputNumSetting(0.7, 'ollamaTemperature', 'temperature')
+  ollamaTemperature: inputNumSetting(0.7, 'ollamaTemperature', 'temperature'),
+  groqAPIKey: defaultInputSetting,
+  groqTemperature: inputNumSetting(0.5, 'groqTemperature', 'temperature'),
+  groqMaxTokens: inputNumSetting(1024, 'groqMaxTokens', 'maxTokens'),
+  groqModelSelect: selectSetting(
+    availableModelsForGroq['gemma2-9b-it'],
+    'groqModel',
+    optionLists.groqModelList,
+    availableModelsForGroq
+  ),
+  groqCustomModel: defaultInputSetting
 }

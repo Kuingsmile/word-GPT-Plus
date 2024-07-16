@@ -48,7 +48,8 @@ export const availableAPIs: IStringKeyMap = {
   azure: 'azure',
   palm: 'palm',
   gemini: 'gemini',
-  ollama: 'ollama'
+  ollama: 'ollama',
+  groq: 'groq'
 }
 
 // official API 可用的模型
@@ -105,6 +106,15 @@ export const availableModelsForOllama: IStringKeyMap = {
   'starlinh-lm': 'starlinh-lm',
   'orca-mini': 'orca-mini',
   vicuna: 'vicuna'
+}
+
+export const availableModelsForGroq: IStringKeyMap = {
+  'gemma2-9b-it': 'gemma2-9b-it',
+  'gemma-7b-it': 'gemma-7b-it',
+  'llama3-70b-8192': 'llama3-70b-8192',
+  'llama3-8b-8192': 'llama3-8b-8192',
+  'mixtral-8x7b-32768': 'mixtral-8x7b-32768',
+  'whisper-large-v3': 'whisper-large-v3'
 }
 
 export const buildInPrompt = {

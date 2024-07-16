@@ -2,6 +2,7 @@ import {
   availableAPIs,
   availableModels,
   availableModelsForGemini,
+  availableModelsForGroq,
   availableModelsForOllama,
   availableModelsForPalm,
   languageMap
@@ -19,6 +20,7 @@ export function checkAuth(auth: Auth): boolean {
       (auth.type === 'azure' && !!auth.azureAPIKey) ||
       (auth.type === 'palm' && !!auth.palmAPIKey) ||
       (auth.type === 'gemini' && !!auth.geminiAPIKey) ||
+      (auth.type === 'groq' && !!auth.groqAPIKey) ||
       auth.type === 'ollama')
   )
 }
@@ -61,7 +63,8 @@ export const optionLists = {
   officialModelList: getOptionList(availableModels),
   palmModelList: getOptionList(availableModelsForPalm),
   geminiModelList: getOptionList(availableModelsForGemini),
-  ollamaModelList: getOptionList(availableModelsForOllama)
+  ollamaModelList: getOptionList(availableModelsForOllama),
+  groqModelList: getOptionList(availableModelsForGroq)
 }
 
 export function getLabel(key: string) {

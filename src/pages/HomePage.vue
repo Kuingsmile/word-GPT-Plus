@@ -154,7 +154,9 @@
         </el-button>
         <el-button
           v-if="
-            ['azure', 'official', 'gemini', 'ollama'].includes(settingForm.api)
+            ['azure', 'official', 'gemini', 'ollama', 'groq'].includes(
+              settingForm.api
+            )
           "
           class="api-button"
           type="success"
@@ -425,18 +427,42 @@ async function template(taskType: keyof typeof buildInPrompt | 'custom') {
         content: userMessage
       }
     ]
-    await API.official.createChatCompletionStream(
+    await API.official.createChatCompletionStream({
       config,
-      historyDialog.value,
+      messages: historyDialog.value,
       result,
       historyDialog,
       errorIssue,
       loading,
-      settingForm.value.officialMaxTokens,
-      settingForm.value.officialTemperature,
-      settingForm.value.officialCustomModel ||
+      maxTokens: settingForm.value.officialMaxTokens,
+      temperature: settingForm.value.officialTemperature,
+      model:
+        settingForm.value.officialCustomModel ||
         settingForm.value.officialModelSelect
-    )
+    })
+  } else if (settingForm.value.api === 'groq' && settingForm.value.groqAPIKey) {
+    historyDialog.value = [
+      {
+        role: 'system',
+        content: systemMessage
+      },
+      {
+        role: 'user',
+        content: userMessage
+      }
+    ]
+    await API.groq.createChatCompletionStream({
+      groqAPIKey: settingForm.value.groqAPIKey,
+      groqModel:
+        settingForm.value.groqCustomModel || settingForm.value.groqModelSelect,
+      messages: historyDialog.value,
+      result,
+      historyDialog,
+      errorIssue,
+      loading,
+      maxTokens: settingForm.value.officialMaxTokens,
+      temperature: settingForm.value.officialTemperature
+    })
   } else if (
     settingForm.value.api === 'azure' &&
     settingForm.value.azureAPIKey
@@ -464,17 +490,18 @@ async function template(taskType: keyof typeof buildInPrompt | 'custom') {
       temperature: settingForm.value.azureTemperature
     })
   } else if (settingForm.value.api === 'palm' && settingForm.value.palmAPIKey) {
-    await API.palm.createChatCompletionStream(
-      settingForm.value.palmAPIKey,
-      settingForm.value.palmAPIEndpoint,
-      settingForm.value.palmCustomModel || settingForm.value.palmModelSelect,
-      `${systemMessage}\n${userMessage}`,
+    await API.palm.createChatCompletionStream({
+      palmAPIKey: settingForm.value.palmAPIKey,
+      palmAPIEndpoint: settingForm.value.palmAPIEndpoint,
+      palmModel:
+        settingForm.value.palmCustomModel || settingForm.value.palmModelSelect,
+      prompt: `${systemMessage}\n${userMessage}`,
       result,
       errorIssue,
       loading,
-      settingForm.value.palmMaxTokens,
-      settingForm.value.palmTemperature
-    )
+      maxTokens: settingForm.value.palmMaxTokens,
+      temperature: settingForm.value.palmTemperature
+    })
   } else if (
     settingForm.value.api === 'gemini' &&
     settingForm.value.geminiAPIKey
@@ -520,17 +547,18 @@ async function template(taskType: keyof typeof buildInPrompt | 'custom') {
         content: systemMessage + '\n' + userMessage
       }
     ]
-    await API.ollama.createChatCompletionStream(
-      settingForm.value.ollamaEndpoint,
-      settingForm.value.ollamaCustomModel ||
+    await API.ollama.createChatCompletionStream({
+      ollamaEndpoint: settingForm.value.ollamaEndpoint,
+      ollamaModel:
+        settingForm.value.ollamaCustomModel ||
         settingForm.value.ollamaModelSelect,
-      historyDialog.value,
+      messages: historyDialog.value,
       result,
       historyDialog,
       errorIssue,
       loading,
-      settingForm.value.ollamaTemperature
-    )
+      temperature: settingForm.value.ollamaTemperature
+    })
   } else {
     ElMessage.error('Set API Key or Access Token first')
     return
@@ -551,7 +579,8 @@ function checkApiKey() {
     apiKey: settingForm.value.officialAPIKey,
     azureAPIKey: settingForm.value.azureAPIKey,
     palmAPIKey: settingForm.value.palmAPIKey,
-    geminiAPIKey: settingForm.value.geminiAPIKey
+    geminiAPIKey: settingForm.value.geminiAPIKey,
+    groqAPIKey: settingForm.value.groqAPIKey
   }
   if (!checkAuth(auth)) {
     ElMessage.error('Set API Key or Access Token first')
@@ -587,21 +616,41 @@ async function continueChat() {
           content: 'continue'
         })
 
-        await API.official.createChatCompletionStream(
-          API.official.setConfig(
+        await API.official.createChatCompletionStream({
+          config: API.official.setConfig(
             settingForm.value.officialAPIKey,
             settingForm.value.officialBasePath
           ),
-          historyDialog.value,
+          messages: historyDialog.value,
           result,
           historyDialog,
           errorIssue,
           loading,
-          settingForm.value.officialMaxTokens,
-          settingForm.value.officialTemperature,
-          settingForm.value.officialCustomModel ||
+          maxTokens: settingForm.value.officialMaxTokens,
+          temperature: settingForm.value.officialTemperature,
+          model:
+            settingForm.value.officialCustomModel ||
             settingForm.value.officialModelSelect
-        )
+        })
+        break
+      case 'groq':
+        historyDialog.value.push({
+          role: 'user',
+          content: 'continue'
+        })
+        await API.groq.createChatCompletionStream({
+          groqAPIKey: settingForm.value.groqAPIKey,
+          groqModel:
+            settingForm.value.groqCustomModel ||
+            settingForm.value.groqModelSelect,
+          messages: historyDialog.value,
+          result,
+          historyDialog,
+          errorIssue,
+          loading,
+          maxTokens: settingForm.value.officialMaxTokens,
+          temperature: settingForm.value.officialTemperature
+        })
         break
       case 'azure':
         historyDialog.value.push({
@@ -661,17 +710,18 @@ async function continueChat() {
           role: 'user',
           content: 'continue'
         })
-        await API.ollama.createChatCompletionStream(
-          settingForm.value.ollamaEndpoint,
-          settingForm.value.ollamaCustomModel ||
+        await API.ollama.createChatCompletionStream({
+          ollamaEndpoint: settingForm.value.ollamaEndpoint,
+          ollamaModel:
+            settingForm.value.ollamaCustomModel ||
             settingForm.value.ollamaModelSelect,
-          historyDialog.value,
+          messages: historyDialog.value,
           result,
           historyDialog,
           errorIssue,
           loading,
-          settingForm.value.ollamaTemperature
-        )
+          temperature: settingForm.value.ollamaTemperature
+        })
     }
   } catch (error) {
     result.value = String(error)

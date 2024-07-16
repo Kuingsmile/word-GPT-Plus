@@ -35,6 +35,12 @@ export enum localStorageKey {
   ollamaModel = 'ollamaModel',
   ollamaTemperature = 'ollamaTemperature',
   ollamaCustomModel = 'ollamaCustomModel',
+  // groq api
+  groqAPIKey = 'groqAPIKey',
+  groqTemperature = 'groqTemperature',
+  groqMaxTokens = 'groqMaxTokens',
+  groqModel = 'groqModel',
+  groqCustomModel = 'groqCustomModel',
   // proxy
   enableProxy = 'enableProxy',
   proxy = 'proxy',
