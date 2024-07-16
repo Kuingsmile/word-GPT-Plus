@@ -1,3 +1,27 @@
+## :tada: 0.4.8 (2024-07-16)
+
+
+### :sparkles: Features
+
+* **custom:** add groq support ([23e16d8](https://github.com/Kuingsmile/word-GPT-Plus/commit/23e16d8)), closes [#64](https://github.com/Kuingsmile/word-GPT-Plus/issues/64)
+
+
+### :bug: Bug Fixes
+
+* **custom:** fix a bug  system and home prompt not saved ([638ced4](https://github.com/Kuingsmile/word-GPT-Plus/commit/638ced4))
+
+
+### :pencil: Documentation
+
+* **custom:** add Groq API key application link to README files ([37a2695](https://github.com/Kuingsmile/word-GPT-Plus/commit/37a2695))
+
+
+### :package: Chore
+
+* **custom:** remove endofline in prettierrc ([7d73f68](https://github.com/Kuingsmile/word-GPT-Plus/commit/7d73f68))
+
+
+
 ## :tada: 0.4.7 (2024-06-24)
 
 
