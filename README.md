@@ -23,6 +23,7 @@ Word GPT Plus is a word add-in which integrates the chatGPT model into Microsoft
   - Ollama2
   - Google PALM2 API
   - Google Gemini Pro API
+  - Groq
 - Support for multiple languages
 - Custom prompts can be set and saved for future use
 - Ability for users to set temperature and max tokens
@@ -50,6 +51,8 @@ You need to apply for qualification first, please go to [Azure OpenAI API applic
 You need to go to [Google AI](https://developers.generativeai.google/) to apply for qualification for Google PALM2 API.
 
 Google Gemini Pro API's api key is the same as Google PALM2 API's api key, and the free version is currently limited to 60 requests per minute.
+
+Groq's api key can be applied for at [https://console.groq.com/keys](https://console.groq.com/keys).
 
 ## Getting Started
 
