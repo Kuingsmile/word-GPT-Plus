@@ -55,6 +55,7 @@ export const availableAPIs: IStringKeyMap = {
 // official API 可用的模型
 export const availableModels: IStringKeyMap = {
   'gpt-4o': 'gpt-4o',
+  'gpt-4o-mini': 'gpt-4o-mini',
   'gpt-3.5': 'gpt-3.5-turbo',
   'gpt-3.5-turbo-1106': 'gpt-3.5-turbo-1106',
   'gpt-3.5-16k': 'gpt-3.5-turbo-16k',
