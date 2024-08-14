@@ -1753,10 +1753,10 @@
   resolved "https://registry.npmjs.org/@types/normalize-package-data/-/normalize-package-data-2.4.1.tgz#d3357479a0fdfdd5907fe67e17e0a85c906e1301"
   integrity sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==
 
-"@types/office-js@^1.0.402":
-  version "1.0.402"
-  resolved "https://registry.yarnpkg.com/@types/office-js/-/office-js-1.0.402.tgz#015c5feb1c9fdfa87017fd2331fa69e5cf8af63f"
-  integrity sha512-vkqaxfBxBSObU6XnP6FtDDEtvNxGRZtN8In0zuQBGloDeOGAXK1T30AVbedjBoqP01IKSOUwH2rg2d4vsb9iIQ==
+"@types/office-js@^1.0.412":
+  version "1.0.412"
+  resolved "https://registry.yarnpkg.com/@types/office-js/-/office-js-1.0.412.tgz#9683daa4d1d9f9704a634d1000db726db1148448"
+  integrity sha512-vVe1q5h8se3aeEHaImsISTEvE7j6SlzOtOzOhc8x+fGAqUXc+dqWW45arAECbNL/aAUH4N+dAwgZp97Z7/FgiA==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
