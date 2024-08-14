@@ -1,3 +1,13 @@
+## :tada: 0.4.9 (2024-08-14)
+
+
+### :sparkles: Features
+
+* **custom:** add gpt-4o-mini ([fd716f6](https://github.com/Kuingsmile/word-GPT-Plus/commit/fd716f6))
+* **custom:** imporve academic prompt ([f40df00](https://github.com/Kuingsmile/word-GPT-Plus/commit/f40df00)), closes [#72](https://github.com/Kuingsmile/word-GPT-Plus/issues/72)
+
+
+
 ## :tada: 0.4.8 (2024-07-16)
 
 
