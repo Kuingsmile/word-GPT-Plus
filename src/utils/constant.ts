@@ -157,6 +157,7 @@ export const buildInPrompt = {
     upper level ${language} words and sentences.
     Keep the meaning same, but make them more literary and improve my expression in the style of SCI papers.
     High IF SCI papers are preferred.
+    Please provide only the revised ${language} version of the text and avoid including explanations.
     Please begin by editing the following text: ${text}`
   },
   summary: {
