@@ -127,7 +127,7 @@ export const buildInPrompt = {
       language: string
     ) => `I will speak to you in any language and you will detect the language,
     translate it and answer in the corrected and improved version of my text, in ${language}.
-    I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, 
+    I want you to replace my simplified A0-level words and sentences with more beautiful and elegant,
     upper level ${language} words and sentences.
     Keep the meaning same, but make them more literary.
     I want you to only reply the correction, the improvements and nothing else, do not write explanations.
@@ -136,15 +136,26 @@ export const buildInPrompt = {
   },
   polish: {
     system: (language: string) =>
-      `As a writing improvement assistant, Reply in ${language}`,
+      `As a writing improvement assistant, reply in ${language}`,
     user: (
       text: string,
       language: string
-    ) => `Improve the spelling, grammar, clarity, concision,
-    and overall readability of the text provided, while breaking down long sentences, reducing repetition,
-    and providing suggestions for improvement.
-    Please provide only the corrected ${language} version of the text and avoid including explanations.
-    Please begin by editing the following text: ${text}`
+    ) => `You are tasked with improving a given text by enhancing its spelling, grammar, clarity, concision, and overall readability. Your goal is to produce a polished and refined version of the original text. Here is the text you need to improve:
+
+      <original_text>
+      ${text}
+      </original_text>
+
+      Follow these steps to improve the text:
+
+      1. Correct any spelling and grammatical errors.
+      2. Improve clarity by rephrasing unclear or ambiguous sentences.
+      3. Enhance concision by removing unnecessary words or phrases.
+      4. Break down long, complex sentences into shorter, more digestible ones.
+      5. Reduce repetition by combining similar ideas or removing redundant information.
+      6. Improve overall readability by ensuring a logical flow of ideas and smooth transitions between sentences and paragraphs.
+
+      Provide only the corrected version of the text in ${language}. Do not include explanations, comparisons to the original text, or any additional commentary.`
   },
   academic: {
     system: (language: string) =>
