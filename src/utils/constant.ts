@@ -84,6 +84,9 @@ export const availableModelsForGemini: IStringKeyMap = {
 // Ollama API 可用的模型
 export const availableModelsForOllama: IStringKeyMap = {
   llama3: 'llama3',
+  'llama3.1:8b': 'llama3.1:8b',
+  'llama3.1:70b': 'llama3.1:70b',
+  'qwen2:72b': 'qwen2:72b',
   llama2: 'llama2',
   phi3: 'phi3',
   wizardlm2: 'wizardlm2',
