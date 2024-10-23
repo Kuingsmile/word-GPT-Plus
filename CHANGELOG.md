@@ -1,3 +1,12 @@
+## :tada: 0.4.10 (2024-10-23)
+
+
+### :sparkles: Features
+
+* **custom:** add o1 and o1 mini ([eedcb96](https://github.com/Kuingsmile/word-GPT-Plus/commit/eedcb96))
+
+
+
 ## :tada: 0.4.9 (2024-08-14)
 
 
