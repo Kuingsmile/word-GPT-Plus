@@ -40,14 +40,18 @@ async function createChatCompletionStream(
 
     const response = await openai.chat.completions.create(requestConfig)
     options.result.value =
-      response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
+      response.choices[0].message?.content?.replace(/\n/g, '\n') ?? ''
     options.historyDialog.value.push({
       role: 'assistant',
       content: options.result.value
     })
   } catch (error) {
     if (error instanceof OpenAI.APIError) {
-      options.result.value = error.message
+      if (error.status === 429) {
+        options.result.value = 'You have exceeded your current quota. Please check your plan and billing details.'
+      } else {
+        options.result.value = error.message
+      }
       options.errorIssue.value = true
       console.error(error.message)
     } else {
