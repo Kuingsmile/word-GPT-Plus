@@ -4,8 +4,7 @@ import {
   availableModels,
   availableModelsForGemini,
   availableModelsForGroq,
-  availableModelsForOllama,
-  availableModelsForPalm
+  availableModelsForOllama
 } from './constant'
 import { localStorageKey } from './enum'
 
@@ -36,12 +35,6 @@ export type SettingNames =
   | 'azureDeploymentName'
   | 'azureTemperature'
   | 'azureMaxTokens'
-  | 'palmAPIKey'
-  | 'palmAPIEndpoint'
-  | 'palmCustomModel'
-  | 'palmModelSelect'
-  | 'palmTemperature'
-  | 'palmMaxTokens'
   | 'geminiAPIKey'
   | 'geminiCustomModel'
   | 'geminiModelSelect'
@@ -157,19 +150,6 @@ export const settingPreset: Record<SettingNames, ISettingOption> = {
   azureDeploymentName: defaultInputSetting,
   azureTemperature: inputNumSetting(0.7, 'azureTemperature', 'temperature'),
   azureMaxTokens: inputNumSetting(800, 'azureMaxTokens', 'maxTokens'),
-  palmAPIKey: defaultInputSetting,
-  palmAPIEndpoint: inputSetting(
-    'https://generativelanguage.googleapis.com/v1beta2'
-  ),
-  palmCustomModel: defaultInputSetting,
-  palmModelSelect: selectSetting(
-    availableModelsForPalm['text-bison-001'],
-    'palmModel',
-    optionLists.palmModelList,
-    availableModelsForPalm
-  ),
-  palmTemperature: inputNumSetting(0.7, 'palmTemperature', 'temperature'),
-  palmMaxTokens: inputNumSetting(800, 'palmMaxTokens', 'maxTokens'),
   geminiAPIKey: defaultInputSetting,
   geminiCustomModel: defaultInputSetting,
   geminiModelSelect: selectSetting(

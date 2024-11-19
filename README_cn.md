@@ -21,7 +21,6 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
   - OpenAI API
   - Azure OpenAI API
   - Ollama2
-  - Google PALM2 API
   - Google Gemini Pro API
   - Groq
 - 支持多种语言
@@ -48,9 +47,7 @@ Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基
 
 Azure OpenAI需要首先申请资格，请前往[Azure OpenAI API申请网址](https://go.microsoft.com/fwlink/?linkid=2222006&clcid=0x409&culture=en-us&country=us)申请资格。
 
-Google PALM2 API需要前往[Google AI](https://developers.generativeai.google/)申请，申请后目前公测阶段使用是免费的。
-
-Google Gemini Pro API的api key与Google PALM2 API的api key相同，目前免费版限制次数一分钟60个请求。
+Google Gemini Pro API需要前往[Google AI](https://developers.generativeai.google/)申请，目前免费版限制次数一分钟60个请求。
 
 Groq的api key可以在[https://console.groq.com/keys](https://console.groq.com/keys)申请。
 

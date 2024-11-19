@@ -17,13 +17,6 @@ export enum localStorageKey {
   azureDeploymentName = 'azureDeploymentName',
   azureMaxTokens = 'azureMaxTokens',
   azureTemperature = 'azureTemperature',
-  // palm api
-  palmAPIKey = 'palmAPIKey',
-  palmAPIEndpoint = 'palmAPIEndpoint',
-  palmMaxTokens = 'palmMaxTokens',
-  palmTemperature = 'palmTemperature',
-  palmModel = 'palmModel',
-  palmCustomModel = 'palmCustomModel',
   // gemini api
   geminiAPIKey = 'geminiAPIKey',
   geminiMaxTokens = 'geminiMaxTokens',

@@ -46,7 +46,6 @@ export const languageMap: IStringKeyMap = {
 export const availableAPIs: IStringKeyMap = {
   official: 'official',
   azure: 'azure',
-  palm: 'palm',
   gemini: 'gemini',
   ollama: 'ollama',
   groq: 'groq'
@@ -64,11 +63,6 @@ export const availableModels: IStringKeyMap = {
   'gpt-4-turbo': 'gpt-4-turbo',
   'gpt-4-turo-preview': 'gpt-4-turo-preview',
   'gpt4-0613': 'gpt-4-0613'
-}
-
-// palm api 可用的模型
-export const availableModelsForPalm: IStringKeyMap = {
-  'text-bison-001': 'text-bison-001'
 }
 
 // Gemini API 可用的模型

@@ -21,6 +21,10 @@ function useSettingForm() {
     settingForm.value[key as keyof typeof settingForm.value] =
       localStorage.getItem(settingPreset[key].saveKey || key) ||
       settingForm.value[key as keyof typeof settingForm.value]
+    if (settingForm.value.api === 'palm') {
+      settingForm.value.api = 'gemini'
+      localStorage.setItem('api', 'gemini')
+    }
   })
   return { settingForm, settingFormKeys }
 }

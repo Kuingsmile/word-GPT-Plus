@@ -489,19 +489,6 @@ async function template(taskType: keyof typeof buildInPrompt | 'custom') {
       maxTokens: settingForm.value.azureMaxTokens,
       temperature: settingForm.value.azureTemperature
     })
-  } else if (settingForm.value.api === 'palm' && settingForm.value.palmAPIKey) {
-    await API.palm.createChatCompletionStream({
-      palmAPIKey: settingForm.value.palmAPIKey,
-      palmAPIEndpoint: settingForm.value.palmAPIEndpoint,
-      palmModel:
-        settingForm.value.palmCustomModel || settingForm.value.palmModelSelect,
-      prompt: `${systemMessage}\n${userMessage}`,
-      result,
-      errorIssue,
-      loading,
-      maxTokens: settingForm.value.palmMaxTokens,
-      temperature: settingForm.value.palmTemperature
-    })
   } else if (
     settingForm.value.api === 'gemini' &&
     settingForm.value.geminiAPIKey
@@ -578,7 +565,6 @@ function checkApiKey() {
     type: settingForm.value.api,
     apiKey: settingForm.value.officialAPIKey,
     azureAPIKey: settingForm.value.azureAPIKey,
-    palmAPIKey: settingForm.value.palmAPIKey,
     geminiAPIKey: settingForm.value.geminiAPIKey,
     groqAPIKey: settingForm.value.groqAPIKey
   }
