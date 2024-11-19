@@ -173,7 +173,7 @@ export const settingPreset: Record<SettingNames, ISettingOption> = {
   geminiAPIKey: defaultInputSetting,
   geminiCustomModel: defaultInputSetting,
   geminiModelSelect: selectSetting(
-    availableModelsForGemini['gemini-pro'],
+    availableModelsForGemini['gemini-1.5-pro'],
     'geminiModel',
     optionLists.geminiModelList,
     availableModelsForGemini

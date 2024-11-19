@@ -25,7 +25,7 @@ async function createChatCompletionStream(
     const genAI = new GoogleGenerativeAI(apiKey)
     const model = genAI.getGenerativeModel(
       {
-        model: options.geminiModel ?? 'gemini-pro'
+        model: options.geminiModel ?? 'gemini-1.5-pro'
       },
       {
         apiVersion: 'v1beta'
