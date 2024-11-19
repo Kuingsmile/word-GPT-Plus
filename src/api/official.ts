@@ -37,7 +37,6 @@ async function createChatCompletionStream(
       temperature: options.temperature ?? 0.7,
       max_tokens: options.maxTokens ?? 800
     }
-
     const response = await openai.chat.completions.create(requestConfig)
     options.result.value =
       response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
