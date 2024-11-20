@@ -1,3 +1,20 @@
+## :tada: 0.4.11 (2024-11-20)
+
+
+### :sparkles: Features
+
+* **custom:** add models for gemini ([f369ab7](https://github.com/Kuingsmile/word-GPT-Plus/commit/f369ab7))
+* **custom:** remove support of palm ([84dc623](https://github.com/Kuingsmile/word-GPT-Plus/commit/84dc623))
+* **custom:** remove unavaliable models of openai ([ee25614](https://github.com/Kuingsmile/word-GPT-Plus/commit/ee25614))
+* **custom:** upgrade google sdk ([e420f82](https://github.com/Kuingsmile/word-GPT-Plus/commit/e420f82))
+
+
+### :pencil: Documentation
+
+* **custom:** require node 18+ ([a069918](https://github.com/Kuingsmile/word-GPT-Plus/commit/a069918))
+
+
+
 ## :tada: 0.4.10 (2024-10-23)
 
 
