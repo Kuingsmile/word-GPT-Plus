@@ -3,83 +3,80 @@
     <img src="https://user-images.githubusercontent.com/96409857/233920113-b6919e19-484e-4a4b-82ff-5c72f7314025.png" alt="Logo" height="100">
   </a>
 
-<br />
-  <h3 align="center">Word & chatGPT</h3>
-
+  <h2 align="center">Word GPT Plus</h2>
+  <p align="center">
+    Integrate AI directly into Microsoft Word
+    <br />
+    <a href="#features">Features</a> •
+    <a href="#getting-started">Getting Started</a> •
+    <a href="#installation">Installation</a> •
+    <a href="#usage">Usage</a>
+  </p>
 </div>
 
 English | [简体中文](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/README_cn.md)
 
-## Introduction
+## 📋 Introduction
 
-Word GPT Plus is a word add-in which integrates the chatGPT model into Microsoft Word. It allows you to generate text based on the text you have written in your document. You can use it to translate, summarize, polish or even write a whole document from zero.
+Word GPT Plus seamlessly integrates AI models into Microsoft Word, allowing you to generate, translate, summarize, and polish text directly within your documents. Enhance your writing workflow without leaving your Word environment.
 
-## Features
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/96409857/233878627-6b5abdfd-7ff6-4818-8b26-d78f74ea0e85.gif" width="45%" />
+  <img src="https://user-images.githubusercontent.com/96409857/233878368-3a793d8b-3740-4471-822b-0e062415b704.gif" width="45%" />
+</p>
 
-- Built-in prompts for translation, summarization, polishing, and academic writing
-- Multiple platforms supported
-  - OpenAI API(and other models compatible with OpenAI, such as DeepSeek)
+## ✨ Features
+
+- **Multiple AI Models Support**:
+  - OpenAI API (compatible with DeepSeek and other OpenAI-compatible endpoints)
   - Azure OpenAI API
-  - Ollama2
   - Google Gemini Pro API
-  - Groq
-- Support for multiple languages
-- Custom prompts can be set and saved for future use
-- Ability for users to set temperature and max tokens
-- Proxy support
+  - Ollama (for local deployment)
+  - Groq API
 
-![230424 091554](https://user-images.githubusercontent.com/96409857/233878627-6b5abdfd-7ff6-4818-8b26-d78f74ea0e85.gif)
-![230424 091221](https://user-images.githubusercontent.com/96409857/233878368-3a793d8b-3740-4471-822b-0e062415b704.gif)
+- **Built-in Templates**:
+  - Translation (40+ languages)
+  - Text polishing and improvement
+  - Academic writing enhancement
+  - Content summarization
+  - Grammar checking
 
-## Requirements
+- **Customization Options**:
+  - Save custom prompts for repeated use
+  - Adjust temperature and max tokens
+  - Support for proxies
+  - Local storage for privacy
 
-### software
+## 🚀 Getting Started
 
-- Microsoft Word 2016/2019 retail version , Microsoft Word 2021 or Microsoft 365
-- Edge WebView2 Runtime [https://developer.microsoft.com/en-us/microsoft-edge/webview2/](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
-- if you use self-hosted service, you need Node.js 18+
+### Requirements
 
-**Note: office add-in can only used in docx file, not support doc file.**
+#### Software
+- Microsoft Word 2016/2019 (retail version), Word 2021, or Microsoft 365
+- [Edge WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
+- Node.js 18+ (only for self-hosting)
 
-### account
+> **Note**: Works only with .docx files (not compatible with older .doc format)
 
-Official API need an OpenAI api key, you can get it from [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)
+#### API Access
+- **OpenAI**: Obtain an API key from [OpenAI Platform](https://platform.openai.com/account/api-keys)
+- **Azure OpenAI**: Apply for access at [Azure OpenAI Service](https://go.microsoft.com/fwlink/?linkid=2222006)
+- **Google Gemini**: Request API access from [Google AI Studio](https://developers.generativeai.google/)
+- **Groq**: Get your API key from [Groq Console](https://console.groq.com/keys)
 
-You need to apply for qualification first, please go to [Azure OpenAI API application website](https://go.microsoft.com/fwlink/?linkid=2222006&clcid=0x409&culture=en-us&country=us) to apply for qualification.
+## 💻 Installation
 
-You need to go to [Google AI](https://developers.generativeai.google/) to apply for qualification for Google Google Gemini Pro API, and the free version is currently limited to 60 requests per minute.
+Choose one of the following installation methods:
 
-Groq's api key can be applied for at [https://console.groq.com/keys](https://console.groq.com/keys).
+### Option 1: Use Hosted Service (Recommended)
 
-## Getting Started
+1. Download [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml)
+2. Save it to a directory on your computer (e.g., `C:\Users\username\Documents\WordGPT`)
+3. Follow the [Add-in Installation Guide](#adding-the-add-in-to-word) below
 
-There are two ways to install Word GPT Plus: through my free hosting service, or by self-hosting it.
+> **Note for users in China**: If you experience connectivity issues, try adding `msq.pub` to your proxy rules or use the self-hosted option.
 
-I recommend utilizing my hosting service as it is both user-friendly and requires no installation of additional dependencies. Furthermore, you will have access to the most up-to-date version of Word GPT Plus at all times.
-
-Rest assured that your privacy is protected as all data is saved using localStorage.
-
-However, if you desire faster speeds and possess expertise with Node.js, self-hosting is also an option.
-
-### Service hosted by me
-
-#### localhost
-
-This service is built using Cloudflare Pages, domain name: [https://word.msq.pub](https://word.msq.pub)
-
-**For China users, there maybe some network problems, please use `ping word.msq.pub` to see if you can access the domain.**
-
-**You can add `msq.pub` to your proxy software's rules, or use self-hosted.**
-
-1. Download the add-in `manifest.xml` file and Save it to a directory on your computer, such as `C:\Users\username\Documents\WordGPT`.
-
-  - download: [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml)
-
-2. Follow the [Sideload add-in](#sideload-add-in) instructions below to install the add-in.
-
-#### docker
-
-You can also use docker to run the service, first docker pull the image, then run the container.
+### Option 2: Docker Deployment
 
 ```bash
 docker pull kuingsmile/word-gpt-plus
@@ -88,9 +85,9 @@ docker run -d -p 3000:80 kuingsmile/word-gpt-plus
 
 You need to modify all `[localhost:3000](http://localhost:3000)` in manifest.xml to your server address.
 
-Follow the [Sideload add-in](#sideload-add-in) instructions below to install the add-in.
+Follow the [Add-in Installation Guide](#adding-the-add-in-to-word) below.
 
-### Self-hosted
+### Option 3: Self-hosted
 
 If you want to host the add-in yourself, you will need to clone this repo and install dependencies, then run the project. Need Node.js 16+.
 
@@ -102,9 +99,9 @@ yarn run serve
 
 [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml)
 
-Then, follow the [Sideload add-in](#sideload-add-in) instructions below to install the add-in.
+Then, follow the [Add-in Installation Guide](#adding-the-add-in-to-word) below.
 
-### Sideload add-in
+### Add-in Installation Guide
 
 To get started with Word GPT Plus, you will need to sideload the add-in into Microsoft Word.
 

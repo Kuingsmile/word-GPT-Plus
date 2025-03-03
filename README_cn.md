@@ -3,77 +3,80 @@
     <img src="https://user-images.githubusercontent.com/96409857/233920113-b6919e19-484e-4a4b-82ff-5c72f7314025.png" alt="Logo" height="100">
   </a>
 
-<br />
-  <h3 align="center">Word & chatGPT</h3>
-
+  <h2 align="center">Word GPT Plus</h2>
+  <p align="center">
+    将 AI 直接集成到 Microsoft Word
+    <br />
+    <a href="#功能特点">功能特点</a> •
+    <a href="#开始使用">开始使用</a> •
+    <a href="#安装说明">安装说明</a> •
+    <a href="#使用方法">使用方法</a>
+  </p>
 </div>
 
-简体中文 | [English](https://github.com/Kuingsmile/PicList/blob/master/README.md)
+简体中文 | [English](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/README.md)
 
-## 简介
+## 📋 简介
 
-Word GPT Plus 是一个集成了 chatGPT 模型的 Word 插件。它允许你基于你在文档中写的内容生成文本。你可以使用它来翻译、总结、润色或者从零开始写一篇文章。
+Word GPT Plus 是一款将 AI 模型无缝集成到 Microsoft Word 中的插件，使您能够在文档中直接生成、翻译、总结和润色文本。增强您的写作流程，无需离开 Word 环境。
 
-## 特色功能
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/96409857/233878627-6b5abdfd-7ff6-4818-8b26-d78f74ea0e85.gif" width="45%" />
+  <img src="https://user-images.githubusercontent.com/96409857/233878368-3a793d8b-3740-4471-822b-0e062415b704.gif" width="45%" />
+</p>
 
-- 内置用于翻译、总结、润色和学术写作的提示
-- 多平台支持
-  - OpenAI API（以及兼容openai的其它模型，如DeepSeek）
+## ✨ 功能特点
+
+- **多种 AI 模型支持**：
+  - OpenAI API（兼容 DeepSeek 和其他 OpenAI 兼容接口）
   - Azure OpenAI API
-  - Ollama2
   - Google Gemini Pro API
-  - Groq
-- 支持多种语言
-- 可以自定义提示并保存以供将来使用
-- 允许用户设置temperature和max tokens
-- 支持代理
+  - Ollama（用于本地部署）
+  - Groq API
 
-![230424 091554](https://user-images.githubusercontent.com/96409857/233878627-6b5abdfd-7ff6-4818-8b26-d78f74ea0e85.gif)
-![230424 091221](https://user-images.githubusercontent.com/96409857/233878368-3a793d8b-3740-4471-822b-0e062415b704.gif)
+- **内置模板**：
+  - 翻译（支持 40+ 种语言）
+  - 文本润色和改进
+  - 学术写作增强
+  - 内容摘要生成
+  - 语法检查
 
-## 环境要求
+- **自定义选项**：
+  - 保存自定义提示以便重复使用
+  - 调整温度和最大令牌数
+  - 支持代理设置
+  - 本地存储保护隐私
 
-### 软件要求
+## 🚀 开始使用
 
-- Microsoft Word 2016/2019 零售版，Microsoft Word 2021 或 Microsoft 365
-- Edge WebView2 Runtime [https://developer.microsoft.com/en-us/microsoft-edge/webview2/](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
-- 如果你使用自己搭建的服务，你需要 Node.js 18+
+### 环境要求
 
-**注意：office 插件只能在 docx 文件中使用，不支持 doc 文件。**
+#### 软件
+- Microsoft Word 2016/2019 零售版、Word 2021 或 Microsoft 365
+- [Edge WebView2 运行时](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
+- Node.js 18+（仅用于自托管）
 
-### 账户要求
+> **注意**：仅适用于 .docx 文件（不兼容旧版 .doc 格式）
 
-官方API需要一个OpenAI api key，你可以从[https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)获取。
+#### API 访问
+- **OpenAI**：从 [OpenAI Platform](https://platform.openai.com/account/api-keys) 获取 API 密钥
+- **Azure OpenAI**：在 [Azure OpenAI Service](https://go.microsoft.com/fwlink/?linkid=2222006) 申请访问权限
+- **Google Gemini**：从 [Google AI Studio](https://developers.generativeai.google/) 请求 API 访问
+- **Groq**：从 [Groq Console](https://console.groq.com/keys) 获取 API 密钥
 
-Azure OpenAI需要首先申请资格，请前往[Azure OpenAI API申请网址](https://go.microsoft.com/fwlink/?linkid=2222006&clcid=0x409&culture=en-us&country=us)申请资格。
+## 💻 安装说明
 
-Google Gemini Pro API需要前往[Google AI](https://developers.generativeai.google/)申请，目前免费版限制次数一分钟60个请求。
+选择以下安装方法之一：
 
-Groq的api key可以在[https://console.groq.com/keys](https://console.groq.com/keys)申请。
+### 方案一：使用托管服务（推荐）
 
-## 快速开始
+1. 下载 [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml)
+2. 保存到您计算机上的目录（例如：`C:\Users\用户名\Documents\WordGPT`）
+3. 按照下方[插件安装指南](#添加插件到-word)操作
 
-有两种方法可以安装 Word GPT Plus：通过我的免费web服务，或者自己搭建服务。
+> **中国用户注意**：如果遇到连接问题，请尝试将 `msq.pub` 添加到您的代理规则，或使用自托管选项。
 
-我建议使用我的web服务，因为它安装简单快捷，也不需要安装额外的依赖项。此外，你将随时可以访问到最新版本的 Word GPT Plus。
-
-由于所有数据都是使用localStorage保存的，所以你的隐私是受到保护的。
-
-但是，如果你想要更快的速度，并且具有Node.js的专业知识，自己搭建服务也是一个选择。
-
-### 由我提供的服务
-
-这项服务是使用 Cloudflare Pages 构建的，域名: [https://word.msq.pub](https://word.msq.pub)
-
-**中国用户可能会遇到网络问题，请使用 `ping word.msq.pub` 查看是否可以访问该域名。**  
-
-**你可以将 `msq.pub` 添加到你的代理软件的规则中，或者使用自己搭建的服务。**
-
-1. 下载`manifest.xml`文件并保存到你的电脑上，例如 `C:\Users\username\Documents\WordGPT`.
-  - 下载: [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml)
-2. 按照下面的 [旁加载插件](#旁加载插件) 说明安装插件。
-
-### 自己搭建服务
+### 方案二：Docker 部署
 
 #### 本地运行
 
