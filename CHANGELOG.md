@@ -1,3 +1,18 @@
+## :tada: 0.4.12 (2025-03-03)
+
+
+### :sparkles: Features
+
+* **custom:** add deepseek r1 and optimize the prompt ([5ef40b0](https://github.com/Kuingsmile/word-GPT-Plus/commit/5ef40b0))
+
+
+### :pencil: Documentation
+
+* **custom:** update readme ([128dc03](https://github.com/Kuingsmile/word-GPT-Plus/commit/128dc03))
+* **custom:** update README to include DeepSeek ([8e261c4](https://github.com/Kuingsmile/word-GPT-Plus/commit/8e261c4))
+
+
+
 ## :tada: 0.4.11 (2024-11-20)
 
 

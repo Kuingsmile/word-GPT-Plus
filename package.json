@@ -1,6 +1,6 @@
 {
   "name": "word-gpt-plus",
-  "version": "0.4.11",
+  "version": "0.4.12",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve --port 3000",
