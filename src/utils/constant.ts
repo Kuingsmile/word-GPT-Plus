@@ -109,71 +109,78 @@ export const availableModelsForGroq: IStringKeyMap = {
   'llama3-70b-8192': 'llama3-70b-8192',
   'llama3-8b-8192': 'llama3-8b-8192',
   'mixtral-8x7b-32768': 'mixtral-8x7b-32768',
-  'whisper-large-v3': 'whisper-large-v3'
+  'whisper-large-v3': 'whisper-large-v3',
+  'deepseek-r1-distill-llama-70b': 'deepseek-r1-distill-llama-70b'
 }
 
 export const buildInPrompt = {
   translate: {
     system: (language: string) =>
-      `Act as an ${language} translator, spelling corrector and improver.`,
+      `You are a professional ${language} translator focused on accuracy and natural-sounding translations.`,
     user: (
       text: string,
       language: string
-    ) => `I will speak to you in any language and you will detect the language,
-    translate it and answer in the corrected and improved version of my text, in ${language}.
-    I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, 
-    upper level ${language} words and sentences.
-    Keep the meaning same, but make them more literary.
-    I want you to only reply the correction, the improvements and nothing else, do not write explanations.
-    Reply in ${language}.
-    My first sentence is: ${text}`
+    ) => `Translate the following text into ${language}. Maintain the original meaning while using natural, 
+    elegant expressions appropriate for native ${language} speakers. Improve the language quality 
+    from basic to sophisticated where appropriate. Provide only the translation without explanations.
+
+    Text to translate: ${text}`
   },
   polish: {
     system: (language: string) =>
-      `As a writing improvement assistant, Reply in ${language}`,
+      `You are a professional writing improvement assistant. Respond in ${language}.`,
     user: (
       text: string,
       language: string
-    ) => `Improve the spelling, grammar, clarity, concision,
-    and overall readability of the text provided, while breaking down long sentences, reducing repetition,
-    and providing suggestions for improvement.
-    Please provide only the corrected ${language} version of the text and avoid including explanations.
-    Please begin by editing the following text: ${text}`
+    ) => `Improve this text in ${language} for clarity, concision, and readability:
+    - Fix spelling and grammar
+    - Break down overly long sentences
+    - Reduce repetition
+    - Enhance overall flow
+    
+    Provide only the improved version without explanations and any additional information: ${text}`
   },
   academic: {
     system: (language: string) =>
-      `As an academic paper writing assistant, Reply in ${language}`,
+      `You are an expert academic editor specializing in scholarly publications. Respond in ${language}.`,
     user: (
       text: string,
       language: string
-    ) => `I want you to act as a professional spelling and grammar corrector and improver.
-    I want you to replace my simplified A0-level words and sentences with more beautiful and elegant,
-    upper level ${language} words and sentences.
-    Keep the meaning same, but make them more literary and improve my expression in the style of SCI papers.
-    High IF SCI papers are preferred.
-    Please provide only the revised ${language} version of the text and avoid including explanations.
-    Please begin by editing the following text: ${text}`
+    ) => `Transform the following text into academic-quality writing suitable for a high-impact scientific journal:
+    - Elevate vocabulary and phrasing while preserving meaning
+    - Apply formal academic tone consistent with scholarly publications
+    - Structure sentences and paragraphs for logical flow
+    - Use precise terminology appropriate for scientific literature
+
+    Provide only the revised text without explanations and Reply in ${language}: ${text}`
   },
   summary: {
     system: (language: string) =>
-      `As a summarization assistant, Reply in ${language}`,
+      `You are a professional text summarization expert. Respond in ${language}.`,
     user: (
       text: string,
       language: string
-    ) => `Summarize the following text into 100 words,
-    making it easy to read and comprehend. The summary should be concise, clear,
-    and capture the main points of the text. Avoid using complex sentence structures or technical jargon.
-    Respond in ${language}. Please begin by editing the following text: ${text}`
+    ) => `Create a concise 100-word summary of this text that:
+    - Captures the main points and key information
+    - Is easy to read and understand
+    - Maintains the core message
+    - Uses clear, straightforward language
+    Respond in ${language}.
+    Text to summarize: ${text}`
   },
   grammar: {
     system: (language: string) =>
-      `Act like you are an expert grammar checker. Look for mistakes and make sentences more fluent, Reply in ${language}`,
+      `You are an expert grammar checker with exceptional attention to detail. Respond in ${language}.`,
     user: (
       text: string,
       language: string
-    ) => `Please analyze the following text for a wide range of grammatical aspects and provide corrections. Be thorough in identifying and fixing any grammatical mistakes, including checking for correct punctuation usage, ensuring proper sentence structure, enhancing readability, identifying and correcting spelling mistakes, and verifying subject-verb agreement. Your assistance in ensuring the grammatical accuracy of the text is highly appreciated. Please be thorough in your examination, and provide comprehensive corrections to enhance the overall grammatical integrity of the text.
-
-    Just reply to user input with the correct grammar, DO NOT reply to the context of the question of the user input. If the user input is grammatically correct and fluent, just reply “sounds good”.
-    Respond in ${language}. Please begin by editing the following text: ${text}`
+    ) => `Review and correct any grammatical issues in this text:
+    - Fix punctuation, spelling, and syntax errors
+    - Ensure proper sentence structure and flow
+    - Correct subject-verb agreement issues
+    - Improve overall readability
+    Respond in ${language}.
+    If the text is already grammatically correct, respond only with "Sounds good." 
+    Otherwise, provide the corrected version: ${text}`
   }
 }
