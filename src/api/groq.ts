@@ -1,16 +1,10 @@
 import Groq from 'groq-sdk'
-import { Ref } from 'vue'
+import { BaseChatCompletionOptions } from './types'
+import { updateResult, handleError, finishLoading } from './utils'
 
-interface ChatCompletionStreamOptions {
+interface ChatCompletionStreamOptions extends BaseChatCompletionOptions {
   groqAPIKey: string
   groqModel: string
-  messages: any[]
-  result: Ref<string>
-  historyDialog: Ref<any[]>
-  errorIssue: Ref<boolean>
-  loading: Ref<boolean>
-  maxTokens?: number
-  temperature?: number
 }
 
 async function createChatCompletionStream(
@@ -21,28 +15,27 @@ async function createChatCompletionStream(
       apiKey: options.groqAPIKey,
       dangerouslyAllowBrowser: true
     })
-    const requestConfig = {
+
+    const response = await groq.chat.completions.create({
       model: options.groqModel,
-      messages: options.messages,
+      messages: options.messages as any[],
       temperature: options.temperature ?? 0.5,
       max_tokens: options.maxTokens ?? 1024
-    }
-
-    const response = await groq.chat.completions.create(requestConfig)
-    options.result.value =
-      response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
-    options.historyDialog.value.push({
-      role: 'assistant',
-      content: options.result.value
     })
+
+    updateResult(
+      {
+        content:
+          response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
+      },
+      options.result,
+      options.historyDialog
+    )
   } catch (error) {
-    options.result.value = String(error)
-    options.errorIssue.value = true
-    console.error(error)
+    handleError(error as Error, options.result, options.errorIssue)
+  } finally {
+    finishLoading(options.loading)
   }
-  options.loading.value = false
 }
 
-export default {
-  createChatCompletionStream
-}
+export default { createChatCompletionStream }

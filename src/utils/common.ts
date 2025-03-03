@@ -13,17 +13,25 @@ export interface Auth {
 }
 
 export function checkAuth(auth: Auth): boolean {
-  return (
-    auth &&
-    ((auth.type === 'official' && !!auth.apiKey) ||
-      (auth.type === 'azure' && !!auth.azureAPIKey) ||
-      (auth.type === 'gemini' && !!auth.geminiAPIKey) ||
-      (auth.type === 'groq' && !!auth.groqAPIKey) ||
-      auth.type === 'ollama')
-  )
+  if (!auth) return false
+
+  switch (auth.type) {
+    case 'official':
+      return !!auth.apiKey
+    case 'azure':
+      return !!auth.azureAPIKey
+    case 'gemini':
+      return !!auth.geminiAPIKey
+    case 'groq':
+      return !!auth.groqAPIKey
+    case 'ollama':
+      return true
+    default:
+      return false
+  }
 }
 
-export function forceNumber(val: any) {
+export function forceNumber(val: any): number {
   return Number(val) || 0
 }
 
@@ -44,14 +52,8 @@ export function getOptionList(
 }
 
 const localLanguageList = [
-  {
-    label: 'English',
-    value: 'en'
-  },
-  {
-    label: '简体中文',
-    value: 'zh-cn'
-  }
+  { label: 'English', value: 'en' },
+  { label: '简体中文', value: 'zh-cn' }
 ]
 
 export const optionLists = {
@@ -64,10 +66,5 @@ export const optionLists = {
   groqModelList: getOptionList(availableModelsForGroq)
 }
 
-export function getLabel(key: string) {
-  return `${key}Label`
-}
-
-export function getPlaceholder(key: string) {
-  return `${key}Placeholder`
-}
+export const getLabel = (key: string) => `${key}Label`
+export const getPlaceholder = (key: string) => `${key}Placeholder`

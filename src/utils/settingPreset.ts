@@ -50,8 +50,7 @@ export type SettingNames =
   | 'groqModelSelect'
   | 'groqCustomModel'
 
-type keyoflocalStorageKey = keyof typeof localStorageKey
-
+// Helper functions
 const createStorageFuncs = (key: string, defaultValue: any) => ({
   getFunc: () => forceNumber(localStorage.getItem(key)) || defaultValue,
   saveFunc: (value: any) => localStorage.setItem(key, value.toString())
@@ -59,7 +58,7 @@ const createStorageFuncs = (key: string, defaultValue: any) => ({
 
 const inputSetting = (
   defaultValue: string,
-  saveKey?: keyoflocalStorageKey
+  saveKey?: keyof typeof localStorageKey
 ): ISettingOption => ({
   defaultValue,
   saveKey,
@@ -68,7 +67,7 @@ const inputSetting = (
 
 const inputNumSetting = (
   defaultValue: number,
-  saveKey: keyoflocalStorageKey,
+  saveKey: keyof typeof localStorageKey,
   stepStyle: 'temperature' | 'maxTokens'
 ) => ({
   defaultValue,
@@ -80,7 +79,7 @@ const inputNumSetting = (
 
 const selectSetting = (
   defaultValue: string,
-  saveKey: keyoflocalStorageKey,
+  saveKey: keyof typeof localStorageKey,
   optionList: { label: string; value: string }[],
   availableModels: Record<string, string> = {}
 ) => ({
@@ -88,29 +87,16 @@ const selectSetting = (
   saveKey,
   type: 'select' as componentType,
   optionList,
-  getFunc: getModelHelper(
-    localStorageKey[saveKey],
-    availableModels,
-    defaultValue
-  )
-})
-
-const getModelHelper = (
-  key: string,
-  availableModels: Record<string, string>,
-  defaultValue: string
-): (() => string) => {
-  return () => {
-    const modelTemp = localStorage.getItem(key) || defaultValue
-    if (Object.keys(availableModels).includes(modelTemp)) {
-      return availableModels[modelTemp]
-    } else if (Object.values(availableModels).includes(modelTemp)) {
-      return modelTemp
-    } else {
-      return defaultValue
-    }
+  getFunc: () => {
+    const modelTemp =
+      localStorage.getItem(localStorageKey[saveKey]) || defaultValue
+    return Object.keys(availableModels).includes(modelTemp)
+      ? availableModels[modelTemp]
+      : Object.values(availableModels).includes(modelTemp)
+        ? modelTemp
+        : defaultValue
   }
-}
+})
 
 const defaultInputSetting = inputSetting('')
 

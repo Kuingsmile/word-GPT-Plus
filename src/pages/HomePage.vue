@@ -12,7 +12,7 @@
           :placeholder="$t('homeSystemDescription')"
           @blur="handelSystemPromptChange(systemPrompt)"
         />
-        <span>
+        <div class="select-with-icons">
           <el-select
             v-model="systemPromptSelected"
             size="small"
@@ -28,7 +28,7 @@
           </el-select>
           <el-icon
             color="#409EFF"
-            style="cursor: pointer; margin-left: 5px; vertical-align: middle"
+            class="action-icon"
             size="15px"
             @click="addSystemPromptVisible = true"
           >
@@ -36,13 +36,13 @@
           </el-icon>
           <el-icon
             color="red"
-            style="cursor: pointer; margin-left: 5px; vertical-align: middle"
+            class="action-icon"
             size="15px"
             @click="removeSystemPromptVisible = true"
           >
             <Remove />
           </el-icon>
-        </span>
+        </div>
       </el-form-item>
       <el-form-item>
         <template #label>
@@ -56,7 +56,7 @@
           :placeholder="$t('homePromptDescription')"
           @blur="handelPromptChange(prompt)"
         />
-        <span>
+        <div class="select-with-icons">
           <el-select
             v-model="promptSelected"
             size="small"
@@ -72,7 +72,7 @@
           </el-select>
           <el-icon
             color="#409EFF"
-            style="cursor: pointer; margin-left: 5px; vertical-align: middle"
+            class="action-icon"
             size="15px"
             @click="addPromptVisible = true"
           >
@@ -80,13 +80,13 @@
           </el-icon>
           <el-icon
             color="red"
-            style="cursor: pointer; margin-left: 5px; vertical-align: middle"
+            class="action-icon"
             size="15px"
             @click="removePromptVisible = true"
           >
             <Remove />
           </el-icon>
-        </span>
+        </div>
       </el-form-item>
       <SelectItem
         v-model="settingForm.replyLanguage"
@@ -745,6 +745,18 @@ onBeforeMount(() => {
 .api-button {
   margin-left: 10px;
   border-radius: 10px;
+}
+
+.select-with-icons {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.action-icon {
+  cursor: pointer;
+  margin-left: 5px;
+  vertical-align: middle;
 }
 
 .result-group {

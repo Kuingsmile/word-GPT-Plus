@@ -1,25 +1,18 @@
 import OpenAI, { ClientOptions } from 'openai'
 import { availableModels } from '@/utils/constant'
-import { Ref } from 'vue'
+import { BaseChatCompletionOptions } from './types'
+import { updateResult, handleError, finishLoading } from './utils'
 
 function setConfig(apiKey: string, basePath?: string): ClientOptions {
-  const config = {
+  return {
     apiKey,
     baseURL: basePath || 'https://api.openai.com/v1',
     dangerouslyAllowBrowser: true
   }
-  return config
 }
 
-interface ChatCompletionStreamOptions {
+interface ChatCompletionStreamOptions extends BaseChatCompletionOptions {
   config: ClientOptions
-  messages: any[]
-  result: Ref<string>
-  historyDialog: Ref<any[]>
-  errorIssue: Ref<boolean>
-  loading: Ref<boolean>
-  maxTokens?: number
-  temperature?: number
   model?: string
 }
 
@@ -31,31 +24,29 @@ async function createChatCompletionStream(
     if (Object.keys(availableModels).includes(options.model ?? '')) {
       options.model = availableModels[options.model ?? '']
     }
-    const requestConfig = {
+
+    const response = await openai.chat.completions.create({
       model: options.model ?? 'gpt-3.5-turbo',
-      messages: options.messages,
+      messages: options.messages as any[],
       temperature: options.temperature ?? 0.7,
       max_tokens: options.maxTokens ?? 800
-    }
-    const response = await openai.chat.completions.create(requestConfig)
-    options.result.value =
-      response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
-    options.historyDialog.value.push({
-      role: 'assistant',
-      content: options.result.value
     })
+
+    updateResult(
+      {
+        content:
+          response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
+      },
+      options.result,
+      options.historyDialog
+    )
   } catch (error) {
-    if (error instanceof OpenAI.APIError) {
-      options.result.value = error.message
-      options.errorIssue.value = true
-      console.error(error.message)
-    } else {
-      options.result.value = String(error)
-      options.errorIssue.value = true
-      console.error(error)
-    }
+    const message =
+      error instanceof OpenAI.APIError ? error.message : String(error)
+    handleError(new Error(message), options.result, options.errorIssue)
+  } finally {
+    finishLoading(options.loading)
   }
-  options.loading.value = false
 }
 
 export default {

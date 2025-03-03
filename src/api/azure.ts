@@ -1,101 +1,51 @@
 import {
   OpenAIClient,
   AzureKeyCredential,
-  GetChatCompletionsOptions,
-  ChatCompletions
+  GetChatCompletionsOptions
 } from '@azure/openai'
-import { Ref } from 'vue'
+import { BaseChatCompletionOptions } from './types'
+import { updateResult, handleError, finishLoading } from './utils'
 
-interface ChatCompletionStreamOptions {
+interface ChatCompletionStreamOptions extends BaseChatCompletionOptions {
   azureAPIKey: string
   azureAPIEndpoint: string
   azureDeploymentName: string
-  messages: any[]
-  result: Ref<string>
-  historyDialog: Ref<any[]>
-  errorIssue: Ref<boolean>
-  loading: Ref<boolean>
-  maxTokens?: number
-  temperature?: number
 }
 
 async function createChatCompletionStream(
   options: ChatCompletionStreamOptions
 ): Promise<void> {
-  const client = createOpenAIClient(
-    options.azureAPIKey,
-    options.azureAPIEndpoint
-  )
-  const requestConfig: GetChatCompletionsOptions = createRequestConfig(
-    options.maxTokens,
-    options.temperature
-  )
   try {
-    const response = await getChatCompletions(
-      client,
+    const client = new OpenAIClient(
+      options.azureAPIEndpoint,
+      new AzureKeyCredential(options.azureAPIKey)
+    )
+
+    const requestConfig: GetChatCompletionsOptions = {
+      maxTokens: options.maxTokens ?? 800,
+      temperature: options.temperature ?? 0.7,
+      stream: false
+    }
+
+    const response = await client.getChatCompletions(
       options.azureDeploymentName,
-      options.messages,
+      options.messages as any[],
       requestConfig
     )
-    updateResultAndHistory(response, options.result, options.historyDialog)
-  } catch (error: any) {
-    handleError(error, options.result, options.errorIssue)
-  }
-  options.loading.value = false
-}
 
-function createOpenAIClient(apiKey: string, apiEndpoint: string): OpenAIClient {
-  return new OpenAIClient(apiEndpoint, new AzureKeyCredential(apiKey))
-}
-
-function createRequestConfig(
-  maxTokens?: number,
-  temperature?: number
-): GetChatCompletionsOptions {
-  return {
-    maxTokens: maxTokens ?? 800,
-    temperature: temperature ?? 0.7,
-    stream: false
+    updateResult(
+      {
+        content:
+          response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
+      },
+      options.result,
+      options.historyDialog
+    )
+  } catch (error) {
+    handleError(error as Error, options.result, options.errorIssue)
+  } finally {
+    finishLoading(options.loading)
   }
 }
 
-async function getChatCompletions(
-  client: OpenAIClient,
-  deploymentName: string,
-  messages: any[],
-  config: GetChatCompletionsOptions
-): Promise<ChatCompletions> {
-  return (await client.getChatCompletions(
-    deploymentName,
-    messages,
-    config
-  )) as ChatCompletions
-}
-
-function updateResultAndHistory(
-  response: ChatCompletions,
-  result: Ref<string>,
-  historyDialog: Ref<any[]>
-): void {
-  const content =
-    response.choices[0].message?.content?.replace(/\\n/g, '\n') ?? ''
-  result.value = content
-  historyDialog.value.push({
-    role: 'assistant',
-    content
-  })
-}
-
-function handleError(
-  error: Error,
-  result: Ref<string>,
-  errorIssue: Ref<boolean>
-): void {
-  result.value = String(error)
-  errorIssue.value = true
-  console.error(error)
-}
-
-export default {
-  createChatCompletionStream
-}
+export default { createChatCompletionStream }

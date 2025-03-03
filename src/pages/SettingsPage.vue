@@ -108,7 +108,7 @@ const addWatch = () => {
       () => settingForm.value[key],
       () => {
         if (settingPreset[key].saveFunc) {
-          settingPreset[key].saveFunc(settingForm.value[key])
+          settingPreset[key].saveFunc!(settingForm.value[key])
           return
         }
         localStorage.setItem(

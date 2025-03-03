@@ -1,15 +1,10 @@
-import { Ref } from 'vue'
 import axios from 'axios'
+import { BaseChatCompletionOptions } from './types'
+import { updateResult, handleError, finishLoading } from './utils'
 
-interface ChatCompletionStreamOptions {
+interface ChatCompletionStreamOptions extends BaseChatCompletionOptions {
   ollamaEndpoint: string
   ollamaModel: string
-  messages: any[]
-  result: Ref<string>
-  historyDialog: Ref<any[]>
-  errorIssue: Ref<boolean>
-  loading: Ref<boolean>
-  temperature?: number
 }
 
 async function createChatCompletionStream(
@@ -21,35 +16,27 @@ async function createChatCompletionStream(
       `${formatedEndpoint}/api/chat`,
       {
         model: options.ollamaModel,
-        options: {
-          temperature: options.temperature
-        },
+        options: { temperature: options.temperature },
         stream: false,
         messages: options.messages
       },
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
+      { headers: { 'Content-Type': 'application/json' } }
     )
+
     if (response.status !== 200) {
       throw new Error(`Status code: ${response.status}`)
     }
-    options.result.value =
-      response.data?.message?.content?.replace(/\\n/g, '\n') ?? ''
-    options.historyDialog.value.push({
-      role: 'assistant',
-      content: options.result.value
-    })
+
+    updateResult(
+      { content: response.data?.message?.content?.replace(/\\n/g, '\n') ?? '' },
+      options.result,
+      options.historyDialog
+    )
   } catch (error) {
-    console.error(error)
-    options.result.value = String(error)
-    options.errorIssue.value = true
+    handleError(error as Error, options.result, options.errorIssue)
+  } finally {
+    finishLoading(options.loading)
   }
-  options.loading.value = false
 }
 
-export default {
-  createChatCompletionStream
-}
+export default { createChatCompletionStream }

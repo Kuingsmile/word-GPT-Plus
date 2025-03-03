@@ -1,94 +1,49 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import { Ref } from 'vue'
+import { BaseChatCompletionOptions } from './types'
+import { handleError, finishLoading } from './utils'
 
-interface ChatCompletionStreamOptions {
+interface ChatCompletionStreamOptions extends BaseChatCompletionOptions {
   geminiAPIKey: string
-  messages: string
-  result: Ref<string>
-  historyDialog: Ref<any[]>
-  errorIssue: Ref<boolean>
-  loading: Ref<boolean>
-  maxTokens?: number
-  temperature?: number
   geminiModel?: string
 }
 
 async function createChatCompletionStream(
   options: ChatCompletionStreamOptions
 ): Promise<void> {
-  const apiKey = options.geminiAPIKey
-  const generationConfig = {
-    maxOutputTokens: options.maxTokens ?? 800,
-    temperature: options.temperature ?? 0.7
-  }
   try {
-    const genAI = new GoogleGenerativeAI(apiKey)
+    const genAI = new GoogleGenerativeAI(options.geminiAPIKey)
     const model = genAI.getGenerativeModel(
-      {
-        model: options.geminiModel ?? 'gemini-1.5-pro'
-      },
-      {
-        apiVersion: 'v1beta'
-      }
+      { model: options.geminiModel ?? 'gemini-1.5-pro' },
+      { apiVersion: 'v1beta' }
     )
+
     const chat = model.startChat({
       history: options.historyDialog.value,
-      generationConfig
+      generationConfig: {
+        maxOutputTokens: options.maxTokens ?? 800,
+        temperature: options.temperature ?? 0.7
+      }
     })
-    const result = await chat.sendMessage(options.messages)
-    const response = await result.response
-    const text = response.text()
-    updateResultAndHistory(
-      text,
-      options.messages,
-      options.result,
-      options.historyDialog
-    )
-  } catch (error: any) {
-    handleError(error, options.result, options.errorIssue)
-  }
-  options.loading.value = false
-}
 
-function updateResultAndHistory(
-  text: string,
-  userText: string,
-  result: Ref<string>,
-  historyDialog: Ref<any[]>
-): void {
-  result.value = text
-  historyDialog.value.push(
-    ...[
+    const result = await chat.sendMessage(options.messages as string)
+    const text = (await result.response).text()
+
+    options.result.value = text
+    options.historyDialog.value.push(
       {
         role: 'user',
-        parts: [
-          {
-            text: userText
-          }
-        ]
+        parts: [{ text: options.messages as string }]
       },
       {
         role: 'model',
-        parts: [
-          {
-            text
-          }
-        ]
+        parts: [{ text }]
       }
-    ]
-  )
+    )
+  } catch (error) {
+    handleError(error as Error, options.result, options.errorIssue)
+  } finally {
+    finishLoading(options.loading)
+  }
 }
 
-function handleError(
-  error: Error,
-  result: Ref<string>,
-  errorIssue: Ref<boolean>
-): void {
-  result.value = String(error)
-  errorIssue.value = true
-  console.error(error)
-}
-
-export default {
-  createChatCompletionStream
-}
+export default { createChatCompletionStream }

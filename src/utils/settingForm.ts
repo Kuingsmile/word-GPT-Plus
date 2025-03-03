@@ -12,21 +12,30 @@ function useSettingForm() {
       {} as { [key in SettingNames]: any }
     )
   )
-  const settingFormKeys = Object.keys(settingForm.value) as SettingNames[]
-  settingFormKeys.forEach(key => {
-    if (settingPreset[key].getFunc) {
-      settingForm.value[key] = settingPreset[key].getFunc!()
+
+  // Load values from storage
+  Object.keys(settingForm.value).forEach(key => {
+    const typedKey = key as SettingNames
+    if (settingPreset[typedKey].getFunc) {
+      settingForm.value[typedKey] = settingPreset[typedKey].getFunc!()
       return
     }
-    settingForm.value[key as keyof typeof settingForm.value] =
-      localStorage.getItem(settingPreset[key].saveKey || key) ||
-      settingForm.value[key as keyof typeof settingForm.value]
-    if (settingForm.value.api === 'palm') {
-      settingForm.value.api = 'gemini'
-      localStorage.setItem('api', 'gemini')
-    }
+
+    const storageKey = settingPreset[typedKey].saveKey || key
+    settingForm.value[typedKey] =
+      localStorage.getItem(storageKey) || settingForm.value[typedKey]
   })
-  return { settingForm, settingFormKeys }
+
+  // Special case for legacy support
+  if (settingForm.value.api === 'palm') {
+    settingForm.value.api = 'gemini'
+    localStorage.setItem('api', 'gemini')
+  }
+
+  return {
+    settingForm,
+    settingFormKeys: Object.keys(settingForm.value) as SettingNames[]
+  }
 }
 
 export default useSettingForm
