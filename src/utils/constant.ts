@@ -67,6 +67,8 @@ export const availableModels: IStringKeyMap = {
 
 // Gemini API 可用的模型
 export const availableModelsForGemini: IStringKeyMap = {
+  'gemini-2.0-flash': 'gemini-2.0-flash',
+  'gemini-2.0-flash-lite': 'gemini-2.0-flash-lite',
   'gemini-1.5-flash': 'gemini-1.5-flash',
   'gemini-1.5-flash-8b': 'gemini-1.5-flash-8b',
   'gemini-1.0-pro': 'gemini-1.0-pro',

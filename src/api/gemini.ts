@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GoogleGenAI } from '@google/genai'
 import { BaseChatCompletionOptions } from './types'
 import { handleError, finishLoading } from './utils'
 
@@ -11,24 +11,27 @@ async function createChatCompletionStream(
   options: ChatCompletionStreamOptions
 ): Promise<void> {
   try {
-    const genAI = new GoogleGenerativeAI(options.geminiAPIKey)
-    const model = genAI.getGenerativeModel(
-      { model: options.geminiModel ?? 'gemini-1.5-pro' },
-      { apiVersion: 'v1beta' }
-    )
+    const genAI = new GoogleGenAI({
+      apiKey: options.geminiAPIKey
+    })
 
-    const chat = model.startChat({
+    const chat = genAI.chats.create({
+      model: options.geminiModel ?? 'gemini-1.5-pro',
       history: options.historyDialog.value,
-      generationConfig: {
+      config: {
         maxOutputTokens: options.maxTokens ?? 800,
         temperature: options.temperature ?? 0.7
       }
     })
 
-    const result = await chat.sendMessage(options.messages as string)
-    const text = (await result.response).text()
+    const result = await chat.sendMessage({
+      message: options.messages as string
+    })
+    if (result.text === undefined) {
+      throw new Error('No response from Gemini API')
+    }
+    options.result.value = result.text
 
-    options.result.value = text
     options.historyDialog.value.push(
       {
         role: 'user',
@@ -36,7 +39,7 @@ async function createChatCompletionStream(
       },
       {
         role: 'model',
-        parts: [{ text }]
+        parts: [{ text: result.text }]
       }
     )
   } catch (error) {
