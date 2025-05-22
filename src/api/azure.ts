@@ -1,8 +1,4 @@
-import {
-  OpenAIClient,
-  AzureKeyCredential,
-  GetChatCompletionsOptions
-} from '@azure/openai'
+import { AzureOpenAI } from 'openai'
 import { BaseChatCompletionOptions } from './types'
 import { updateResult, handleError, finishLoading } from './utils'
 
@@ -10,28 +6,28 @@ interface ChatCompletionStreamOptions extends BaseChatCompletionOptions {
   azureAPIKey: string
   azureAPIEndpoint: string
   azureDeploymentName: string
+  azureAPIVersion?: string
 }
 
 async function createChatCompletionStream(
   options: ChatCompletionStreamOptions
 ): Promise<void> {
   try {
-    const client = new OpenAIClient(
-      options.azureAPIEndpoint,
-      new AzureKeyCredential(options.azureAPIKey)
-    )
+    const client = new AzureOpenAI({
+      dangerouslyAllowBrowser: true,
+      apiKey: options.azureAPIKey,
+      endpoint: options.azureAPIEndpoint,
+      deployment: options.azureDeploymentName,
+      apiVersion: options.azureAPIVersion ?? '2024-10-01'
+    })
 
-    const requestConfig: GetChatCompletionsOptions = {
-      maxTokens: options.maxTokens ?? 800,
+    const response = await client.chat.completions.create({
+      model: options.azureDeploymentName,
+      messages: options.messages as any[],
+      max_tokens: options.maxTokens ?? 800,
       temperature: options.temperature ?? 0.7,
       stream: false
-    }
-
-    const response = await client.getChatCompletions(
-      options.azureDeploymentName,
-      options.messages as any[],
-      requestConfig
-    )
+    })
 
     updateResult(
       {

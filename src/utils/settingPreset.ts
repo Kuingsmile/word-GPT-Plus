@@ -35,6 +35,7 @@ export type SettingNames =
   | 'azureDeploymentName'
   | 'azureTemperature'
   | 'azureMaxTokens'
+  | 'azureAPIVersion'
   | 'geminiAPIKey'
   | 'geminiCustomModel'
   | 'geminiModelSelect'
@@ -136,6 +137,7 @@ export const settingPreset: Record<SettingNames, ISettingOption> = {
   azureDeploymentName: defaultInputSetting,
   azureTemperature: inputNumSetting(0.7, 'azureTemperature', 'temperature'),
   azureMaxTokens: inputNumSetting(800, 'azureMaxTokens', 'maxTokens'),
+  azureAPIVersion: defaultInputSetting,
   geminiAPIKey: defaultInputSetting,
   geminiCustomModel: defaultInputSetting,
   geminiModelSelect: selectSetting(

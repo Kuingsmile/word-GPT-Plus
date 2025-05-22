@@ -17,6 +17,7 @@ export enum localStorageKey {
   azureDeploymentName = 'azureDeploymentName',
   azureMaxTokens = 'azureMaxTokens',
   azureTemperature = 'azureTemperature',
+  azureAPIVersion = 'azureAPIVersion',
   // gemini api
   geminiAPIKey = 'geminiAPIKey',
   geminiMaxTokens = 'geminiMaxTokens',

@@ -13,7 +13,6 @@
     "lint:dpdm": "dpdm -T --tsconfig ./tsconfig.json --no-tree --no-warning --exit-code circular:1 src/main.ts"
   },
   "dependencies": {
-    "@azure/openai": "1.0.0-beta.4",
     "@element-plus/icons-vue": "^2.3.1",
     "@google/genai": "^1.0.0",
     "axios": "^1.9.0",
