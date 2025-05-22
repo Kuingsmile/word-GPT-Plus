@@ -21,7 +21,7 @@
     "dexie": "^3.2.4",
     "element-plus": "2.9.10",
     "groq-sdk": "^0.22.0",
-    "openai": "^4.10.0",
+    "openai": "^4.102.0",
     "unfetch": "^5.0.0",
     "vue": "^3.5.14",
     "vue-class-component": "^8.0.0-rc.1",
