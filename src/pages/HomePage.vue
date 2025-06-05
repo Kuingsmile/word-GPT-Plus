@@ -735,18 +735,21 @@ onBeforeMount(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .input-group {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 2px;
   margin-bottom: 20px;
 }
 
 .api-button {
-  margin-left: 10px;
-  border-radius: 10px;
+  margin-left: 0px;
+  border-radius: 5px;
 }
 
 .select-with-icons {
