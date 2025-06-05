@@ -61,8 +61,6 @@ export const availableModels: IStringKeyMap = {
   'gpt-3.5-turbo-1106': 'gpt-3.5-turbo-1106',
   gpt4: 'gpt-4',
   'gpt-4-turbo': 'gpt-4-turbo',
-  // Note the correct spelling "turbo" below. The previous version had a typo
-  // ("turo"), which resulted in an invalid model option.
   'gpt-4-turbo-preview': 'gpt-4-turbo-preview',
   'gpt4-0613': 'gpt-4-0613'
 }
