@@ -1,3 +1,24 @@
+## :tada: 0.4.13 (2025-06-05)
+
+
+### :sparkles: Features
+
+* **custom:** add support for gemini 2.0 and migrate to new gemini sdk ([9bc81ad](https://github.com/Kuingsmile/word-GPT-Plus/commit/9bc81ad))
+
+
+### :bug: Bug Fixes
+
+* **custom:** fix node version and el-input ([3d42391](https://github.com/Kuingsmile/word-GPT-Plus/commit/3d42391))
+* **custom:** fix typos ([061a585](https://github.com/Kuingsmile/word-GPT-Plus/commit/061a585))
+* **custom:** update font family in App.vue and adjust layout in HomePage.vue ([05b20d5](https://github.com/Kuingsmile/word-GPT-Plus/commit/05b20d5))
+
+
+### :package: Chore
+
+* **custom:** change bat file path ([8659da0](https://github.com/Kuingsmile/word-GPT-Plus/commit/8659da0))
+
+
+
 ## :tada: 0.4.12 (2025-03-03)
 
 
