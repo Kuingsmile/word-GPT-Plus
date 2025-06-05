@@ -10,14 +10,14 @@
           clearable
           size="small"
           :placeholder="$t('homeSystemDescription')"
-          @blur="handelSystemPromptChange(systemPrompt)"
+          @blur="handleSystemPromptChange(systemPrompt)"
         />
         <div class="select-with-icons">
           <el-select
             v-model="systemPromptSelected"
             size="small"
             placeholder="Select a system prompt"
-            @change="handelSystemPromptChange"
+            @change="handleSystemPromptChange"
           >
             <el-option
               v-for="item in systemPromptList"
@@ -54,14 +54,14 @@
           clearable
           size="small"
           :placeholder="$t('homePromptDescription')"
-          @blur="handelPromptChange(prompt)"
+          @blur="handlePromptChange(prompt)"
         />
         <div class="select-with-icons">
           <el-select
             v-model="promptSelected"
             size="small"
             placeholder="Select a prompt"
-            @change="handelPromptChange"
+            @change="handlePromptChange"
           >
             <el-option
               v-for="item in promptList"
@@ -99,7 +99,7 @@
         label="insertType"
         :option-list="insertTypeList"
         placeholder="insertTypePlaceholder"
-        @change="handelInsertTypeChange"
+        @change="handleInsertTypeChange"
       />
     </el-form>
     <div style="width: 100%">
@@ -315,7 +315,7 @@ async function removePrompt() {
   getPromptList()
 }
 
-function handelSystemPromptChange(val: string) {
+function handleSystemPromptChange(val: string) {
   systemPrompt.value = val
   localStorage.setItem(localStorageKey.defaultSystemPrompt, val)
 }
@@ -336,7 +336,7 @@ async function addPrompt() {
   getPromptList()
 }
 
-function handelPromptChange(val: string) {
+function handlePromptChange(val: string) {
   prompt.value = val
   localStorage.setItem(localStorageKey.defaultPrompt, val)
 }
@@ -368,7 +368,7 @@ async function initData() {
   }
 }
 
-function handelInsertTypeChange(val: insertTypes) {
+function handleInsertTypeChange(val: insertTypes) {
   insertType.value = val
   localStorage.setItem(localStorageKey.insertType, val)
 }
