@@ -89,7 +89,7 @@ Follow the [Add-in Installation Guide](#adding-the-add-in-to-word) below.
 
 ### Option 3: Self-hosted
 
-If you want to host the add-in yourself, you will need to clone this repo and install dependencies, then run the project. Need Node.js 16+.
+If you want to host the add-in yourself, you will need to clone this repo and install dependencies, then run the project. Need Node.js 18+.
 
 ```bash
 git clone https://github.com/Kuingsmile/Word-GPT-Plus.git

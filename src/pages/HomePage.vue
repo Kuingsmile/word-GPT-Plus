@@ -173,7 +173,7 @@
         v-model="result"
         type="textarea"
         autosize
-        :row="5"
+        :rows="5"
         :aria-placeholder="$t('result')"
       />
     </div>

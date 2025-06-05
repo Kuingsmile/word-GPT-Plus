@@ -80,7 +80,7 @@ Word GPT Plus 是一款将 AI 模型无缝集成到 Microsoft Word 中的插件�
 
 #### 本地运行
 
-如果你想要自己搭建服务，你需要克隆这个仓库并安装依赖项，然后运行项目。需要 Node.js 16+。
+如果你想要自己搭建服务，你需要克隆这个仓库并安装依赖项，然后运行项目。需要 Node.js 18+。
 
 ```bash
 git clone https://github.com/Kuingsmile/Word-GPT-Plus.git
