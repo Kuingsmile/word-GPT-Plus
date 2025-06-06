@@ -2,10 +2,13 @@ import { createI18n } from 'vue-i18n'
 
 const messages = {
   en: {
+    quickSettings: 'Quick Settings',
+    aiTools: 'AI Tools',
+    prompts: 'Prompts',
     apiLabel: 'API',
     apiPlaceholder: 'Please choose API',
-    replyLanguageLabel: 'Reply in',
-    replyLanguagePlaceholder: 'Reply in',
+    replyLanguageLabel: 'Reply In',
+    replyLanguagePlaceholder: 'Reply In',
     localLanguageLabel: 'UI Language',
     localLanguagePlaceholder: 'UI Language',
     officialAPIKeyLabel: 'API Key',
@@ -50,8 +53,8 @@ const messages = {
     groqModelSelectPlaceholder: 'Please select model',
     groqCustomModelLabel: 'Custom Model',
     groqCustomModelPlaceholder: 'Please input model',
-    translate: 'Trans',
-    summary: 'Sum',
+    translate: 'Translate',
+    summary: 'Summary',
     polish: 'Polish',
     grammar: 'Grammar',
     academic: 'Academic',
@@ -96,6 +99,9 @@ const messages = {
     backToHome: 'Back to home'
   },
   'zh-cn': {
+    quickSettings: '快速设置',
+    aiTools: 'AI 工具',
+    prompts: '提示词',
     apiLabel: 'API',
     apiPlaceholder: '请选择API',
     replyLanguageLabel: '回复语言',
