@@ -33,7 +33,9 @@
                 </el-select>
               </div>
               <div class="option-group">
-                <label class="compact-label">Model</label>
+                <label class="compact-label">
+                  {{ $t('modelLabel') }}
+                </label>
                 <el-select
                   v-model="currentModelSelect"
                   class="compact-select"
@@ -55,7 +57,9 @@
             <!-- Row 2 -->
             <div class="option-row">
               <div class="option-group">
-                <label class="compact-label">API</label>
+                <label class="compact-label">
+                  {{ $t('apiLabel') }}
+                </label>
                 <el-select
                   v-model="settingForm.api"
                   class="compact-select"
@@ -71,7 +75,9 @@
                 </el-select>
               </div>
               <div class="option-group">
-                <label class="compact-label">Insert Mode</label>
+                <label class="compact-label">
+                  {{ $t('insertTypeLabel') }}
+                </label>
                 <el-select
                   v-model="insertType"
                   class="compact-select"
