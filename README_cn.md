@@ -21,8 +21,8 @@
 Word GPT Plus 是一款将 AI 模型无缝集成到 Microsoft Word 中的插件，使您能够在文档中直接生成、翻译、总结和润色文本。增强您的写作流程，无需离开 Word 环境。
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/96409857/233878627-6b5abdfd-7ff6-4818-8b26-d78f74ea0e85.gif" width="45%" />
-  <img src="https://user-images.githubusercontent.com/96409857/233878368-3a793d8b-3740-4471-822b-0e062415b704.gif" width="45%" />
+  <img src="https://user-images.githubusercontent.com/96409857/233878627-6b5abdfd-7ff6-4818-8b26-d78f74ea0e85.gif" width="45%" alt="Word GPT Plus 演示" />
+  <img src="https://user-images.githubusercontent.com/96409857/233878368-3a793d8b-3740-4471-822b-0e062415b704.gif" width="45%" alt="Word GPT Plus 演示" />
 </p>
 
 ## ✨ 功能特点
@@ -52,6 +52,7 @@ Word GPT Plus 是一款将 AI 模型无缝集成到 Microsoft Word 中的插件�
 ### 环境要求
 
 #### 软件
+
 - Microsoft Word 2016/2019 零售版、Word 2021 或 Microsoft 365
 - [Edge WebView2 运行时](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
 - Node.js 18+（仅用于自托管）
@@ -59,6 +60,7 @@ Word GPT Plus 是一款将 AI 模型无缝集成到 Microsoft Word 中的插件�
 > **注意**：仅适用于 .docx 文件（不兼容旧版 .doc 格式）
 
 #### API 访问
+
 - **OpenAI**：从 [OpenAI Platform](https://platform.openai.com/account/api-keys) 获取 API 密钥
 - **Azure OpenAI**：在 [Azure OpenAI Service](https://go.microsoft.com/fwlink/?linkid=2222006) 申请访问权限
 - **Google Gemini**：从 [Google AI Studio](https://developers.generativeai.google/) 请求 API 访问
@@ -72,7 +74,7 @@ Word GPT Plus 是一款将 AI 模型无缝集成到 Microsoft Word 中的插件�
 
 1. 下载 [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml)
 2. 保存到您计算机上的目录（例如：`C:\Users\用户名\Documents\WordGPT`）
-3. 按照下方[插件安装指南](#添加插件到-word)操作
+3. 按照下方[旁加载插件](#旁加载插件)操作
 
 > **中国用户注意**：如果遇到连接问题，请尝试将 `msq.pub` 添加到您的代理规则，或使用自托管选项。
 

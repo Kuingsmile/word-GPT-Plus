@@ -21,8 +21,8 @@ English | [简体中文](https://github.com/Kuingsmile/word-GPT-Plus/blob/master
 Word GPT Plus seamlessly integrates AI models into Microsoft Word, allowing you to generate, translate, summarize, and polish text directly within your documents. Enhance your writing workflow without leaving your Word environment.
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/96409857/233878627-6b5abdfd-7ff6-4818-8b26-d78f74ea0e85.gif" width="45%" />
-  <img src="https://user-images.githubusercontent.com/96409857/233878368-3a793d8b-3740-4471-822b-0e062415b704.gif" width="45%" />
+  <img src="https://user-images.githubusercontent.com/96409857/233878627-6b5abdfd-7ff6-4818-8b26-d78f74ea0e85.gif" width="45%" alt="Word GPT Plus Demo" />
+  <img src="https://user-images.githubusercontent.com/96409857/233878368-3a793d8b-3740-4471-822b-0e062415b704.gif" width="45%" alt="Word GPT Plus Demo" />
 </p>
 
 ## ✨ Features
@@ -52,6 +52,7 @@ Word GPT Plus seamlessly integrates AI models into Microsoft Word, allowing you 
 ### Requirements
 
 #### Software
+
 - Microsoft Word 2016/2019 (retail version), Word 2021, or Microsoft 365
 - [Edge WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
 - Node.js 18+ (only for self-hosting)
@@ -59,6 +60,7 @@ Word GPT Plus seamlessly integrates AI models into Microsoft Word, allowing you 
 > **Note**: Works only with .docx files (not compatible with older .doc format)
 
 #### API Access
+
 - **OpenAI**: Obtain an API key from [OpenAI Platform](https://platform.openai.com/account/api-keys)
 - **Azure OpenAI**: Apply for access at [Azure OpenAI Service](https://go.microsoft.com/fwlink/?linkid=2222006)
 - **Google Gemini**: Request API access from [Google AI Studio](https://developers.generativeai.google/)
@@ -72,7 +74,7 @@ Choose one of the following installation methods:
 
 1. Download [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml)
 2. Save it to a directory on your computer (e.g., `C:\Users\username\Documents\WordGPT`)
-3. Follow the [Add-in Installation Guide](#adding-the-add-in-to-word) below
+3. Follow the [Add-in Installation Guide](#add-in-installation-guide) below
 
 > **Note for users in China**: If you experience connectivity issues, try adding `msq.pub` to your proxy rules or use the self-hosted option.
 
@@ -85,7 +87,7 @@ docker run -d -p 3000:80 kuingsmile/word-gpt-plus
 
 You need to modify all `[localhost:3000](http://localhost:3000)` in manifest.xml to your server address.
 
-Follow the [Add-in Installation Guide](#adding-the-add-in-to-word) below.
+Follow the [Add-in Installation Guide](#add-in-installation-guide) below.
 
 ### Option 3: Self-hosted
 
@@ -99,7 +101,7 @@ yarn run serve
 
 [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml)
 
-Then, follow the [Add-in Installation Guide](#adding-the-add-in-to-word) below.
+Then, follow the [Add-in Installation Guide](#add-in-installation-guide) below.
 
 ### Add-in Installation Guide
 
