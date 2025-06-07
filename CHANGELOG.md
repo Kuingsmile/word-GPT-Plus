@@ -1,3 +1,24 @@
+# :tada: 0.5.0 (2025-06-07)
+
+
+### :sparkles: Features
+
+* **custom:** enhance UI of home page ([b6925d9](https://github.com/Kuingsmile/word-GPT-Plus/commit/b6925d9))
+* **custom:** new UI of setting page ([2de3b10](https://github.com/Kuingsmile/word-GPT-Plus/commit/2de3b10))
+
+
+### :pencil: Documentation
+
+* **custom:** add alt text to images and update installation guide links in README files ([4d02191](https://github.com/Kuingsmile/word-GPT-Plus/commit/4d02191))
+* **custom:** add new image for readme ([27e64fb](https://github.com/Kuingsmile/word-GPT-Plus/commit/27e64fb))
+
+
+### :package: Chore
+
+* **custom:** add mcp server configuration file ([5868654](https://github.com/Kuingsmile/word-GPT-Plus/commit/5868654))
+
+
+
 ## :tada: 0.4.13 (2025-06-05)
 
 
