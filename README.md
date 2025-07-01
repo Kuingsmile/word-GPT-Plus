@@ -105,7 +105,11 @@ yarn run serve
 
 Then, follow the [Add-in Installation Guide](#add-in-installation-guide) below.
 
-### Add-in Installation Guide
+### Option 4: Deploy to Tencent EdgeOne
+
+[![Deploy to Tencent EdgeOne](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2FKuingsmile%2FWord-GPT-Plus%2Ftree%2Fmaster&build-command=npm%20run%20build&output-directory=.%2Fdist&install-command=yarn%20install)
+
+## Add-in Installation Guide
 
 To get started with Word GPT Plus, you will need to sideload the add-in into Microsoft Word.
 

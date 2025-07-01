@@ -80,9 +80,7 @@ Word GPT Plus 是一款将 AI 模型无缝集成到 Microsoft Word 中的插件�
 
 > **中国用户注意**：如果遇到连接问题，请尝试将 `msq.pub` 添加到您的代理规则，或使用自托管选项。
 
-### 方案二：Docker 部署
-
-#### 本地运行
+### 方案二：本地运行
 
 如果你想要自己搭建服务，你需要克隆这个仓库并安装依赖项，然后运行项目。需要 Node.js 18+。
 
@@ -94,7 +92,7 @@ yarn run serve
 
 [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml)
 
-#### docker运行
+### 方案三：docker运行
 
 你也可以使用docker运行服务，首先docker pull镜像，然后运行容器。
 
@@ -107,7 +105,11 @@ manifest.xml需要修改所有的`[localhost:3000](http://localhost:3000)`为你
 
 然后，按照下面的 [旁加载插件](#旁加载插件) 说明安装插件。
 
-### 旁加载插件
+### 方案四：部署到腾讯 EdgeOne
+
+[![使用 EdgeOne Pages 部署](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2FKuingsmile%2FWord-GPT-Plus%2Ftree%2Fmaster&build-command=npm%20run%20build&output-directory=.%2Fdist&install-command=yarn%20install)
+
+## 旁加载插件
 
 为了开始使用 Word GPT Plus，你需要将插件旁加载到 Microsoft Word 中。
 
