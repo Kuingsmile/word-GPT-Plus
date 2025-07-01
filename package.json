@@ -14,21 +14,19 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
-    "@eslint/js": "^9.30.0",
     "@google/genai": "^1.7.0",
     "axios": "^1.10.0",
     "dexie": "^3.2.4",
     "element-plus": "2.10.2",
     "groq-sdk": "^0.26.0",
-    "husky": "^9.1.7",
     "openai": "^5.8.2",
-    "unfetch": "^5.0.0",
     "vue": "^3.5.17",
-    "vue-class-component": "^8.0.0-rc.1",
     "vue-i18n": "^11.1.7",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "husky": "^9.1.7",
+    "@eslint/js": "^9.30.0",
     "@types/office-js": "^1.0.514",
     "@typescript-eslint/eslint-plugin": "^8.35.1",
     "@typescript-eslint/parser": "^8.35.1",
