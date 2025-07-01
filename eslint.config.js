@@ -1,14 +1,16 @@
 import { defineConfig, globalIgnores } from 'eslint/config'
 
-import { node } from 'globals'
+import globals from 'globals';
+const { node } = globals;
 import parser from 'vue-eslint-parser'
 import typescriptEslint from '@typescript-eslint/eslint-plugin'
-import { configs } from '@eslint/js'
+import eslingjs from '@eslint/js';
+const { configs } = eslingjs;
 
 import { FlatCompat } from '@eslint/eslintrc'
 
 const compat = new FlatCompat({
-  baseDirectory: __dirname,
+  baseDirectory: import.meta.dirname,
   recommendedConfig: configs.recommended,
   allConfig: configs.all
 })
@@ -27,8 +29,6 @@ export default defineConfig([
       }
     },
 
-    extends: compat.extends('plugin:vue/vue3-recommended'),
-
     plugins: {
       '@typescript-eslint': typescriptEslint
     },
@@ -44,14 +44,6 @@ export default defineConfig([
       '@typescript-eslint/no-this-alias': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       'vue/no-v-html': 'off',
-
-      'prettier/prettier': [
-        'error',
-        {},
-        {
-          usePrettierrc: true
-        }
-      ]
     }
   },
   {
