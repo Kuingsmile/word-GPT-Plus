@@ -1,6 +1,7 @@
 import { GoogleGenAI } from '@google/genai'
 import { BaseChatCompletionOptions } from './types'
 import { handleError, finishLoading } from './utils'
+import { toRaw } from 'vue'
 
 interface ChatCompletionStreamOptions extends BaseChatCompletionOptions {
   geminiAPIKey: string
@@ -17,7 +18,7 @@ async function createChatCompletionStream(
 
     const chat = genAI.chats.create({
       model: options.geminiModel ?? 'gemini-1.5-pro',
-      history: options.historyDialog.value,
+      history: toRaw(options.historyDialog.value),
       config: {
         maxOutputTokens: options.maxTokens ?? 800,
         temperature: options.temperature ?? 0.7

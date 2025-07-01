@@ -73,7 +73,7 @@
                   indeterminate
                   :duration="3"
                   status="success"
-                  stroke-width="3"
+                  :stroke-width="3"
                 />
                 <p class="progress-text">AI is processing your request...</p>
               </div>

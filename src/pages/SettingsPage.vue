@@ -172,7 +172,7 @@
                       v-model="settingForm[item as SettingNames]"
                       class="setting-input-number"
                       size="small"
-                      :step="settingPreset[item as SettingNames].stepStyle"
+                      :step="1"
                       :min="0"
                       :max="item.includes('Temperature') ? 2 : 4000"
                       controls-position="right"
