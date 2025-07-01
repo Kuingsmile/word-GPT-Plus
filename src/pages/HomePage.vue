@@ -4,6 +4,201 @@
 
     <div class="main-content">
       <div class="left-column">
+        <!-- AI Tools -->
+        <el-card class="tools-card" shadow="hover">
+          <template #header>
+            <h3 class="compact-title">
+              <el-icon><MagicStick /></el-icon>
+              {{ $t('aiTools') }}
+            </h3>
+          </template>
+          <div class="compact-actions-grid">
+            <el-button
+              v-for="item in actionList"
+              :key="item"
+              class="mini-action-btn"
+              type="primary"
+              size="small"
+              :disabled="loading"
+              @click="performAction(item)"
+            >
+              <span class="mini-text">{{ $t(item) }}</span>
+            </el-button>
+            <el-button
+              class="mini-action-btn settings-action-btn"
+              size="small"
+              :disabled="loading"
+              @click="settings"
+            >
+              <span class="mini-text">{{ $t('settings') }}</span>
+            </el-button>
+          </div>
+          <div class="main-actions">
+            <div class="button-row">
+              <el-button
+                class="primary-action-btn"
+                type="success"
+                size="small"
+                :disabled="loading"
+                @click="StartChat"
+              >
+                <el-icon><VideoPlay /></el-icon>
+                {{ $t('start') }}
+              </el-button>
+              <el-button
+                v-if="
+                  ['azure', 'official', 'gemini', 'ollama', 'groq'].includes(
+                    settingForm.api
+                  )
+                "
+                class="secondary-action-btn"
+                type="warning"
+                size="small"
+                :disabled="loading"
+                @click="continueChat"
+              >
+                <el-icon><Right /></el-icon>
+                {{ $t('continue') }}
+              </el-button>
+            </div>
+          </div>
+          <div v-if="loading" class="progress-container">
+            <div class="progress-wrapper">
+              <div class="progress-icon">
+                <el-icon class="spinning"><Loading /></el-icon>
+              </div>
+              <div class="progress-content">
+                <el-progress
+                  :percentage="50"
+                  indeterminate
+                  :duration="3"
+                  status="success"
+                  stroke-width="3"
+                />
+                <p class="progress-text">AI is processing your request...</p>
+              </div>
+            </div>
+          </div>
+        </el-card>
+        <el-card class="results-card" shadow="hover">
+          <template #header>
+            <h3 class="compact-title">
+              <el-icon><Document /></el-icon>
+              {{ $t('result') }}
+            </h3>
+          </template>
+          <el-input
+            v-model="result"
+            class="result-textarea"
+            type="textarea"
+            :autosize="{ minRows: 4, maxRows: 8 }"
+            :placeholder="$t('result')"
+            resize="vertical"
+          />
+        </el-card>
+      </div>
+
+      <div class="right-column">
+        <el-card class="config-card" shadow="hover">
+          <template #header>
+            <h3 class="compact-title">
+              <el-icon><Setting /></el-icon>
+              {{ $t('prompts') }}
+            </h3>
+          </template>
+
+          <div class="config-section">
+            <div class="section-header">
+              <label class="section-label">{{ $t('homeSystem') }}</label>
+              <div class="action-buttons">
+                <el-button
+                  size="small"
+                  type="primary"
+                  circle
+                  @click="(addSystemPromptVisible = true)"
+                >
+                  <el-icon><Plus /></el-icon>
+                </el-button>
+                <el-button
+                  size="small"
+                  type="danger"
+                  circle
+                  @click="(removeSystemPromptVisible = true)"
+                >
+                  <el-icon><Minus /></el-icon>
+                </el-button>
+              </div>
+            </div>
+            <el-select
+              v-model="systemPromptSelected"
+              class="config-select"
+              size="small"
+              :placeholder="$t('homeSystemDescription')"
+              @change="handleSystemPromptChange"
+            >
+              <el-option
+                v-for="item in systemPromptList"
+                :key="item.value"
+                :label="item.key"
+                :value="item.value"
+              />
+            </el-select>
+            <el-input
+              v-model="systemPrompt"
+              class="config-input"
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4 }"
+              :placeholder="$t('homeSystemDescription')"
+              @blur="handleSystemPromptChange(systemPrompt)"
+            />
+          </div>
+
+          <div class="config-section">
+            <div class="section-header">
+              <label class="section-label">{{ $t('homePrompt') }}</label>
+              <div class="action-buttons">
+                <el-button
+                  size="small"
+                  type="primary"
+                  circle
+                  @click="(addPromptVisible = true)"
+                >
+                  <el-icon><Plus /></el-icon>
+                </el-button>
+                <el-button
+                  size="small"
+                  type="danger"
+                  circle
+                  @click="(removePromptVisible = true)"
+                >
+                  <el-icon><Minus /></el-icon>
+                </el-button>
+              </div>
+            </div>
+            <el-select
+              v-model="promptSelected"
+              class="config-select"
+              size="small"
+              :placeholder="$t('homePromptDescription')"
+              @change="handlePromptChange"
+            >
+              <el-option
+                v-for="item in promptList"
+                :key="item.value"
+                :label="item.key"
+                :value="item.value"
+              />
+            </el-select>
+            <el-input
+              v-model="prompt"
+              class="config-input"
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4 }"
+              :placeholder="$t('homePromptDescription')"
+              @blur="handlePromptChange(prompt)"
+            />
+          </div>
+        </el-card>
         <el-card class="quick-settings-card" shadow="hover">
           <template #header>
             <h3 class="compact-title">
@@ -95,202 +290,6 @@
               </div>
             </div>
           </div>
-        </el-card>
-        <!-- AI Tools -->
-        <el-card class="tools-card" shadow="hover">
-          <template #header>
-            <h3 class="compact-title">
-              <el-icon><MagicStick /></el-icon>
-              {{ $t('aiTools') }}
-            </h3>
-          </template>
-          <div class="compact-actions-grid">
-            <el-button
-              v-for="item in actionList"
-              :key="item"
-              class="mini-action-btn"
-              type="primary"
-              size="small"
-              :disabled="loading"
-              @click="performAction(item)"
-            >
-              <span class="mini-text">{{ $t(item) }}</span>
-            </el-button>
-            <el-button
-              class="mini-action-btn settings-action-btn"
-              size="small"
-              :disabled="loading"
-              @click="settings"
-            >
-              <span class="mini-text">{{ $t('settings') }}</span>
-            </el-button>
-          </div>
-          <div class="main-actions">
-            <div class="button-row">
-              <el-button
-                class="primary-action-btn"
-                type="success"
-                size="small"
-                :disabled="loading"
-                @click="StartChat"
-              >
-                <el-icon><VideoPlay /></el-icon>
-                {{ $t('start') }}
-              </el-button>
-              <el-button
-                v-if="
-                  ['azure', 'official', 'gemini', 'ollama', 'groq'].includes(
-                    settingForm.api
-                  )
-                "
-                class="secondary-action-btn"
-                type="warning"
-                size="small"
-                :disabled="loading"
-                @click="continueChat"
-              >
-                <el-icon><Right /></el-icon>
-                {{ $t('continue') }}
-              </el-button>
-            </div>
-          </div>
-          <div v-if="loading" class="progress-container">
-            <div class="progress-wrapper">
-              <div class="progress-icon">
-                <el-icon class="spinning"><Loading /></el-icon>
-              </div>
-              <div class="progress-content">
-                <el-progress
-                  :percentage="50"
-                  indeterminate
-                  :duration="3"
-                  status="success"
-                  stroke-width="3"
-                />
-                <p class="progress-text">AI is processing your request...</p>
-              </div>
-            </div>
-          </div>
-        </el-card>
-      </div>
-
-      <div class="right-column">
-        <el-card class="config-card" shadow="hover">
-          <template #header>
-            <h3 class="compact-title">
-              <el-icon><Setting /></el-icon>
-              {{ $t('prompts') }}
-            </h3>
-          </template>
-
-          <div class="config-section">
-            <div class="section-header">
-              <label class="section-label">{{ $t('homeSystem') }}</label>
-              <div class="action-buttons">
-                <el-button
-                  size="small"
-                  type="primary"
-                  circle
-                  @click="addSystemPromptVisible = true"
-                >
-                  <el-icon><Plus /></el-icon>
-                </el-button>
-                <el-button
-                  size="small"
-                  type="danger"
-                  circle
-                  @click="removeSystemPromptVisible = true"
-                >
-                  <el-icon><Minus /></el-icon>
-                </el-button>
-              </div>
-            </div>
-            <el-select
-              v-model="systemPromptSelected"
-              class="config-select"
-              size="small"
-              :placeholder="$t('homeSystemDescription')"
-              @change="handleSystemPromptChange"
-            >
-              <el-option
-                v-for="item in systemPromptList"
-                :key="item.value"
-                :label="item.key"
-                :value="item.value"
-              />
-            </el-select>
-            <el-input
-              v-model="systemPrompt"
-              class="config-input"
-              type="textarea"
-              :autosize="{ minRows: 2, maxRows: 4 }"
-              :placeholder="$t('homeSystemDescription')"
-              @blur="handleSystemPromptChange(systemPrompt)"
-            />
-          </div>
-
-          <div class="config-section">
-            <div class="section-header">
-              <label class="section-label">{{ $t('homePrompt') }}</label>
-              <div class="action-buttons">
-                <el-button
-                  size="small"
-                  type="primary"
-                  circle
-                  @click="addPromptVisible = true"
-                >
-                  <el-icon><Plus /></el-icon>
-                </el-button>
-                <el-button
-                  size="small"
-                  type="danger"
-                  circle
-                  @click="removePromptVisible = true"
-                >
-                  <el-icon><Minus /></el-icon>
-                </el-button>
-              </div>
-            </div>
-            <el-select
-              v-model="promptSelected"
-              class="config-select"
-              size="small"
-              :placeholder="$t('homePromptDescription')"
-              @change="handlePromptChange"
-            >
-              <el-option
-                v-for="item in promptList"
-                :key="item.value"
-                :label="item.key"
-                :value="item.value"
-              />
-            </el-select>
-            <el-input
-              v-model="prompt"
-              class="config-input"
-              type="textarea"
-              :autosize="{ minRows: 2, maxRows: 4 }"
-              :placeholder="$t('homePromptDescription')"
-              @blur="handlePromptChange(prompt)"
-            />
-          </div>
-        </el-card>
-
-        <el-card class="results-card" shadow="hover">
-          <template #header>
-            <h3 class="compact-title">
-              <el-icon><Document /></el-icon>
-              {{ $t('result') }}
-            </h3>
-          </template>
-          <el-input
-            v-model="result"
-            class="result-textarea"
-            type="textarea"
-            :autosize="{ minRows: 4, maxRows: 8 }"
-            :placeholder="$t('result')"
-            resize="vertical"
-          />
         </el-card>
       </div>
     </div>
@@ -933,7 +932,8 @@ onBeforeMount(() => {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   padding: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* Modern Header Section */

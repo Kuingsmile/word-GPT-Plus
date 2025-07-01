@@ -1,6 +1,6 @@
 import { Ref } from 'vue'
 
-function insertResult(result: Ref<string>, insertType: Ref<string>): void {
+function insertResult(result: Ref, insertType: Ref): void {
   const paragraph = result.value
     .replace(/\n+/g, '\n')
     .replace(/\r+/g, '\n')

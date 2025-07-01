@@ -2,55 +2,49 @@
   "name": "word-gpt-plus",
   "version": "0.5.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "vue-cli-service serve --port 3000",
-    "serve": "vue-cli-service serve --port 3000",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint --fix",
-    "lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx,.vue src/",
+    "dev": "vite --port 3000",
+    "build": "vite build",
+    "serve": "vite preview --port 3000",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
     "cz": "git-cz",
     "release": "bump-version",
     "lint:dpdm": "dpdm -T --tsconfig ./tsconfig.json --no-tree --no-warning --exit-code circular:1 src/main.ts"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
-    "@google/genai": "^1.0.0",
-    "axios": "^1.9.0",
-    "core-js": "^3.42.0",
+    "@eslint/js": "^9.30.0",
+    "@google/genai": "^1.7.0",
+    "axios": "^1.10.0",
     "dexie": "^3.2.4",
-    "element-plus": "2.9.10",
-    "groq-sdk": "^0.22.0",
-    "openai": "^4.102.0",
+    "element-plus": "2.10.2",
+    "groq-sdk": "^0.26.0",
+    "husky": "^9.1.7",
+    "openai": "^5.8.2",
     "unfetch": "^5.0.0",
-    "vue": "^3.5.14",
+    "vue": "^3.5.17",
     "vue-class-component": "^8.0.0-rc.1",
-    "vue-i18n": "^11.1.3",
+    "vue-i18n": "^11.1.7",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@picgo/bump-version": "^1.1.2",
-    "@types/office-js": "^1.0.502",
-    "@typescript-eslint/eslint-plugin": "^6.14.0",
-    "@typescript-eslint/parser": "^6.14.0",
-    "@vue/cli-plugin-babel": "^5.0.8",
-    "@vue/cli-plugin-eslint": "^5.0.8",
-    "@vue/cli-plugin-router": "^5.0.8",
-    "@vue/cli-plugin-typescript": "^5.0.8",
-    "@vue/cli-service": "^5.0.8",
-    "@vue/eslint-config-prettier": "^9.0.0",
-    "@vue/eslint-config-standard": "^8.0.1",
-    "@vue/eslint-config-typescript": "^12.0.0",
+    "@types/office-js": "^1.0.514",
+    "@typescript-eslint/eslint-plugin": "^8.35.1",
+    "@typescript-eslint/parser": "^8.35.1",
+    "@vitejs/plugin-vue": "^6.0.0",
     "dpdm": "^3.14.0",
-    "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.26.0",
-    "prettier": "^3.3.2",
-    "stylus": "^0.61.0",
-    "stylus-loader": "^7.1.3",
-    "typescript": "^5.2.2"
+    "eslint": "^9.30.0",
+    "eslint-plugin-vue": "^10.2.0",
+    "node-bump-version": "^2.0.0",
+    "prettier": "^3.6.2",
+    "stylus": "^0.64.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.0"
   },
   "commitlint": {
     "extends": [
-      "./node_modules/@picgo/bump-version/commitlint-picgo"
+      "./node_modules/node-bump-version/dist/commitlint-node/index.js"
     ]
   },
   "config": {
@@ -58,7 +52,7 @@
       "path": "./node_modules/cz-customizable"
     },
     "cz-customizable": {
-      "config": "./node_modules/@picgo/bump-version/.cz-config.js"
+      "config": "./node_modules/node-bump-version/.cz-config.cjs"
     }
   },
   "husky": {
@@ -67,6 +61,6 @@
     }
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   }
 }
