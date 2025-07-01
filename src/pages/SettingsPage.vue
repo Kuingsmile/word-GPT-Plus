@@ -111,12 +111,7 @@
                       class="setting-input"
                       size="small"
                       :placeholder="$t(getPlaceholder(item))"
-                      :type="
-                        item.includes('Key') || item.includes('Token')
-                          ? 'password'
-                          : 'text'
-                      "
-                      show-password
+                      type="text"
                     />
                   </div>
                 </template>
