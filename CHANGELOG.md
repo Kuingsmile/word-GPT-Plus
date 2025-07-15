@@ -1,3 +1,11 @@
+##  (2025-07-15)
+
+* feat: add agent mode and markdown to word format support 27e94d0
+* :arrow_up: Upgrade(custom): upgrade deps c13de8a
+* :pencil: Docs(custom): add tencent edgeone deploy guide 8d1d9c3
+
+
+
 ##  (2025-07-01)
 
 * :bug: Fix(custom): fix page ui props error 7607286
