@@ -47,7 +47,7 @@
               </el-button>
               <el-button
                 v-if="
-                  ['azure', 'official', 'gemini', 'ollama', 'groq'].includes(
+                  ['azure', 'official', 'gemini', 'ollama', 'groq', 'agent'].includes(
                     settingForm.api
                   )
                 "
@@ -288,6 +288,16 @@
                   />
                 </el-select>
               </div>
+              <div class="option-group">
+                <label class="compact-label">
+                  {{ $t('useWordFormattingLabel') }}
+                </label>
+                <el-switch
+                  v-model="useWordFormatting"
+                  size="small"
+                  @change="handleWordFormattingChange"
+                />
+              </div>
             </div>
           </div>
         </el-card>
@@ -396,6 +406,7 @@ const errorIssue = ref(false)
 
 // insert type
 const insertType = ref<insertTypes>('replace')
+const useWordFormatting = ref(true)
 const insertTypeList = ['replace', 'append', 'newLine', 'NoAction'].map(
   item => ({
     label: t(item),
@@ -551,6 +562,8 @@ async function initData() {
   insertType.value =
     (localStorage.getItem(localStorageKey.insertType) as insertTypes) ||
     'replace'
+  useWordFormatting.value = 
+    localStorage.getItem(localStorageKey.useWordFormatting) === 'true'
   systemPrompt.value =
     localStorage.getItem(localStorageKey.defaultSystemPrompt) ||
     'Act like a personal assistant.'
@@ -568,6 +581,11 @@ async function initData() {
 function handleInsertTypeChange(val: insertTypes) {
   insertType.value = val
   localStorage.setItem(localStorageKey.insertType, val)
+}
+
+function handleWordFormattingChange(val: boolean) {
+  useWordFormatting.value = val
+  localStorage.setItem(localStorageKey.useWordFormatting, String(val))
 }
 
 async function template(taskType: keyof typeof buildInPrompt | 'custom') {
@@ -744,6 +762,45 @@ async function template(taskType: keyof typeof buildInPrompt | 'custom') {
       loading,
       temperature: settingForm.value.ollamaTemperature
     })
+  } else if (settingForm.value.api === 'agent') {
+    historyDialog.value = [
+      {
+        role: 'system',
+        content: systemMessage
+      },
+      {
+        role: 'user',
+        content: userMessage
+      }
+    ]
+    await API.agent.createChatCompletionStream({
+      agentMode: settingForm.value.agentMode,
+      agentMaxSteps: settingForm.value.agentMaxSteps,
+      agentThinkingDepth: settingForm.value.agentThinkingDepth,
+      agentAutoExecute: settingForm.value.agentAutoExecute === 'true',
+      agentBaseModeAPI: settingForm.value.agentBaseModeAPI,
+      // Pass API credentials based on base mode
+      apiKey: settingForm.value.officialAPIKey,
+      azureAPIKey: settingForm.value.azureAPIKey,
+      azureAPIEndpoint: settingForm.value.azureAPIEndpoint,
+      azureDeploymentName: settingForm.value.azureDeploymentName,
+      azureAPIVersion: settingForm.value.azureAPIVersion,
+      geminiAPIKey: settingForm.value.geminiAPIKey,
+      geminiModel: settingForm.value.geminiCustomModel || settingForm.value.geminiModelSelect,
+      groqAPIKey: settingForm.value.groqAPIKey,
+      groqModel: settingForm.value.groqCustomModel || settingForm.value.groqModelSelect,
+      ollamaEndpoint: settingForm.value.ollamaEndpoint,
+      ollamaModel: settingForm.value.ollamaCustomModel || settingForm.value.ollamaModelSelect,
+      officialModel: settingForm.value.officialCustomModel || settingForm.value.officialModelSelect,
+      officialBasePath: settingForm.value.officialBasePath,
+      messages: historyDialog.value,
+      result,
+      historyDialog,
+      errorIssue,
+      loading,
+      maxTokens: settingForm.value.officialMaxTokens,
+      temperature: settingForm.value.officialTemperature
+    })
   } else {
     ElMessage.error('Set API Key or Access Token first')
     return
@@ -754,7 +811,11 @@ async function template(taskType: keyof typeof buildInPrompt | 'custom') {
     return
   }
   if (!jsonIssue.value) {
-    API.common.insertResult(result, insertType)
+    if (useWordFormatting.value) {
+      API.common.insertFormattedResult(result, insertType)
+    } else {
+      API.common.insertResult(result, insertType)
+    }
   }
 }
 
@@ -764,7 +825,8 @@ function checkApiKey() {
     apiKey: settingForm.value.officialAPIKey,
     azureAPIKey: settingForm.value.azureAPIKey,
     geminiAPIKey: settingForm.value.geminiAPIKey,
-    groqAPIKey: settingForm.value.groqAPIKey
+    groqAPIKey: settingForm.value.groqAPIKey,
+    agentBaseModeAPI: settingForm.value.agentBaseModeAPI
   }
   if (!checkAuth(auth)) {
     ElMessage.error('Set API Key or Access Token first')
@@ -907,6 +969,41 @@ async function continueChat() {
           loading,
           temperature: settingForm.value.ollamaTemperature
         })
+        break
+      case 'agent':
+        historyDialog.value.push({
+          role: 'user',
+          content: 'continue'
+        })
+        await API.agent.createChatCompletionStream({
+          agentMode: settingForm.value.agentMode,
+          agentMaxSteps: settingForm.value.agentMaxSteps,
+          agentThinkingDepth: settingForm.value.agentThinkingDepth,
+          agentAutoExecute: settingForm.value.agentAutoExecute === 'true',
+          agentBaseModeAPI: settingForm.value.agentBaseModeAPI,
+          // Pass API credentials based on base mode
+          apiKey: settingForm.value.officialAPIKey,
+          azureAPIKey: settingForm.value.azureAPIKey,
+          azureAPIEndpoint: settingForm.value.azureAPIEndpoint,
+          azureDeploymentName: settingForm.value.azureDeploymentName,
+          azureAPIVersion: settingForm.value.azureAPIVersion,
+          geminiAPIKey: settingForm.value.geminiAPIKey,
+          geminiModel: settingForm.value.geminiCustomModel || settingForm.value.geminiModelSelect,
+          groqAPIKey: settingForm.value.groqAPIKey,
+          groqModel: settingForm.value.groqCustomModel || settingForm.value.groqModelSelect,
+          ollamaEndpoint: settingForm.value.ollamaEndpoint,
+          ollamaModel: settingForm.value.ollamaCustomModel || settingForm.value.ollamaModelSelect,
+          officialModel: settingForm.value.officialCustomModel || settingForm.value.officialModelSelect,
+          officialBasePath: settingForm.value.officialBasePath,
+          messages: historyDialog.value,
+          result,
+          historyDialog,
+          errorIssue,
+          loading,
+          maxTokens: settingForm.value.officialMaxTokens,
+          temperature: settingForm.value.officialTemperature
+        })
+        break
     }
   } catch (error) {
     result.value = String(error)
@@ -918,7 +1015,11 @@ async function continueChat() {
     ElMessage.error('Something is wrong')
     return
   }
-  API.common.insertResult(result, insertType)
+  if (useWordFormatting.value) {
+    API.common.insertFormattedResult(result, insertType)
+  } else {
+    API.common.insertResult(result, insertType)
+  }
 }
 
 onBeforeMount(() => {

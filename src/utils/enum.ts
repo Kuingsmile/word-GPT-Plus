@@ -4,6 +4,7 @@ export enum localStorageKey {
   localLanguage = 'localLanguage',
   replyLanguage = 'replyLanguage',
   insertType = 'insertType',
+  useWordFormatting = 'useWordFormatting',
   // official api
   apiKey = 'apiKey',
   model = 'model',
@@ -35,6 +36,12 @@ export enum localStorageKey {
   groqMaxTokens = 'groqMaxTokens',
   groqModel = 'groqModel',
   groqCustomModel = 'groqCustomModel',
+  // agent mode
+  agentMode = 'agentMode',
+  agentMaxSteps = 'agentMaxSteps',
+  agentThinkingDepth = 'agentThinkingDepth',
+  agentAutoExecute = 'agentAutoExecute',
+  agentBaseModeAPI = 'agentBaseModeAPI',
   // proxy
   enableProxy = 'enableProxy',
   proxy = 'proxy',

@@ -36,6 +36,10 @@ Word GPT Plus seamlessly integrates AI models into Microsoft Word, allowing you 
   - Ollama (for local deployment)
   - Groq API
 
+- **Agent Mode**:
+  - Supports multi-step analysis and result synthesis
+  - Configurable analysis step limits
+
 - **Built-in Templates**:
   - Translation (40+ languages)
   - Text polishing and improvement
@@ -48,6 +52,11 @@ Word GPT Plus seamlessly integrates AI models into Microsoft Word, allowing you 
   - Adjust temperature and max tokens
   - Support for proxies
   - Local storage for privacy
+
+- **Advanced Formatting**:
+  - **Automatic Word Formatting**: AI responses are automatically formatted with proper Word styles (headers, bold, italic, lists, code blocks)
+  - Multiple insertion modes (replace, append, new line)
+  - Markdown parsing and conversion to Word formatting
 
 ## 🚀 Getting Started
 

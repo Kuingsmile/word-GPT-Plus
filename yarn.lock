@@ -968,10 +968,10 @@
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.4.tgz#56e2cc26c397c038fab0e3a917a12d5c5909e901"
   integrity sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==
 
-"@types/office-js@^1.0.515":
-  version "1.0.515"
-  resolved "https://registry.yarnpkg.com/@types/office-js/-/office-js-1.0.515.tgz#31e1f3e1f1fde4d8c04f668d96edc703d0ac68ff"
-  integrity sha512-7WhpAe2k1sVXQBdtJvZ43CJAKSZpyhONUJM47xL43ZF+RtbhKu9vwE/9VjJueLTxkxBlfXUxbd29f9P0lsZRRw==
+"@types/office-js@^1.0.517":
+  version "1.0.517"
+  resolved "https://registry.yarnpkg.com/@types/office-js/-/office-js-1.0.517.tgz#368e03165f05f4b15ec3fc42e5c3142d4e945499"
+  integrity sha512-CvIVctr5SyXypGpMe2uCUQ7NYeAOX51bHevpBrrT8fWzpy2IrHlsQgOQlrJ5CP9xTyVGLsP4fynx6fGkeE+L6g==
 
 "@types/web-bluetooth@^0.0.16":
   version "0.0.16"

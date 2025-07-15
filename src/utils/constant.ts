@@ -48,7 +48,8 @@ export const availableAPIs: IStringKeyMap = {
   azure: 'azure',
   gemini: 'gemini',
   ollama: 'ollama',
-  groq: 'groq'
+  groq: 'groq',
+  agent: 'agent'
 }
 
 // official API 可用的模型
@@ -113,6 +114,15 @@ export const availableModelsForGroq: IStringKeyMap = {
   'mixtral-8x7b-32768': 'mixtral-8x7b-32768',
   'whisper-large-v3': 'whisper-large-v3',
   'deepseek-r1-distill-llama-70b': 'deepseek-r1-distill-llama-70b'
+}
+
+// Agent API 可用的模型
+export const availableModelsForAgent: IStringKeyMap = {
+  'auto-workflow': 'auto-workflow',
+  'multi-step': 'multi-step',
+  'research-assistant': 'research-assistant',
+  'writing-coach': 'writing-coach',
+  'document-analyzer': 'document-analyzer'
 }
 
 export const buildInPrompt = {
