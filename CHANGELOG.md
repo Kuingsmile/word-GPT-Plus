@@ -1,3 +1,9 @@
+##  (2025-09-03)
+
+* :sparkles: Feature(custom): update model list 9138979
+
+
+
 ##  (2025-07-15)
 
 * feat: add agent mode and markdown to word format support 27e94d0
