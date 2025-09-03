@@ -54,5 +54,6 @@ export default defineConfig([
     }
   },
   globalIgnores(['src/**/*.d.ts']),
-  globalIgnores(['src/**/*.js'])
+  globalIgnores(['src/**/*.js']),
+  compat
 ])

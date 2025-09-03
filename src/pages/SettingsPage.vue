@@ -1,183 +1,161 @@
 <template>
   <div class="settings-page">
-    <div class="header-section">
-      <div class="header-content">
-        <h1 class="page-title">
-          <el-icon class="title-icon"><Setting /></el-icon>
-          {{ $t('settings') }}
-        </h1>
-        <el-button class="back-btn" size="small" @click="backToHome">
-          <el-icon><ArrowLeft /></el-icon>
-          {{ $t('backToHome') }}
-        </el-button>
+    <!-- Header -->
+    <div class="header">
+      <div class="brand">
+        <Settings class="brand-icon" />
+        <h1 class="brand-title">{{ $t('settings') }}</h1>
+      </div>
+      <button 
+        class="back-btn"
+        @click="backToHome"
+      >
+        <ArrowLeft class="icon" />
+        {{ $t('backToHome') }}
+      </button>
+    </div>
+
+    <!-- Quick Settings Section -->
+    <div class="section">
+      <div class="section-header">
+        <Sliders class="section-icon" />
+        <h2 class="section-title">{{ $t('quickSettings') }}</h2>
+      </div>
+      <div class="settings-content">
+        <div class="settings-row">
+          <div class="setting-item">
+            <label class="setting-label">{{ $t('localLanguageLabel') }}</label>
+            <div class="select-wrapper">
+              <select 
+                v-model="settingForm.localLanguage"
+                class="select-input"
+              >
+                <option value="" disabled>{{ getPlaceholder('localLanguage') }}</option>
+                <option
+                  v-for="item in settingPreset.localLanguage.optionList"
+                  :key="item.value"
+                  :value="item.value"
+                >
+                  {{ item.label }}
+                </option>
+              </select>
+              <ChevronDown class="select-icon" />
+            </div>
+          </div>
+          <div class="setting-item">
+            <label class="setting-label">{{ $t('replyLanguageLabel') }}</label>
+            <div class="select-wrapper">
+              <select 
+                v-model="settingForm.replyLanguage"
+                class="select-input"
+              >
+                <option value="" disabled>{{ getPlaceholder('replyLanguage') }}</option>
+                <option
+                  v-for="item in settingPreset.replyLanguage.optionList"
+                  :key="item.value"
+                  :value="item.value"
+                >
+                  {{ item.label }}
+                </option>
+              </select>
+              <ChevronDown class="select-icon" />
+            </div>
+          </div>
+        </div>
+        <div class="setting-item full-width">
+          <label class="setting-label">{{ $t('apiLabel') }}</label>
+          <div class="select-wrapper">
+            <select 
+              v-model="settingForm.api"
+              class="select-input"
+            >
+              <option value="" disabled>{{ getPlaceholder('api') }}</option>
+              <option
+                v-for="item in settingPreset.api.optionList"
+                :key="item.value"
+                :value="item.value"
+              >
+                {{ item.label }}
+              </option>
+            </select>
+            <ChevronDown class="select-icon" />
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="main-content">
-      <div class="left-column">
-        <el-card class="settings-card quick-settings-card" shadow="hover">
-          <template #header>
-            <h3 class="compact-title">
-              <el-icon><Tools /></el-icon>
-              {{ $t('quickSettings') }}
-            </h3>
-          </template>
-
-          <div class="quick-settings-grid">
-            <div class="setting-row">
-              <div class="setting-group">
-                <label class="compact-label">{{
-                  $t('localLanguageLabel')
-                }}</label>
-                <el-select
-                  v-model="settingForm.localLanguage"
-                  class="compact-select"
-                  size="small"
-                  :placeholder="getPlaceholder('localLanguage')"
-                >
-                  <el-option
-                    v-for="item in settingPreset.localLanguage.optionList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-              <div class="setting-group">
-                <label class="compact-label">{{
-                  $t('replyLanguageLabel')
-                }}</label>
-                <el-select
-                  v-model="settingForm.replyLanguage"
-                  class="compact-select"
-                  size="small"
-                  :placeholder="getPlaceholder('replyLanguage')"
-                >
-                  <el-option
-                    v-for="item in settingPreset.replyLanguage.optionList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-group full-width">
-                <label class="compact-label">{{ $t('apiLabel') }}</label>
-                <el-select
-                  v-model="settingForm.api"
-                  class="compact-select"
-                  size="small"
-                  :placeholder="getPlaceholder('api')"
-                >
-                  <el-option
-                    v-for="item in settingPreset.api.optionList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </div>
-          </div>
-        </el-card>
+    <!-- API Configuration Sections -->
+    <div
+      v-for="platform in Object.keys(availableAPIs)"
+      v-show="settingForm.api === platform"
+      :key="platform"
+      class="section"
+    >
+      <div class="section-header">
+        <Settings class="section-icon" />
+        <h2 class="section-title">{{ platform.toUpperCase() }} {{ $t('configuration') || 'Configuration' }}</h2>
       </div>
-
-      <div class="right-column">
-        <el-card
-          v-for="platform in Object.keys(availableAPIs)"
-          v-show="settingForm.api === platform"
-          :key="platform"
-          class="settings-card api-config-card"
-          shadow="hover"
+      <div class="settings-content">
+        <!-- Input Settings -->
+        <template
+          v-for="item in getApiInputSettings(platform)"
+          :key="item"
         >
-          <div class="api-settings-content">
-            <div
-              v-if="getApiInputSettings(platform).length > 0"
-              class="settings-group"
-            >
-              <div class="settings-grid-compact">
-                <template
-                  v-for="item in getApiInputSettings(platform)"
-                  :key="item"
-                >
-                  <div class="setting-item">
-                    <label class="setting-label">{{
-                      $t(getLabel(item))
-                    }}</label>
-                    <el-input
-                      v-model="settingForm[item as SettingNames]"
-                      class="setting-input"
-                      size="small"
-                      :placeholder="$t(getPlaceholder(item))"
-                      type="text"
-                    />
-                  </div>
-                </template>
-              </div>
-            </div>
+          <div class="setting-item">
+            <label class="setting-label">{{ $t(getLabel(item)) }}</label>
+            <input
+              v-model="settingForm[item as SettingNames]"
+              class="text-input"
+              :type="item.toLowerCase().includes('key') || item.toLowerCase().includes('token') ? 'password' : 'text'"
+              :placeholder="$t(getPlaceholder(item))"
+            />
+          </div>
+        </template>
 
-            <div
-              v-if="getApiSelectSettings(platform).length > 0"
-              class="settings-group"
-            >
-              <div class="settings-grid-compact">
-                <template
-                  v-for="item in getApiSelectSettings(platform)"
-                  :key="item"
+        <!-- Select Settings -->
+        <template
+          v-for="item in getApiSelectSettings(platform)"
+          :key="item"
+        >
+          <div class="setting-item">
+            <label class="setting-label">{{ $t(getLabel(item)) }}</label>
+            <div class="select-wrapper">
+              <select 
+                v-model="settingForm[item as SettingNames]"
+                class="select-input"
+              >
+                <option value="" disabled>{{ $t(getPlaceholder(item)) }}</option>
+                <option
+                  v-for="option in settingPreset[item as SettingNames].optionList"
+                  :key="option.value"
+                  :value="option.value"
                 >
-                  <div class="setting-item">
-                    <label class="setting-label">{{
-                      $t(getLabel(item))
-                    }}</label>
-                    <el-select
-                      v-model="settingForm[item as SettingNames]"
-                      class="setting-input"
-                      size="small"
-                      :placeholder="$t(getPlaceholder(item))"
-                    >
-                      <el-option
-                        v-for="option in settingPreset[item as SettingNames]
-                          .optionList"
-                        :key="option.value"
-                        :label="option.label"
-                        :value="option.value"
-                      />
-                    </el-select>
-                  </div>
-                </template>
-              </div>
-            </div>
-
-            <div
-              v-if="getApiNumSettings(platform).length > 0"
-              class="settings-group"
-            >
-              <div class="settings-grid-compact">
-                <template
-                  v-for="item in getApiNumSettings(platform)"
-                  :key="item"
-                >
-                  <div class="setting-item">
-                    <label class="setting-label">{{
-                      $t(getLabel(item))
-                    }}</label>
-                    <el-input-number
-                      v-model="settingForm[item as SettingNames]"
-                      class="setting-input-number"
-                      size="small"
-                      :step="1"
-                      :min="0"
-                      :max="item.includes('Temperature') ? 2 : 4000"
-                      controls-position="right"
-                    />
-                  </div>
-                </template>
-              </div>
+                  {{ option.label }}
+                </option>
+              </select>
+              <ChevronDown class="select-icon" />
             </div>
           </div>
-        </el-card>
+        </template>
+
+        <!-- Number Settings -->
+        <template
+          v-for="item in getApiNumSettings(platform)"
+          :key="item"
+        >
+          <div class="setting-item">
+            <label class="setting-label">{{ $t(getLabel(item)) }}</label>
+            <input
+              v-model.number="settingForm[item as SettingNames]"
+              class="number-input"
+              type="number"
+              :min="0"
+              :max="item.includes('Temperature') ? 2 : 4000"
+              :step="item.includes('Temperature') ? 0.1 : 1"
+              :placeholder="$t(getPlaceholder(item))"
+            />
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -186,7 +164,7 @@
 <script lang="ts" setup>
 import { onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { Setting, ArrowLeft, Tools } from '@element-plus/icons-vue'
+import { Settings, ArrowLeft, Sliders, ChevronDown } from 'lucide-vue-next'
 
 import { getLabel, getPlaceholder } from '@/utils/common'
 import { availableAPIs } from '@/utils/constant'
@@ -248,328 +226,123 @@ function backToHome() {
 </script>
 
 <style scoped>
+/* Global styles */
+* {
+  box-sizing: border-box;
+}
+
 .settings-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  padding: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-/* Header Section */
-.header-section {
-  margin-bottom: 12px;
-  padding: 4px;
-  background: transparent;
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1000px;
+  width: 100%;
+  max-width: 600px;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
-  padding: 16px 20px;
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.05),
-    0 1px 2px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #fafbfc;
+  min-height: 100vh;
+  color: #21252b;
+  font-size: 12px;
+  line-height: 1.3;
 }
 
-.page-title {
+/* Header */
+.header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 0;
-  font-size: 24px;
-  font-weight: 700;
-  color: #1d1d1f;
-  letter-spacing: -0.5px;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e1e4e8;
 }
 
-.title-icon {
-  font-size: 28px;
-  color: #007aff;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-icon {
+  width: 20px;
+  height: 20px;
+  color: #0366d6;
+}
+
+.brand-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #24292e;
 }
 
 .back-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  height: 36px;
-  padding: 0 16px;
-  border-radius: 18px;
-  border: 1px solid #e4e7ed;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid #d0d7de;
   background: white;
-  color: #606266;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: #24292e;
+  font-size: 12px;
   font-weight: 500;
-  transition: all 0.3s ease;
-  font-size: 14px;
 }
 
 .back-btn:hover {
-  border-color: #007aff;
-  color: #007aff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.15);
+  background: #f6f8fa;
+  border-color: #0366d6;
+  color: #0366d6;
 }
 
-/* Main Content */
-.main-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  max-width: 1000px;
-  margin: 0 auto;
+.back-btn .icon {
+  width: 14px;
+  height: 14px;
 }
 
-/* Columns */
-.left-column,
-.right-column {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+/* Sections */
+.section {
+  margin-bottom: 16px;
+  background: white;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
-/* Settings Cards */
-.settings-card {
-  border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.05),
-    0 1px 2px rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-}
-
-.settings-card:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.08),
-    0 2px 4px rgba(0, 0, 0, 0.06);
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
-.settings-card:deep(.el-card__header) {
-  padding: 12px 16px;
-  background: rgba(248, 249, 250, 0.8);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 16px 16px 0 0;
-}
-
-.settings-card:deep(.el-card__body) {
-  padding: 16px;
-}
-
-.compact-title {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #1d1d1f;
+.section-header {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 12px 16px;
+  background: #f6f8fa;
+  border-bottom: 1px solid #e1e4e8;
 }
 
-.compact-title .el-icon {
-  font-size: 16px;
-  color: #007aff;
+.section-icon {
+  width: 14px;
+  height: 14px;
+  color: #586069;
 }
 
-/* Quick Settings Card */
-.quick-settings-card {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: #24292e;
 }
 
-.quick-settings-grid {
-  display: grid;
-  grid-template-rows: repeat(2, auto);
+/* Settings Content */
+.settings-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
-.setting-row {
+.settings-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  align-items: end;
-}
-
-.setting-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
-
-.setting-group.full-width {
-  grid-column: 1 / -1;
-}
-
-.compact-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #495057;
-  margin-bottom: 2px;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-}
-
-.compact-select {
-  width: 100%;
-}
-
-.compact-select:deep(.el-select__wrapper) {
-  border-radius: 8px;
-  border: 1.5px solid #e9ecef;
-  transition: all 0.3s ease;
-  min-height: 32px;
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.compact-select:deep(.el-select__wrapper:hover) {
-  border-color: #007aff;
-  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.15);
-  transform: translateY(-1px);
-}
-
-.compact-select:deep(.el-select__wrapper:focus-within) {
-  border-color: #007aff;
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
-}
-
-/* Status Overview Card */
-.status-overview-card {
-  background: linear-gradient(135deg, #f0fff4 0%, #e6ffed 100%);
-  border: 1px solid rgba(52, 199, 89, 0.1);
-}
-
-.status-overview-card:deep(.el-card__header) {
-  background: linear-gradient(
-    135deg,
-    rgba(52, 199, 89, 0.03) 0%,
-    rgba(248, 249, 250, 0.8) 100%
-  );
-  border-bottom: 1px solid rgba(52, 199, 89, 0.1);
-}
-
-.status-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.status-item-compact {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
-}
-
-.status-item-compact:hover {
-  background: rgba(255, 255, 255, 0.8);
-  transform: translateY(-1px);
-}
-
-.status-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.status-label {
-  font-size: 12px;
-  font-weight: 500;
-  color: #606266;
-}
-
-.status-value {
-  font-weight: 600;
-  border-radius: 6px;
-}
-
-.status-icon {
-  font-size: 18px;
-  transition: all 0.3s ease;
-}
-
-.status-icon.connected {
-  color: #34c759;
-}
-
-.status-icon.disconnected {
-  color: #ff3b30;
-}
-
-.config-icon {
-  font-size: 18px;
-  transition: all 0.3s ease;
-}
-
-.config-icon.configured {
-  color: #34c759;
-}
-
-.config-icon.not-configured {
-  color: #ff3b30;
-}
-
-/* API Configuration Card */
-.api-config-card {
-  background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
-  border: 1px solid rgba(0, 122, 255, 0.1);
-}
-
-.api-config-card:deep(.el-card__header) {
-  background: linear-gradient(
-    135deg,
-    rgba(0, 122, 255, 0.03) 0%,
-    rgba(248, 249, 250, 0.8) 100%
-  );
-  border-bottom: 1px solid rgba(0, 122, 255, 0.1);
-}
-
-.api-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.api-settings-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.settings-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.group-title {
-  margin: 0 0 8px 0;
-  font-size: 13px;
-  font-weight: 600;
-  color: #495057;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-}
-
-.settings-grid-compact {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
 }
 
 .setting-item {
@@ -578,117 +351,124 @@ function backToHome() {
   gap: 6px;
 }
 
+.setting-item.full-width {
+  grid-column: 1 / -1;
+}
+
 .setting-label {
   font-size: 12px;
   font-weight: 500;
-  color: #606266;
-  margin-bottom: 2px;
+  color: #24292e;
 }
 
-.setting-input {
+/* Input Styles */
+.text-input,
+.number-input {
   width: 100%;
-}
-
-.setting-input:deep(.el-input__wrapper) {
-  border-radius: 8px;
-  border: 1px solid #e4e7ed;
-  transition: all 0.3s ease;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
   background: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  font-size: 12px;
+  color: #24292e;
+  transition: all 0.15s ease;
 }
 
-.setting-input:deep(.el-input__wrapper:hover) {
-  border-color: #007aff;
-  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.15);
-  transform: translateY(-1px);
+.text-input:focus,
+.number-input:focus {
+  outline: none;
+  border-color: #0366d6;
+  box-shadow: 0 0 0 2px rgba(3, 102, 214, 0.1);
 }
 
-.setting-input:deep(.el-input__wrapper.is-focus) {
-  border-color: #007aff;
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+.text-input:disabled,
+.number-input:disabled {
+  background: #f6f8fa;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
-.setting-input:deep(.el-select__wrapper) {
-  border-radius: 8px;
-  border: 1px solid #e4e7ed;
-  transition: all 0.3s ease;
-  background: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+/* Select Styles */
+.select-wrapper {
+  position: relative;
 }
 
-.setting-input:deep(.el-select__wrapper:hover) {
-  border-color: #007aff;
-  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.15);
-  transform: translateY(-1px);
-}
-
-.setting-input-number {
+.select-input {
   width: 100%;
-}
-
-.setting-input-number:deep(.el-input__wrapper) {
-  border-radius: 8px;
-  border: 1px solid #e4e7ed;
-  transition: all 0.3s ease;
+  height: 32px;
+  padding: 0 28px 0 8px;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
   background: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  font-size: 12px;
+  color: #24292e;
+  cursor: pointer;
+  appearance: none;
+  transition: all 0.15s ease;
 }
 
-.setting-input-number:deep(.el-input__wrapper:hover) {
-  border-color: #007aff;
-  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.15);
-  transform: translateY(-1px);
+.select-input:focus {
+  outline: none;
+  border-color: #0366d6;
+  box-shadow: 0 0 0 2px rgba(3, 102, 214, 0.1);
+}
+
+.select-input:disabled {
+  background: #f6f8fa;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.select-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  color: #586069;
+  pointer-events: none;
+}
+
+/* Number Input Specific Styles */
+.number-input {
+  appearance: textfield;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.number-input::-webkit-outer-spin-button,
+.number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .settings-page {
+    max-width: 100%;
     padding: 8px;
   }
 
-  .main-content {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .header-content {
-    flex-direction: column;
-    gap: 12px;
-    text-align: center;
-    padding: 12px 16px;
-  }
-
-  .page-title {
-    font-size: 20px;
-    justify-content: center;
-  }
-
-  .setting-row {
+  .settings-row {
     grid-template-columns: 1fr;
     gap: 12px;
   }
 
-  .setting-group.full-width {
-    grid-column: 1;
-  }
-
-  .settings-card:deep(.el-card__body) {
-    padding: 12px;
-  }
-
-  .settings-card:deep(.el-card__header) {
-    padding: 10px 12px;
-  }
-
-  .status-item-compact {
+  .header {
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
     text-align: center;
   }
 
   .back-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .settings-content {
+    padding: 12px;
   }
 }
 
@@ -697,24 +477,77 @@ function backToHome() {
     padding: 6px;
   }
 
-  .page-title {
-    font-size: 18px;
+  .brand-title {
+    font-size: 16px;
   }
 
-  .compact-title {
-    font-size: 13px;
+  .section-title {
+    font-size: 12px;
   }
 
-  .header-content {
-    padding: 10px 12px;
-  }
-
-  .quick-settings-grid {
+  .settings-content {
+    padding: 10px;
     gap: 12px;
   }
+}
 
-  .settings-grid-compact {
-    gap: 10px;
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .settings-page {
+    background: #1c1f23;
+    color: #e1e4e8;
+  }
+  
+  .header {
+    border-color: #30363d;
+  }
+  
+  .brand-title {
+    color: #f0f6fc;
+  }
+  
+  .section {
+    background: #21262d;
+    border-color: #30363d;
+  }
+  
+  .section-header {
+    background: #161b22;
+    border-color: #30363d;
+  }
+  
+  .section-title {
+    color: #f0f6fc;
+  }
+  
+  .back-btn {
+    background: #21262d;
+    border-color: #30363d;
+    color: #e1e4e8;
+  }
+  
+  .back-btn:hover {
+    background: #30363d;
+    border-color: #58a6ff;
+    color: #58a6ff;
+  }
+  
+  .text-input,
+  .number-input,
+  .select-input {
+    background: #0d1117;
+    border-color: #30363d;
+    color: #e1e4e8;
+  }
+  
+  .text-input:disabled,
+  .number-input:disabled,
+  .select-input:disabled {
+    background: #161b22;
+  }
+  
+  .setting-label {
+    color: #f0f6fc;
   }
 }
 </style>

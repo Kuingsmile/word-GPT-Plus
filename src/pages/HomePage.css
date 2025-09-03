@@ -1,0 +1,582 @@
+/* Global styles */
+* {
+  box-sizing: border-box;
+}
+
+.homepage {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  padding: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #fafbfc;
+  min-height: 100vh;
+  color: #21252b;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.brand-icon {
+  width: 16px;
+  height: 16px;
+  color: #0366d6;
+}
+
+.brand-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: #24292e;
+}
+
+.settings-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: #586069;
+}
+
+.settings-btn:hover:not(:disabled) {
+  background: #f1f3f4;
+  color: #0366d6;
+}
+
+.settings-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settings-btn .icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* Main Actions */
+.main-actions {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.primary-btn,
+.secondary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex: 1;
+  min-width: 0;
+}
+
+.primary-btn {
+  background: #0366d6;
+  color: white;
+}
+
+.primary-btn:hover:not(:disabled) {
+  background: #0256cc;
+}
+
+.secondary-btn {
+  background: #28a745;
+  color: white;
+}
+
+.secondary-btn:hover:not(:disabled) {
+  background: #239a3b;
+}
+
+.primary-btn:disabled,
+.secondary-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.primary-btn .icon,
+.secondary-btn .icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* Sections */
+.section {
+  margin-bottom: 12px;
+  background: white;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #f6f8fa;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.section-icon {
+  width: 12px;
+  height: 12px;
+  color: #586069;
+}
+
+.section-title {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0;
+  color: #24292e;
+}
+
+/* Action Grid - More compact */
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 8px;
+}
+
+.action-btn {
+  height: 28px;
+  border: 1px solid #d0d7de;
+  background: white;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: #24292e;
+  padding: 4px;
+}
+
+.action-btn:hover:not(:disabled) {
+  background: #f6f8fa;
+  border-color: #0366d6;
+  color: #0366d6;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Progress Section - More compact */
+.progress-section {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #f1f3f4;
+  border-radius: 6px;
+  border: 1px solid #e1e4e8;
+}
+
+.progress-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spinning-icon {
+  width: 14px;
+  height: 14px;
+  color: #0366d6;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.progress-text {
+  font-size: 11px;
+  color: #586069;
+  margin: 0;
+}
+
+/* Result Textarea - More compact */
+.result-textarea {
+  width: calc(100% - 16px);
+  min-height: 60px;
+  padding: 8px;
+  border: none;
+  border-radius: 0;
+  font-family: 'SF Mono', Consolas, 'Liberation Mono', monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  resize: vertical;
+  background: white;
+  color: #24292e;
+  margin: 8px;
+}
+
+.result-textarea:focus {
+  outline: 2px solid #0366d6;
+  outline-offset: -2px;
+}
+
+/* Collapsible Sections */
+.collapsible-section {
+  margin-bottom: 8px;
+  background: white;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f6f8fa;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.collapsible-header:hover {
+  background: #f1f3f4;
+}
+
+.collapsible-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #24292e;
+  margin: 0;
+}
+
+.collapsible-icon {
+  width: 12px;
+  height: 12px;
+  color: #586069;
+}
+
+.collapse-icon {
+  width: 12px;
+  height: 12px;
+  color: #586069;
+  transition: transform 0.2s ease;
+}
+
+.collapse-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.collapsible-content.expanded {
+  max-height: 1000px;
+}
+
+/* Settings Grid - More compact */
+.settings-grid {
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.setting-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #24292e;
+}
+
+/* Two column layout for some settings */
+.settings-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* Select Wrapper */
+.select-wrapper {
+  position: relative;
+}
+
+.select-input {
+  width: 100%;
+  height: 28px;
+  padding: 0 24px 0 8px;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  background: white;
+  font-size: 11px;
+  color: #24292e;
+  cursor: pointer;
+  appearance: none;
+}
+
+.select-input:focus {
+  outline: none;
+  border-color: #0366d6;
+  box-shadow: 0 0 0 2px rgba(3, 102, 214, 0.1);
+}
+
+.select-input:disabled {
+  background: #f6f8fa;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.select-icon {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  color: #586069;
+  pointer-events: none;
+}
+
+/* Toggle Switch - Smaller */
+.toggle-wrapper {
+  position: relative;
+  width: 36px;
+  height: 20px;
+}
+
+.toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.2s;
+  border-radius: 20px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.2s;
+  border-radius: 50%;
+}
+
+.toggle-input:checked + .toggle-slider {
+  background-color: #0366d6;
+}
+
+.toggle-input:checked + .toggle-slider:before {
+  transform: translateX(16px);
+}
+
+/* Prompt Sections - More compact */
+.prompt-section {
+  padding: 8px 12px;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.prompt-section:last-child {
+  border-bottom: none;
+}
+
+.prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.prompt-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #24292e;
+}
+
+.prompt-actions {
+  display: flex;
+  gap: 2px;
+}
+
+.icon-btn {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.add-btn {
+  background: #0366d6;
+  color: white;
+}
+
+.add-btn:hover {
+  background: #0256cc;
+}
+
+.remove-btn {
+  background: #d73a49;
+  color: white;
+}
+
+.remove-btn:hover {
+  background: #cb2431;
+}
+
+.small-icon {
+  width: 10px;
+  height: 10px;
+}
+
+.prompt-textarea {
+  width: 100%;
+  min-height: 40px;
+  padding: 6px 8px;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1.3;
+  resize: vertical;
+  background: white;
+  color: #24292e;
+  margin-top: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.prompt-textarea:focus {
+  outline: none;
+  border-color: #0366d6;
+  box-shadow: 0 0 0 2px rgba(3, 102, 214, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 320px) {
+  .homepage {
+    padding: 8px;
+  }
+  
+  .action-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .brand-title {
+    font-size: 12px;
+  }
+}
+
+/* Dark mode support for Word */
+@media (prefers-color-scheme: dark) {
+  .homepage {
+    background: #1c1f23;
+    color: #e1e4e8;
+  }
+  
+  .header {
+    border-color: #30363d;
+  }
+  
+  .brand-title {
+    color: #f0f6fc;
+  }
+  
+  .section,
+  .collapsible-section {
+    background: #21262d;
+    border-color: #30363d;
+  }
+  
+  .section-header,
+  .collapsible-header {
+    background: #161b22;
+    border-color: #30363d;
+  }
+  
+  .collapsible-header:hover {
+    background: #1c2128;
+  }
+  
+  .section-title,
+  .collapsible-title {
+    color: #f0f6fc;
+  }
+  
+  .action-btn {
+    background: #21262d;
+    border-color: #30363d;
+    color: #e1e4e8;
+  }
+  
+  .action-btn:hover:not(:disabled) {
+    background: #30363d;
+    border-color: #58a6ff;
+    color: #58a6ff;
+  }
+  
+  .select-input, .result-textarea, .prompt-textarea {
+    background: #0d1117;
+    border-color: #30363d;
+    color: #e1e4e8;
+  }
+  
+  .select-input:disabled {
+    background: #161b22;
+  }
+  
+  .progress-section {
+    background: #161b22;
+    border-color: #30363d;
+  }
+}
