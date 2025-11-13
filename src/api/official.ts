@@ -21,15 +21,24 @@ async function createChatCompletionStream(
 ): Promise<void> {
   try {
     const openai = new OpenAI(options.config)
-    if (Object.keys(availableModels).includes(options.model ?? '')) {
-      options.model = availableModels[options.model ?? '']
+    const defaultModel = 'gpt-5'
+    let model = options.model ?? defaultModel
+    if (Object.keys(availableModels).includes(model)) {
+      model = availableModels[model]
     }
 
+    const isGpt5Family =
+      model === 'gpt-5' || model === 'gpt-5-mini' || model === 'gpt-5-nano'
+
+    const temperature = isGpt5Family ? 1 : options.temperature ?? 0.7
+
     const response = await openai.chat.completions.create({
-      model: options.model ?? 'gpt-3.5-turbo',
+      model,
       messages: options.messages as any[],
-      temperature: options.temperature ?? 0.7,
-      max_tokens: options.maxTokens ?? 800
+      temperature,
+      ...(isGpt5Family
+        ? { max_output_tokens: options.maxTokens ?? 5000 }
+        : { max_tokens: options.maxTokens ?? 800 })
     })
 
     updateResult(
