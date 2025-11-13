@@ -262,7 +262,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus'
 import {
   Plus,
   Minus,
@@ -282,6 +281,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import API from '@/api'
+import { message } from '@/utils/message'
 
 import { buildInPrompt } from '@/utils/constant'
 import { promptDbInstance } from '@/store/promtStore'
@@ -714,12 +714,12 @@ async function template(taskType: keyof typeof buildInPrompt | 'custom') {
       temperature: settingForm.value.officialTemperature
     })
   } else {
-    ElMessage.error('Set API Key or Access Token first')
+    message.error('Set API Key or Access Token first')
     return
   }
   if (errorIssue.value === true) {
     errorIssue.value = false
-    ElMessage.error('Something is wrong')
+    message.error('Something is wrong')
     return
   }
   if (!jsonIssue.value) {
@@ -741,7 +741,7 @@ function checkApiKey() {
     agentBaseModeAPI: settingForm.value.agentBaseModeAPI
   }
   if (!checkAuth(auth)) {
-    ElMessage.error('Set API Key or Access Token first')
+    message.error('Set API Key or Access Token first')
     return false
   }
   return true
@@ -924,7 +924,7 @@ async function continueChat() {
   }
   if (errorIssue.value === true) {
     errorIssue.value = false
-    ElMessage.error('Something is wrong')
+    message.error('Something is wrong')
     return
   }
   if (useWordFormatting.value) {
