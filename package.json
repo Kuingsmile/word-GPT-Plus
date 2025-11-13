@@ -13,7 +13,7 @@
     "lint:dpdm": "dpdm -T --tsconfig ./tsconfig.json --no-tree --no-warning --exit-code circular:1 src/main.ts"
   },
   "dependencies": {
-    "@google/genai": "^1.16.0",
+    "@google/genai": "^1.29.1",
     "axios": "^1.13.2",
     "dexie": "^3.2.4",
     "groq-sdk": "^0.35.0",
