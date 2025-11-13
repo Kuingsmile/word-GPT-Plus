@@ -1,3 +1,14 @@
+##  (2025-11-13)
+
+* :arrow_up: Upgrade(custom): upgrade google sdk fc6c8e3
+* :bug: Fix(custom): fix max_token error 233aa66, closes #109
+* :bug: Fix(custom): fix word formatting bug c335aa8, closes #105 #108
+* :package: Chore(custom): add element-plus deps 47c4e8f
+* :sparkles: Feature(custom): add custom msg component 1ed0df8
+* :sparkles: Feature(custom): update groq sdk and models 086a3c9
+
+
+
 ##  (2025-09-03)
 
 * :sparkles: Feature(custom): update model list 9138979
