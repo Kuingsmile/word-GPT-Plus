@@ -24,13 +24,23 @@ async function createChatCompletionStream(
     if (Object.keys(availableModels).includes(options.model ?? '')) {
       options.model = availableModels[options.model ?? '']
     }
-
-    const response = await openai.chat.completions.create({
-      model: options.model ?? 'gpt-3.5-turbo',
-      messages: options.messages as any[],
-      temperature: options.temperature ?? 0.7,
-      max_tokens: options.maxTokens ?? 800
-    })
+    let response
+    try {
+      response = await openai.chat.completions.create({
+        model: options.model ?? 'gpt-3.5-turbo',
+        messages: options.messages as any[],
+        temperature: options.temperature ?? 0.7,
+        max_tokens: options.maxTokens ?? 800
+      })
+    } catch (error) {
+      console.error('error in chat completion:', error)
+      response = await openai.chat.completions.create({
+        model: options.model ?? 'gpt-3.5-turbo',
+        messages: options.messages as any[],
+        temperature: options.temperature ?? 0.7,
+        max_completion_tokens: options.maxTokens ?? 800
+      })
+    }
 
     updateResult(
       {
