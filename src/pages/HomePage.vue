@@ -89,10 +89,10 @@
           </div>
           <div class="setting-item">
             <label class="setting-label">{{ $t('useWordFormattingLabel') }}</label>
-            <div class="toggle-wrapper">
-              <input type="checkbox" v-model="useWordFormatting" class="toggle-input" @change="(e) => handleWordFormattingChange((e.target as HTMLInputElement)?.checked ?? false)" />
+            <label class="toggle-wrapper">
+              <input type="checkbox" v-model="useWordFormatting" class="toggle-input" @change="() => handleWordFormattingChange(useWordFormatting)" />
               <div class="toggle-slider"></div>
-            </div>
+            </label>
           </div>
         </div>
         <div class="setting-item">
