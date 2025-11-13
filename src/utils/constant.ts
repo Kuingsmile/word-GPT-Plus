@@ -121,11 +121,11 @@ export const availableModelsForGroq: IStringKeyMap = {
   'openai/gpt-oss-20b': 'openai/gpt-oss-20b',
   'whisper-large-v3': 'whisper-large-v3',
   'whisper-large-v3-turbo': 'whisper-large-v3-turbo',
-  'deepseek-r1-distill-llama-70b': 'deepseek-r1-distill-llama-70b',
   'meta-llama/llama-4-maverick-17b-128e-instruct': 'meta-llama/llama-4-maverick-17b-128e-instruct',
   'meta-llama/llama-4-scout-17b-16e-instruct': 'meta-llama/llama-4-scout-17b-16e-instruct',
   'meta-llama/llama-prompt-guard-2-22m': 'meta-llama/llama-prompt-guard-2-22m',
-  'moonshotai/kimi-k2-instruct': 'moonshotai/kimi-k2-instruct',
+  'meta-llama/llama-prompt-guard-2-86m': 'meta-llama/llama-prompt-guard-2-86m',
+  'moonshotai/kimi-k2-instruct-0905': 'moonshotai/kimi-k2-instruct-0905',
   'qwen/qwen3-32b': 'qwen/qwen3-32b'  
 }
 

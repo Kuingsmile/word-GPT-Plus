@@ -16,7 +16,7 @@
     "@google/genai": "^1.16.0",
     "axios": "^1.13.2",
     "dexie": "^3.2.4",
-    "groq-sdk": "^0.31.0",
+    "groq-sdk": "^0.35.0",
     "lucide-vue-next": "^0.553.0",
     "openai": "^5.18.1",
     "vue": "^3.5.24",

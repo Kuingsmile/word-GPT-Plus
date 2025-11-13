@@ -2558,10 +2558,10 @@ graphemer@^1.4.0:
   resolved "https://registry.npmjs.org/graphemer/-/graphemer-1.4.0.tgz"
   integrity sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==
 
-groq-sdk@^0.31.0:
-  version "0.31.0"
-  resolved "https://registry.yarnpkg.com/groq-sdk/-/groq-sdk-0.31.0.tgz#58a7c5acd905b55086816d02bb770c7f260d117f"
-  integrity sha512-+2WpYMDanCqjJ0U+UxKdlzVyA/5rsf/9LWNQt5vFfih0+AInIX87tUxSv1liRXV0A3dA7+/Nn+8VD3FrVeIvlg==
+groq-sdk@^0.35.0:
+  version "0.35.0"
+  resolved "https://registry.yarnpkg.com/groq-sdk/-/groq-sdk-0.35.0.tgz#68d12c08182caa92be980f15c44e6783b600a6da"
+  integrity sha512-jrRqtV4kwtYFpuiQ5EM+vVUM0xS4kQAyQx1tFpbHOCoaM/ad6ECMZxPT9bzA7SkXVDzhF1TYh5SYqxYiFqk/Pw==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
