@@ -2,6 +2,9 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import { i18n } from './i18n'
 import router from './router'
+import ElementUI from 'element-plus'
+// @ts-ignore
+import 'element-plus/dist/index.css'
 
 window.Office.onReady(() => {
   const app = createApp(App)
@@ -31,5 +34,6 @@ window.Office.onReady(() => {
   }
   app.use(i18n)
   app.use(router)
+  app.use(ElementUI)
   app.mount('#app')
 })
