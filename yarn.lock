@@ -511,10 +511,10 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.10.tgz#a2a1e3812d14525f725d011a73eceb41fef5bc1c"
   integrity sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==
 
-"@google/genai@^1.29.1":
-  version "1.29.1"
-  resolved "https://registry.yarnpkg.com/@google/genai/-/genai-1.29.1.tgz#6e01bd98c4217fd01f4cb5a30deafb7a86bc3b7e"
-  integrity sha512-Buywpq0A6xf9cOdhiWCi5KUiDBbZkjCH5xbl+xxNQRItoYQgd31p0OKyn5cUnT0YNzC/pAmszqXoOc7kncqfFQ==
+"@google/genai@^1.33.0":
+  version "1.33.0"
+  resolved "https://registry.yarnpkg.com/@google/genai/-/genai-1.33.0.tgz#c808abbcc04002c6860a3c99e12fcd2cfda5345c"
+  integrity sha512-ThUjFZ1N0DU88peFjnQkb8K198EWaW2RmmnDShFQ+O+xkIH9itjpRe358x3L/b4X/A7dimkvq63oz49Vbh7Cog==
   dependencies:
     google-auth-library "^10.3.0"
     ws "^8.18.0"
@@ -679,26 +679,26 @@
   resolved "https://registry.yarnpkg.com/@inquirer/type/-/type-3.0.7.tgz#b46bcf377b3172dbc768fdbd053e6492ad801a09"
   integrity sha512-PfunHQcjwnju84L+ycmcMKB/pTPIngjUJvfnRhKY6FKPuYXlM4aQCb/nIdTFR6BEhMjFvngzvng/vBAJMZpLSA==
 
-"@intlify/core-base@11.1.12":
-  version "11.1.12"
-  resolved "https://registry.yarnpkg.com/@intlify/core-base/-/core-base-11.1.12.tgz#e02529021a4e69f8a1adcca5ce61963c71cd72ba"
-  integrity sha512-whh0trqRsSqVLNEUCwU59pyJZYpU8AmSWl8M3Jz2Mv5ESPP6kFh4juas2NpZ1iCvy7GlNRffUD1xr84gceimjg==
+"@intlify/core-base@11.2.2":
+  version "11.2.2"
+  resolved "https://registry.yarnpkg.com/@intlify/core-base/-/core-base-11.2.2.tgz#499a9a9ca8b0430df936fa59fe7791f863d06212"
+  integrity sha512-0mCTBOLKIqFUP3BzwuFW23hYEl9g/wby6uY//AC5hTgQfTsM2srCYF2/hYGp+a5DZ/HIFIgKkLJMzXTt30r0JQ==
   dependencies:
-    "@intlify/message-compiler" "11.1.12"
-    "@intlify/shared" "11.1.12"
+    "@intlify/message-compiler" "11.2.2"
+    "@intlify/shared" "11.2.2"
 
-"@intlify/message-compiler@11.1.12":
-  version "11.1.12"
-  resolved "https://registry.yarnpkg.com/@intlify/message-compiler/-/message-compiler-11.1.12.tgz#27e69790b711a92cddb07175187dd09a7b270b55"
-  integrity sha512-Fv9iQSJoJaXl4ZGkOCN1LDM3trzze0AS2zRz2EHLiwenwL6t0Ki9KySYlyr27yVOj5aVz0e55JePO+kELIvfdQ==
+"@intlify/message-compiler@11.2.2":
+  version "11.2.2"
+  resolved "https://registry.yarnpkg.com/@intlify/message-compiler/-/message-compiler-11.2.2.tgz#519b495ec165ae3ee3dc09dd698c7f77cf319633"
+  integrity sha512-XS2p8Ff5JxWsKhgfld4/MRQzZRQ85drMMPhb7Co6Be4ZOgqJX1DzcZt0IFgGTycgqL8rkYNwgnD443Q+TapOoA==
   dependencies:
-    "@intlify/shared" "11.1.12"
+    "@intlify/shared" "11.2.2"
     source-map-js "^1.0.2"
 
-"@intlify/shared@11.1.12":
-  version "11.1.12"
-  resolved "https://registry.yarnpkg.com/@intlify/shared/-/shared-11.1.12.tgz#ab41083e017d622cf63c7dc88a0ee0bc27f4127a"
-  integrity sha512-Om86EjuQtA69hdNj3GQec9ZC0L0vPSAnXzB3gP/gyJ7+mA7t06d9aOAiqMZ+xEOsumGP4eEBlfl8zF2LOTzf2A==
+"@intlify/shared@11.2.2":
+  version "11.2.2"
+  resolved "https://registry.yarnpkg.com/@intlify/shared/-/shared-11.2.2.tgz#a97e53b376e4f9d27f0f7b0d66beb81ccf7aadb4"
+  integrity sha512-OtCmyFpSXxNu/oET/aN6HtPCbZ01btXVd0f3w00YsHOb13Kverk1jzA2k47pAekM55qbUw421fvPF1yxZ+gicw==
 
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
@@ -766,10 +766,10 @@
   resolved "https://registry.yarnpkg.com/@sxzz/popperjs-es/-/popperjs-es-2.11.7.tgz#a7f69e3665d3da9b115f9e71671dae1b97e13671"
   integrity sha512-Ccy0NlLkzr0Ex2FKvh2X+OyERHXJ88XJ1MXtsI9y9fGexlaXaVTPzBCRBwIxFkORuOb+uBqeu+RqnpgYTEZRUQ==
 
-"@rolldown/pluginutils@1.0.0-beta.29":
-  version "1.0.0-beta.29"
-  resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.0-beta.29.tgz#f8fc9a8788757dccba0d3b7fee93183621773d4c"
-  integrity sha512-NIJgOsMjbxAXvoGq/X0gD7VPMQ8j9g0BiDaNjVNVjvl+iKXxL3Jre0v31RmBYeLEmkbj2s02v8vFTbUXi5XS2Q==
+"@rolldown/pluginutils@1.0.0-beta.53":
+  version "1.0.0-beta.53"
+  resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.0-beta.53.tgz#c57a5234ae122671aff6fe72e673a7ed90f03f87"
+  integrity sha512-vENRlFU4YbrwVqNDZ7fLvy+JR1CRkyr01jhSiDpE1u6py3OMzQfztQU2jxykW3ALNxO4kSlqIDeYyD0Y9RcQeQ==
 
 "@rollup/rollup-android-arm-eabi@4.47.0":
   version "4.47.0"
@@ -970,40 +970,39 @@
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.4.tgz#56e2cc26c397c038fab0e3a917a12d5c5909e901"
   integrity sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==
 
-"@types/office-js@^1.0.557":
-  version "1.0.557"
-  resolved "https://registry.yarnpkg.com/@types/office-js/-/office-js-1.0.557.tgz#35c2c4f397aa8b7412266ff58a99dbcc3520aa94"
-  integrity sha512-BhL0EngQnLt9S0jP3C6UR4gy9fu0B93cv+ijmhhkUNZNoBsatIqC7dzuPFuFJIyLobR+KaRBUMvxDTxlxxQlVA==
+"@types/office-js@^1.0.561":
+  version "1.0.561"
+  resolved "https://registry.yarnpkg.com/@types/office-js/-/office-js-1.0.561.tgz#914f97ab35489b8f04f25941c84462242abd9737"
+  integrity sha512-xO8ig8OQeeKn8z8Ogg5m9y2zxpMqIztqDNITovCJNqcRb3FOA+Vwtt9hMHR4x3ckA6LX7aZMNv9hQ1pezZGg1A==
 
 "@types/web-bluetooth@^0.0.16":
   version "0.0.16"
   resolved "https://registry.yarnpkg.com/@types/web-bluetooth/-/web-bluetooth-0.0.16.tgz#1d12873a8e49567371f2a75fe3e7f7edca6662d8"
   integrity sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==
 
-"@typescript-eslint/eslint-plugin@^8.46.4":
-  version "8.46.4"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.46.4.tgz#005dc4eebcb27462f20de3afe888065f65cec100"
-  integrity sha512-R48VhmTJqplNyDxCyqqVkFSZIx1qX6PzwqgcXn1olLrzxcSBDlOsbtcnQuQhNtnNiJ4Xe5gREI1foajYaYU2Vg==
+"@typescript-eslint/eslint-plugin@^8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.49.0.tgz#8ed8736b8415a9193989220eadb6031dbcd2260a"
+  integrity sha512-JXij0vzIaTtCwu6SxTh8qBc66kmf1xs7pI4UOiMDFVct6q86G0Zs7KRcEoJgY3Cav3x5Tq0MF5jwgpgLqgKG3A==
   dependencies:
     "@eslint-community/regexpp" "^4.10.0"
-    "@typescript-eslint/scope-manager" "8.46.4"
-    "@typescript-eslint/type-utils" "8.46.4"
-    "@typescript-eslint/utils" "8.46.4"
-    "@typescript-eslint/visitor-keys" "8.46.4"
-    graphemer "^1.4.0"
+    "@typescript-eslint/scope-manager" "8.49.0"
+    "@typescript-eslint/type-utils" "8.49.0"
+    "@typescript-eslint/utils" "8.49.0"
+    "@typescript-eslint/visitor-keys" "8.49.0"
     ignore "^7.0.0"
     natural-compare "^1.4.0"
     ts-api-utils "^2.1.0"
 
-"@typescript-eslint/parser@^8.46.4":
-  version "8.46.4"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-8.46.4.tgz#1a5bfd48be57bc07eec64e090ac46e89f47ade31"
-  integrity sha512-tK3GPFWbirvNgsNKto+UmB/cRtn6TZfyw0D6IKrW55n6Vbs7KJoZtI//kpTKzE/DUmmnAFD8/Ca46s7Obs92/w==
+"@typescript-eslint/parser@^8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-8.49.0.tgz#0ede412d59e99239b770f0f08c76c42fba717fa2"
+  integrity sha512-N9lBGA9o9aqb1hVMc9hzySbhKibHmB+N3IpoShyV6HyQYRGIhlrO5rQgttypi+yEeKsKI4idxC8Jw6gXKD4THA==
   dependencies:
-    "@typescript-eslint/scope-manager" "8.46.4"
-    "@typescript-eslint/types" "8.46.4"
-    "@typescript-eslint/typescript-estree" "8.46.4"
-    "@typescript-eslint/visitor-keys" "8.46.4"
+    "@typescript-eslint/scope-manager" "8.49.0"
+    "@typescript-eslint/types" "8.49.0"
+    "@typescript-eslint/typescript-estree" "8.49.0"
+    "@typescript-eslint/visitor-keys" "8.49.0"
     debug "^4.3.4"
 
 "@typescript-eslint/project-service@8.35.1":
@@ -1015,13 +1014,13 @@
     "@typescript-eslint/types" "^8.35.1"
     debug "^4.3.4"
 
-"@typescript-eslint/project-service@8.46.4":
-  version "8.46.4"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/project-service/-/project-service-8.46.4.tgz#fa9872673b51fb57e5d5da034edbe17424ddd185"
-  integrity sha512-nPiRSKuvtTN+no/2N1kt2tUh/HoFzeEgOm9fQ6XQk4/ApGqjx0zFIIaLJ6wooR1HIoozvj2j6vTi/1fgAz7UYQ==
+"@typescript-eslint/project-service@8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/project-service/-/project-service-8.49.0.tgz#ce220525c88cb2d23792b391c07e14cb9697651a"
+  integrity sha512-/wJN0/DKkmRUMXjZUXYZpD1NEQzQAAn9QWfGwo+Ai8gnzqH7tvqS7oNVdTjKqOcPyVIdZdyCMoqN66Ia789e7g==
   dependencies:
-    "@typescript-eslint/tsconfig-utils" "^8.46.4"
-    "@typescript-eslint/types" "^8.46.4"
+    "@typescript-eslint/tsconfig-utils" "^8.49.0"
+    "@typescript-eslint/types" "^8.49.0"
     debug "^4.3.4"
 
 "@typescript-eslint/scope-manager@8.35.1":
@@ -1032,32 +1031,32 @@
     "@typescript-eslint/types" "8.35.1"
     "@typescript-eslint/visitor-keys" "8.35.1"
 
-"@typescript-eslint/scope-manager@8.46.4":
-  version "8.46.4"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/scope-manager/-/scope-manager-8.46.4.tgz#78c9b4856c0094def64ffa53ea955b46bec13304"
-  integrity sha512-tMDbLGXb1wC+McN1M6QeDx7P7c0UWO5z9CXqp7J8E+xGcJuUuevWKxuG8j41FoweS3+L41SkyKKkia16jpX7CA==
+"@typescript-eslint/scope-manager@8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/scope-manager/-/scope-manager-8.49.0.tgz#a3496765b57fb48035d671174552e462e5bffa63"
+  integrity sha512-npgS3zi+/30KSOkXNs0LQXtsg9ekZ8OISAOLGWA/ZOEn0ZH74Ginfl7foziV8DT+D98WfQ5Kopwqb/PZOaIJGg==
   dependencies:
-    "@typescript-eslint/types" "8.46.4"
-    "@typescript-eslint/visitor-keys" "8.46.4"
+    "@typescript-eslint/types" "8.49.0"
+    "@typescript-eslint/visitor-keys" "8.49.0"
 
 "@typescript-eslint/tsconfig-utils@8.35.1", "@typescript-eslint/tsconfig-utils@^8.35.1":
   version "8.35.1"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/tsconfig-utils/-/tsconfig-utils-8.35.1.tgz#c2db8714c181cc0700216c1a2e3cf55719c58006"
   integrity sha512-K5/U9VmT9dTHoNowWZpz+/TObS3xqC5h0xAIjXPw+MNcKV9qg6eSatEnmeAwkjHijhACH0/N7bkhKvbt1+DXWQ==
 
-"@typescript-eslint/tsconfig-utils@8.46.4", "@typescript-eslint/tsconfig-utils@^8.46.4":
-  version "8.46.4"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/tsconfig-utils/-/tsconfig-utils-8.46.4.tgz#989a338093b6b91b0552f1f51331d89ec6980382"
-  integrity sha512-+/XqaZPIAk6Cjg7NWgSGe27X4zMGqrFqZ8atJsX3CWxH/jACqWnrWI68h7nHQld0y+k9eTTjb9r+KU4twLoo9A==
+"@typescript-eslint/tsconfig-utils@8.49.0", "@typescript-eslint/tsconfig-utils@^8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/tsconfig-utils/-/tsconfig-utils-8.49.0.tgz#857777c8e35dd1e564505833d8043f544442fbf4"
+  integrity sha512-8prixNi1/6nawsRYxet4YOhnbW+W9FK/bQPxsGB1D3ZrDzbJ5FXw5XmzxZv82X3B+ZccuSxo/X8q9nQ+mFecWA==
 
-"@typescript-eslint/type-utils@8.46.4":
-  version "8.46.4"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/type-utils/-/type-utils-8.46.4.tgz#ae71b428a3c138b5084affe47893c129949171e0"
-  integrity sha512-V4QC8h3fdT5Wro6vANk6eojqfbv5bpwHuMsBcJUJkqs2z5XnYhJzyz9Y02eUmF9u3PgXEUiOt4w4KHR3P+z0PQ==
+"@typescript-eslint/type-utils@8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/type-utils/-/type-utils-8.49.0.tgz#d8118a0c1896a78a22f01d3c176e9945409b085b"
+  integrity sha512-KTExJfQ+svY8I10P4HdxKzWsvtVnsuCifU5MvXrRwoP2KOlNZ9ADNEWWsQTJgMxLzS5VLQKDjkCT/YzgsnqmZg==
   dependencies:
-    "@typescript-eslint/types" "8.46.4"
-    "@typescript-eslint/typescript-estree" "8.46.4"
-    "@typescript-eslint/utils" "8.46.4"
+    "@typescript-eslint/types" "8.49.0"
+    "@typescript-eslint/typescript-estree" "8.49.0"
+    "@typescript-eslint/utils" "8.49.0"
     debug "^4.3.4"
     ts-api-utils "^2.1.0"
 
@@ -1066,10 +1065,10 @@
   resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.35.1.tgz#4344dcf934495bbf25a9f83a06dd9fe2acf15780"
   integrity sha512-q/O04vVnKHfrrhNAscndAn1tuQhIkwqnaW+eu5waD5IPts2eX1dgJxgqcPx5BX109/qAz7IG6VrEPTOYKCNfRQ==
 
-"@typescript-eslint/types@8.46.4", "@typescript-eslint/types@^8.46.4":
-  version "8.46.4"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.46.4.tgz#38022bfda051be80e4120eeefcd2b6e3e630a69b"
-  integrity sha512-USjyxm3gQEePdUwJBFjjGNG18xY9A2grDVGuk7/9AkjIF1L+ZrVnwR5VAU5JXtUnBL/Nwt3H31KlRDaksnM7/w==
+"@typescript-eslint/types@8.49.0", "@typescript-eslint/types@^8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.49.0.tgz#c1bd3ebf956d9e5216396349ca23c58d74f06aee"
+  integrity sha512-e9k/fneezorUo6WShlQpMxXh8/8wfyc+biu6tnAqA81oWrEic0k21RHzP9uqqpyBBeBKu4T+Bsjy9/b8u7obXQ==
 
 "@typescript-eslint/typescript-estree@8.35.1":
   version "8.35.1"
@@ -1087,31 +1086,30 @@
     semver "^7.6.0"
     ts-api-utils "^2.1.0"
 
-"@typescript-eslint/typescript-estree@8.46.4":
-  version "8.46.4"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-8.46.4.tgz#6a9eeab0da45bf400f22c818e0f47102a980ceaa"
-  integrity sha512-7oV2qEOr1d4NWNmpXLR35LvCfOkTNymY9oyW+lUHkmCno7aOmIf/hMaydnJBUTBMRCOGZh8YjkFOc8dadEoNGA==
+"@typescript-eslint/typescript-estree@8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-8.49.0.tgz#99c5a53275197ccb4e849786dad68344e9924135"
+  integrity sha512-jrLdRuAbPfPIdYNppHJ/D0wN+wwNfJ32YTAm10eJVsFmrVpXQnDWBn8niCSMlWjvml8jsce5E/O+86IQtTbJWA==
   dependencies:
-    "@typescript-eslint/project-service" "8.46.4"
-    "@typescript-eslint/tsconfig-utils" "8.46.4"
-    "@typescript-eslint/types" "8.46.4"
-    "@typescript-eslint/visitor-keys" "8.46.4"
+    "@typescript-eslint/project-service" "8.49.0"
+    "@typescript-eslint/tsconfig-utils" "8.49.0"
+    "@typescript-eslint/types" "8.49.0"
+    "@typescript-eslint/visitor-keys" "8.49.0"
     debug "^4.3.4"
-    fast-glob "^3.3.2"
-    is-glob "^4.0.3"
     minimatch "^9.0.4"
     semver "^7.6.0"
+    tinyglobby "^0.2.15"
     ts-api-utils "^2.1.0"
 
-"@typescript-eslint/utils@8.46.4":
-  version "8.46.4"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/utils/-/utils-8.46.4.tgz#ea7878ddd625948cad4424dc2752b1be236556f5"
-  integrity sha512-AbSv11fklGXV6T28dp2Me04Uw90R2iJ30g2bgLz529Koehrmkbs1r7paFqr1vPCZi7hHwYxYtxfyQMRC8QaVSg==
+"@typescript-eslint/utils@8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/utils/-/utils-8.49.0.tgz#43b3b91d30afd6f6114532cf0b228f1790f43aff"
+  integrity sha512-N3W7rJw7Rw+z1tRsHZbK395TWSYvufBXumYtEGzypgMUthlg0/hmCImeA8hgO2d2G4pd7ftpxxul2J8OdtdaFA==
   dependencies:
     "@eslint-community/eslint-utils" "^4.7.0"
-    "@typescript-eslint/scope-manager" "8.46.4"
-    "@typescript-eslint/types" "8.46.4"
-    "@typescript-eslint/typescript-estree" "8.46.4"
+    "@typescript-eslint/scope-manager" "8.49.0"
+    "@typescript-eslint/types" "8.49.0"
+    "@typescript-eslint/typescript-estree" "8.49.0"
 
 "@typescript-eslint/utils@^8.26.1":
   version "8.35.1"
@@ -1131,62 +1129,62 @@
     "@typescript-eslint/types" "8.35.1"
     eslint-visitor-keys "^4.2.1"
 
-"@typescript-eslint/visitor-keys@8.46.4":
-  version "8.46.4"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-8.46.4.tgz#07031bd8d3ca6474e121221dae1055daead888f1"
-  integrity sha512-/++5CYLQqsO9HFGLI7APrxBJYo+5OCMpViuhV8q5/Qa3o5mMrF//eQHks+PXcsAVaLdn817fMuS7zqoXNNZGaw==
+"@typescript-eslint/visitor-keys@8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-8.49.0.tgz#8e450cc502c0d285cad9e84d400cf349a85ced6c"
+  integrity sha512-LlKaciDe3GmZFphXIc79THF/YYBugZ7FS1pO581E/edlVVNbZKDy93evqmrfQ9/Y4uN0vVhX4iuchq26mK/iiA==
   dependencies:
-    "@typescript-eslint/types" "8.46.4"
+    "@typescript-eslint/types" "8.49.0"
     eslint-visitor-keys "^4.2.1"
 
-"@vitejs/plugin-vue@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-6.0.1.tgz#4c7f559621af104a22255c6ace5626e6d8349689"
-  integrity sha512-+MaE752hU0wfPFJEUAIxqw18+20euHHdxVtMvbFcOEpjEyfqXH/5DCoTHiVJ0J29EhTJdoTkjEv5YBKU9dnoTw==
+"@vitejs/plugin-vue@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-6.0.3.tgz#b857c5dcbc5cfb30bf5d7f9d6e274afcca2d46d1"
+  integrity sha512-TlGPkLFLVOY3T7fZrwdvKpjprR3s4fxRln0ORDo1VQ7HHyxJwTlrjKU3kpVWTlaAjIEuCTokmjkZnr8Tpc925w==
   dependencies:
-    "@rolldown/pluginutils" "1.0.0-beta.29"
+    "@rolldown/pluginutils" "1.0.0-beta.53"
 
-"@vue/compiler-core@3.5.24":
-  version "3.5.24"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-core/-/compiler-core-3.5.24.tgz#1853f4b7d7090033cd9041aab6e7e8017d66c39c"
-  integrity sha512-eDl5H57AOpNakGNAkFDH+y7kTqrQpJkZFXhWZQGyx/5Wh7B1uQYvcWkvZi11BDhscPgj8N7XV3oRwiPnx1Vrig==
+"@vue/compiler-core@3.5.25":
+  version "3.5.25"
+  resolved "https://registry.yarnpkg.com/@vue/compiler-core/-/compiler-core-3.5.25.tgz#7ffb658d7919348baad8c491eb5b948ee8e44108"
+  integrity sha512-vay5/oQJdsNHmliWoZfHPoVZZRmnSWhug0BYT34njkYTPqClh3DNWLkZNJBVSjsNMrg0CCrBfoKkjZQPM/QVUw==
   dependencies:
     "@babel/parser" "^7.28.5"
-    "@vue/shared" "3.5.24"
+    "@vue/shared" "3.5.25"
     entities "^4.5.0"
     estree-walker "^2.0.2"
     source-map-js "^1.2.1"
 
-"@vue/compiler-dom@3.5.24":
-  version "3.5.24"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-dom/-/compiler-dom-3.5.24.tgz#b02e98749c377d6d2ba30dc2e94ce0f5b0af060c"
-  integrity sha512-1QHGAvs53gXkWdd3ZMGYuvQFXHW4ksKWPG8HP8/2BscrbZ0brw183q2oNWjMrSWImYLHxHrx1ItBQr50I/q2zw==
+"@vue/compiler-dom@3.5.25":
+  version "3.5.25"
+  resolved "https://registry.yarnpkg.com/@vue/compiler-dom/-/compiler-dom-3.5.25.tgz#dd799ac2474cda54303039310b8994f0cfb40957"
+  integrity sha512-4We0OAcMZsKgYoGlMjzYvaoErltdFI2/25wqanuTu+S4gismOTRTBPi4IASOjxWdzIwrYSjnqONfKvuqkXzE2Q==
   dependencies:
-    "@vue/compiler-core" "3.5.24"
-    "@vue/shared" "3.5.24"
+    "@vue/compiler-core" "3.5.25"
+    "@vue/shared" "3.5.25"
 
-"@vue/compiler-sfc@3.5.24":
-  version "3.5.24"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-sfc/-/compiler-sfc-3.5.24.tgz#7cc3329b672b7b75d04a71eabe81bc84209dfa9f"
-  integrity sha512-8EG5YPRgmTB+YxYBM3VXy8zHD9SWHUJLIGPhDovo3Z8VOgvP+O7UP5vl0J4BBPWYD9vxtBabzW1EuEZ+Cqs14g==
+"@vue/compiler-sfc@3.5.25":
+  version "3.5.25"
+  resolved "https://registry.yarnpkg.com/@vue/compiler-sfc/-/compiler-sfc-3.5.25.tgz#30377920c3869c3bb32111aa4aefad53921831ad"
+  integrity sha512-PUgKp2rn8fFsI++lF2sO7gwO2d9Yj57Utr5yEsDf3GNaQcowCLKL7sf+LvVFvtJDXUp/03+dC6f2+LCv5aK1ag==
   dependencies:
     "@babel/parser" "^7.28.5"
-    "@vue/compiler-core" "3.5.24"
-    "@vue/compiler-dom" "3.5.24"
-    "@vue/compiler-ssr" "3.5.24"
-    "@vue/shared" "3.5.24"
+    "@vue/compiler-core" "3.5.25"
+    "@vue/compiler-dom" "3.5.25"
+    "@vue/compiler-ssr" "3.5.25"
+    "@vue/shared" "3.5.25"
     estree-walker "^2.0.2"
     magic-string "^0.30.21"
     postcss "^8.5.6"
     source-map-js "^1.2.1"
 
-"@vue/compiler-ssr@3.5.24":
-  version "3.5.24"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-ssr/-/compiler-ssr-3.5.24.tgz#3891f2479928751353b946e491e048f33d0249a8"
-  integrity sha512-trOvMWNBMQ/odMRHW7Ae1CdfYx+7MuiQu62Jtu36gMLXcaoqKvAyh+P73sYG9ll+6jLB6QPovqoKGGZROzkFFg==
+"@vue/compiler-ssr@3.5.25":
+  version "3.5.25"
+  resolved "https://registry.yarnpkg.com/@vue/compiler-ssr/-/compiler-ssr-3.5.25.tgz#51dd89b88a1e044d1beab158c91a29963d28eb96"
+  integrity sha512-ritPSKLBcParnsKYi+GNtbdbrIE1mtuFEJ4U1sWeuOMlIziK5GtOL85t5RhsNy4uWIXPgk+OUdpnXiTdzn8o3A==
   dependencies:
-    "@vue/compiler-dom" "3.5.24"
-    "@vue/shared" "3.5.24"
+    "@vue/compiler-dom" "3.5.25"
+    "@vue/shared" "3.5.25"
 
 "@vue/devtools-api@^6.5.0":
   version "6.5.0"
@@ -1198,43 +1196,43 @@
   resolved "https://registry.npmjs.org/@vue/devtools-api/-/devtools-api-6.6.4.tgz"
   integrity sha512-sGhTPMuXqZ1rVOk32RylztWkfXTRhuS7vgAKv0zjqk8gbsHkJ7xfFf+jbySxt7tWObEJwyKaHMikV/WGDiQm8g==
 
-"@vue/reactivity@3.5.24":
-  version "3.5.24"
-  resolved "https://registry.yarnpkg.com/@vue/reactivity/-/reactivity-3.5.24.tgz#d2de10045f3ec05108787b6c90701b3f3bc401f8"
-  integrity sha512-BM8kBhtlkkbnyl4q+HiF5R5BL0ycDPfihowulm02q3WYp2vxgPcJuZO866qa/0u3idbMntKEtVNuAUp5bw4teg==
+"@vue/reactivity@3.5.25":
+  version "3.5.25"
+  resolved "https://registry.yarnpkg.com/@vue/reactivity/-/reactivity-3.5.25.tgz#2420fa02022dab3373033c955802b9cdab5435ad"
+  integrity sha512-5xfAypCQepv4Jog1U4zn8cZIcbKKFka3AgWHEFQeK65OW+Ys4XybP6z2kKgws4YB43KGpqp5D/K3go2UPPunLA==
   dependencies:
-    "@vue/shared" "3.5.24"
+    "@vue/shared" "3.5.25"
 
-"@vue/runtime-core@3.5.24":
-  version "3.5.24"
-  resolved "https://registry.yarnpkg.com/@vue/runtime-core/-/runtime-core-3.5.24.tgz#902ff6f6372a14b190aeb501a57467759bc58241"
-  integrity sha512-RYP/byyKDgNIqfX/gNb2PB55dJmM97jc9wyF3jK7QUInYKypK2exmZMNwnjueWwGceEkP6NChd3D2ZVEp9undQ==
+"@vue/runtime-core@3.5.25":
+  version "3.5.25"
+  resolved "https://registry.yarnpkg.com/@vue/runtime-core/-/runtime-core-3.5.25.tgz#5e524db201b419db6f091db440452fe4e49efdee"
+  integrity sha512-Z751v203YWwYzy460bzsYQISDfPjHTl+6Zzwo/a3CsAf+0ccEjQ8c+0CdX1WsumRTHeywvyUFtW6KvNukT/smA==
   dependencies:
-    "@vue/reactivity" "3.5.24"
-    "@vue/shared" "3.5.24"
+    "@vue/reactivity" "3.5.25"
+    "@vue/shared" "3.5.25"
 
-"@vue/runtime-dom@3.5.24":
-  version "3.5.24"
-  resolved "https://registry.yarnpkg.com/@vue/runtime-dom/-/runtime-dom-3.5.24.tgz#b27414fd0be2c9b58c701a67ba4db96b78819e9b"
-  integrity sha512-Z8ANhr/i0XIluonHVjbUkjvn+CyrxbXRIxR7wn7+X7xlcb7dJsfITZbkVOeJZdP8VZwfrWRsWdShH6pngMxRjw==
+"@vue/runtime-dom@3.5.25":
+  version "3.5.25"
+  resolved "https://registry.yarnpkg.com/@vue/runtime-dom/-/runtime-dom-3.5.25.tgz#ebd9815f39ee70fe32698c615cc09bda604e4e06"
+  integrity sha512-a4WrkYFbb19i9pjkz38zJBg8wa/rboNERq3+hRRb0dHiJh13c+6kAbgqCPfMaJ2gg4weWD3APZswASOfmKwamA==
   dependencies:
-    "@vue/reactivity" "3.5.24"
-    "@vue/runtime-core" "3.5.24"
-    "@vue/shared" "3.5.24"
+    "@vue/reactivity" "3.5.25"
+    "@vue/runtime-core" "3.5.25"
+    "@vue/shared" "3.5.25"
     csstype "^3.1.3"
 
-"@vue/server-renderer@3.5.24":
-  version "3.5.24"
-  resolved "https://registry.yarnpkg.com/@vue/server-renderer/-/server-renderer-3.5.24.tgz#efc5f8dc2776b91f04bf3249be95afe6e83a02a8"
-  integrity sha512-Yh2j2Y4G/0/4z/xJ1Bad4mxaAk++C2v4kaa8oSYTMJBJ00/ndPuxCnWeot0/7/qafQFLh5pr6xeV6SdMcE/G1w==
+"@vue/server-renderer@3.5.25":
+  version "3.5.25"
+  resolved "https://registry.yarnpkg.com/@vue/server-renderer/-/server-renderer-3.5.25.tgz#ca67ac93cb84dd3c3bc2f89c046a18ab04f7cc96"
+  integrity sha512-UJaXR54vMG61i8XNIzTSf2Q7MOqZHpp8+x3XLGtE3+fL+nQd+k7O5+X3D/uWrnQXOdMw5VPih+Uremcw+u1woQ==
   dependencies:
-    "@vue/compiler-ssr" "3.5.24"
-    "@vue/shared" "3.5.24"
+    "@vue/compiler-ssr" "3.5.25"
+    "@vue/shared" "3.5.25"
 
-"@vue/shared@3.5.24":
-  version "3.5.24"
-  resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.5.24.tgz#45ea9e6e037e53cfb8141ffa6bcad75b8be11e9c"
-  integrity sha512-9cwHL2EsJBdi8NY22pngYYWzkTDhld6fAD6jlaeloNGciNSJL6bLpbxVgXl96X00Jtc6YWQv96YA/0sxex/k1A==
+"@vue/shared@3.5.25":
+  version "3.5.25"
+  resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.5.25.tgz#21edcff133a5a04f72c4e4c6142260963fe5afbe"
+  integrity sha512-AbOPdQQnAnzs58H2FrrDxYj/TJfmeS2jdfEEhgiKINy+bnOANmVizIEgq1r+C5zsbs6l1CCQxtcj71rwNQ4jWg==
 
 "@vueuse/core@^9.1.0":
   version "9.13.0"
@@ -1839,7 +1837,7 @@ data-uri-to-buffer@^4.0.0:
   resolved "https://registry.yarnpkg.com/data-uri-to-buffer/-/data-uri-to-buffer-4.0.1.tgz#d8feb2b2881e6a4f58c2e08acfd0e2834e26222e"
   integrity sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==
 
-dayjs@^1.11.18:
+dayjs@^1.11.19:
   version "1.11.19"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.19.tgz#15dc98e854bb43917f12021806af897c58ae2938"
   integrity sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==
@@ -1953,10 +1951,10 @@ editor@1.0.0:
   resolved "https://registry.npmjs.org/editor/-/editor-1.0.0.tgz"
   integrity sha512-SoRmbGStwNYHgKfjOrX2L0mUvp9bUVv0uPppZSOMAntEbcFtoC3MKF5b3T6HQPXKIV+QGY3xPO3JK5it5lVkuw==
 
-element-plus@2.11.7:
-  version "2.11.7"
-  resolved "https://registry.yarnpkg.com/element-plus/-/element-plus-2.11.7.tgz#ee6270cd84df7aff89fe50bb5a5c5da11e4db15f"
-  integrity sha512-Bh47wuzsqaNBNDkbtlOlZER1cGcOB8GsXp/+C9b95MOrk0wvoHUV4NKKK7xMkfYNFYdYysQ752oMhnExgAL6+g==
+element-plus@2.12.0:
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/element-plus/-/element-plus-2.12.0.tgz#489192aae6e2f08f0c78ac41c0115f8231e8c8c3"
+  integrity sha512-M9YLSn2np9OnqrSKWsiXvGe3qnF8pd94+TScsHj1aTMCD+nSEvucXermf807qNt6hOP040le0e5Aft7E9ZfHmA==
   dependencies:
     "@ctrl/tinycolor" "^3.4.1"
     "@element-plus/icons-vue" "^2.3.2"
@@ -1966,7 +1964,7 @@ element-plus@2.11.7:
     "@types/lodash-es" "^4.17.12"
     "@vueuse/core" "^9.1.0"
     async-validator "^4.2.5"
-    dayjs "^1.11.18"
+    dayjs "^1.11.19"
     lodash "^4.17.21"
     lodash-es "^4.17.21"
     lodash-unified "^1.0.3"
@@ -2118,15 +2116,15 @@ eslint-plugin-n@^17.20.0:
     semver "^7.6.3"
     ts-declaration-location "^1.0.6"
 
-eslint-plugin-vue@^10.5.1:
-  version "10.5.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-10.5.1.tgz#b172bab0b78100484e21726af138debb998a369f"
-  integrity sha512-SbR9ZBUFKgvWAbq3RrdCtWaW0IKm6wwUiApxf3BVTNfqUIo4IQQmreMg2iHFJJ6C/0wss3LXURBJ1OwS/MhFcQ==
+eslint-plugin-vue@^10.6.2:
+  version "10.6.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-10.6.2.tgz#5d8790fa2e1105cf06259afc14c8a55cb110f346"
+  integrity sha512-nA5yUs/B1KmKzvC42fyD0+l9Yd+LtEpVhWRbXuDj0e+ZURcTtyRbMDWUeJmTAh2wC6jC83raS63anNM2YT3NPw==
   dependencies:
     "@eslint-community/eslint-utils" "^4.4.0"
     natural-compare "^1.4.0"
     nth-check "^2.1.1"
-    postcss-selector-parser "^6.0.15"
+    postcss-selector-parser "^7.1.0"
     semver "^7.6.3"
     xml-name-validator "^4.0.0"
 
@@ -2677,15 +2675,10 @@ graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4:
   resolved "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.11.tgz"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-graphemer@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.npmjs.org/graphemer/-/graphemer-1.4.0.tgz"
-  integrity sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==
-
-groq-sdk@^0.35.0:
-  version "0.35.0"
-  resolved "https://registry.yarnpkg.com/groq-sdk/-/groq-sdk-0.35.0.tgz#68d12c08182caa92be980f15c44e6783b600a6da"
-  integrity sha512-jrRqtV4kwtYFpuiQ5EM+vVUM0xS4kQAyQx1tFpbHOCoaM/ad6ECMZxPT9bzA7SkXVDzhF1TYh5SYqxYiFqk/Pw==
+groq-sdk@^0.37.0:
+  version "0.37.0"
+  resolved "https://registry.yarnpkg.com/groq-sdk/-/groq-sdk-0.37.0.tgz#6bb6521de9db9fd5e650bf526000a55a5a6d81a5"
+  integrity sha512-lT72pcT8b/X5XrzdKf+rWVzUGW1OQSKESmL8fFN5cTbsf02gq6oFam4SVeNtzELt9cYE2Pt3pdGgSImuTbHFDg==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
@@ -3219,10 +3212,10 @@ lru-cache@^10.0.1, lru-cache@^10.2.0:
   resolved "https://registry.npmjs.org/lru-cache/-/lru-cache-10.0.1.tgz"
   integrity sha512-IJ4uwUTi2qCccrioU6g9g/5rvvVl13bsdczUUcqbciD9iLr095yj8DQKdObriEvuNSx325N1rV1O0sJFszx75g==
 
-lucide-vue-next@^0.553.0:
-  version "0.553.0"
-  resolved "https://registry.yarnpkg.com/lucide-vue-next/-/lucide-vue-next-0.553.0.tgz#adcf695bcfd386313b9dbc8bc811791c319df937"
-  integrity sha512-0tg9XT+VCElTT+7EXXbBRhWe1nU7Doa32Xv/dHP5/LCleFVgV6cAqziM3C7AetqmsYIsfAtNwRYdtvs4Ds7aUg==
+lucide-vue-next@^0.561.0:
+  version "0.561.0"
+  resolved "https://registry.yarnpkg.com/lucide-vue-next/-/lucide-vue-next-0.561.0.tgz#096981d1a7a0e352cc2523b8b3e4754141913895"
+  integrity sha512-c5HUckO0qHklVSOf/0vaSR3pEb8fYImRDCRDLde56uqS9js0D/e3RAvq0/YFWjkmyOBKCb0/IdskdoHZQEkT5g==
 
 magic-string@^0.30.21:
   version "0.30.21"
@@ -3485,10 +3478,10 @@ onetime@^7.0.0:
   dependencies:
     mimic-function "^5.0.0"
 
-openai@^6.8.1:
-  version "6.8.1"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-6.8.1.tgz#72610890aa6f67b3473c7be2e2d6ff25ebb9846a"
-  integrity sha512-ACifslrVgf+maMz9vqwMP4+v9qvx5Yzssydizks8n+YUJ6YwUoxj51sKRQ8HYMfR6wgKLSIlaI108ZwCk+8yig==
+openai@^6.10.0:
+  version "6.10.0"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-6.10.0.tgz#3f52d2ad7b6b2288124d064b0eb737c914d1f3ea"
+  integrity sha512-ITxOGo7rO3XRMiKA5l7tQ43iNNu+iXGFAcf2t+aWVzzqRaS0i7m1K2BhxNdaveB+5eENhO0VY1FkiZzhBk4v3A==
 
 optionator@^0.9.3:
   version "0.9.3"
@@ -3658,10 +3651,10 @@ picomatch@^4.0.3:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.3.tgz#796c76136d1eead715db1e7bad785dedd695a042"
   integrity sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==
 
-postcss-selector-parser@^6.0.15:
-  version "6.1.0"
-  resolved "https://registry.npmjs.org/postcss-selector-parser/-/postcss-selector-parser-6.1.0.tgz"
-  integrity sha512-UMz42UD0UY0EApS0ZL9o1XnLhSTtvvvLe5Dc2H2O56fvRZi+KulDyf5ctDhhtYJBGKStV2FL1fy6253cmLgqVQ==
+postcss-selector-parser@^7.1.0:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-7.1.1.tgz#e75d2e0d843f620e5df69076166f4e16f891cb9f"
+  integrity sha512-orRsuYpJVw8LdAwqqLykBj9ecS5/cRHlI5+nvTo8LcCKmzDmqVORXtOIYEEQuL9D4BxtA1lm5isAqzQZCoQ6Eg==
   dependencies:
     cssesc "^3.0.0"
     util-deprecate "^1.0.2"
@@ -3680,10 +3673,10 @@ prelude-ls@^1.2.1:
   resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
-prettier@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.6.2.tgz#ccda02a1003ebbb2bfda6f83a074978f608b9393"
-  integrity sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==
+prettier@^3.7.4:
+  version "3.7.4"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.7.4.tgz#d2f8335d4b1cec47e1c8098645411b0c9dff9c0f"
+  integrity sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==
 
 proxy-from-env@^1.1.0:
   version "1.1.0"
@@ -4253,10 +4246,10 @@ validate-npm-package-license@^3.0.4:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vite@^7.2.2:
-  version "7.2.2"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-7.2.2.tgz#17dd62eac2d0ca0fa90131c5f56e4fefb8845362"
-  integrity sha512-BxAKBWmIbrDgrokdGZH1IgkIk/5mMHDreLDmCJ0qpyJaAteP8NvMhkwr/ZCQNqNH97bw/dANTE9PDzqwJghfMQ==
+vite@^7.2.4:
+  version "7.2.4"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-7.2.4.tgz#a3a09c7e25487612ecc1119c7d412c73da35bd4e"
+  integrity sha512-NL8jTlbo0Tn4dUEXEsUg8KeyG/Lkmc4Fnzb8JXN/Ykm9G4HNImjtABMJgkQoVjOBN/j2WAwDTRytdqJbZsah7w==
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.5.0"
@@ -4284,32 +4277,32 @@ vue-eslint-parser@^10.2.0:
     esquery "^1.6.0"
     semver "^7.6.3"
 
-vue-i18n@^11.1.12:
-  version "11.1.12"
-  resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-11.1.12.tgz#230b21d65dd89343ebd40d19c9e3cfb13db8c1fd"
-  integrity sha512-BnstPj3KLHLrsqbVU2UOrPmr0+Mv11bsUZG0PyCOzsawCivk8W00GMXHeVUWIDOgNaScCuZah47CZFE+Wnl8mw==
+vue-i18n@^11.2.2:
+  version "11.2.2"
+  resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-11.2.2.tgz#bc733a5aab5f346c803cb8e6ce49c3748193991f"
+  integrity sha512-ULIKZyRluUPRCZmihVgUvpq8hJTtOqnbGZuv4Lz+byEKZq4mU0g92og414l6f/4ju+L5mORsiUuEPYrAuX2NJg==
   dependencies:
-    "@intlify/core-base" "11.1.12"
-    "@intlify/shared" "11.1.12"
+    "@intlify/core-base" "11.2.2"
+    "@intlify/shared" "11.2.2"
     "@vue/devtools-api" "^6.5.0"
 
-vue-router@^4.6.3:
-  version "4.6.3"
-  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.6.3.tgz#52a40a231b910806438a8203c065a411fd3f1faa"
-  integrity sha512-ARBedLm9YlbvQomnmq91Os7ck6efydTSpRP3nuOKCvgJOHNrhRoJDSKtee8kcL1Vf7nz6U+PMBL+hTvR3bTVQg==
+vue-router@^4.6.4:
+  version "4.6.4"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.6.4.tgz#a0a9cb9ef811a106d249e4bb9313d286718020d8"
+  integrity sha512-Hz9q5sa33Yhduglwz6g9skT8OBPii+4bFn88w6J+J4MfEo4KRRpmiNG/hHHkdbRFlLBOqxN8y8gf2Fb0MTUgVg==
   dependencies:
     "@vue/devtools-api" "^6.6.4"
 
-vue@^3.5.24:
-  version "3.5.24"
-  resolved "https://registry.yarnpkg.com/vue/-/vue-3.5.24.tgz#1b93af349faa064f46e70ac5b0caaa3d0952bbf3"
-  integrity sha512-uTHDOpVQTMjcGgrqFPSb8iO2m1DUvo+WbGqoXQz8Y1CeBYQ0FXf2z1gLRaBtHjlRz7zZUBHxjVB5VTLzYkvftg==
+vue@^3.5.25:
+  version "3.5.25"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-3.5.25.tgz#b68b5092b617c57a0a36e8e640fd2c09aa2a374d"
+  integrity sha512-YLVdgv2K13WJ6n+kD5owehKtEXwdwXuj2TTyJMsO7pSeKw2bfRNZGjhB7YzrpbMYj5b5QsUebHpOqR3R3ziy/g==
   dependencies:
-    "@vue/compiler-dom" "3.5.24"
-    "@vue/compiler-sfc" "3.5.24"
-    "@vue/runtime-dom" "3.5.24"
-    "@vue/server-renderer" "3.5.24"
-    "@vue/shared" "3.5.24"
+    "@vue/compiler-dom" "3.5.25"
+    "@vue/compiler-sfc" "3.5.25"
+    "@vue/runtime-dom" "3.5.25"
+    "@vue/server-renderer" "3.5.25"
+    "@vue/shared" "3.5.25"
 
 walk-up-path@^3.0.1:
   version "3.0.1"
