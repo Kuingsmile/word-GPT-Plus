@@ -36,10 +36,11 @@ export class AgentAPIClient {
         return this.callGroqAPI(messages)
       case 'ollama':
         return this.callOllamaAPI(messages)
-      default:
+      default: {
         const error = `Unsupported base API: ${agentBaseModeAPI}`
         this.debugLog('Base API call failed', error)
         throw new Error(error)
+      }
     }
   }
 

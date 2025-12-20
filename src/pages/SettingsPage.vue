@@ -4,7 +4,9 @@
     <div class="header">
       <div class="brand">
         <Settings class="brand-icon" />
-        <h1 class="brand-title">{{ $t('settings') }}</h1>
+        <h1 class="brand-title">
+          {{ $t('settings') }}
+        </h1>
       </div>
       <button 
         class="back-btn"
@@ -19,7 +21,9 @@
     <div class="section">
       <div class="section-header">
         <Sliders class="section-icon" />
-        <h2 class="section-title">{{ $t('quickSettings') }}</h2>
+        <h2 class="section-title">
+          {{ $t('quickSettings') }}
+        </h2>
       </div>
       <div class="settings-content">
         <div class="settings-row">
@@ -30,7 +34,12 @@
                 v-model="settingForm.localLanguage"
                 class="select-input"
               >
-                <option value="" disabled>{{ getPlaceholder('localLanguage') }}</option>
+                <option
+                  value=""
+                  disabled
+                >
+                  {{ getPlaceholder('localLanguage') }}
+                </option>
                 <option
                   v-for="item in settingPreset.localLanguage.optionList"
                   :key="item.value"
@@ -49,7 +58,12 @@
                 v-model="settingForm.replyLanguage"
                 class="select-input"
               >
-                <option value="" disabled>{{ getPlaceholder('replyLanguage') }}</option>
+                <option
+                  value=""
+                  disabled
+                >
+                  {{ getPlaceholder('replyLanguage') }}
+                </option>
                 <option
                   v-for="item in settingPreset.replyLanguage.optionList"
                   :key="item.value"
@@ -69,7 +83,12 @@
               v-model="settingForm.api"
               class="select-input"
             >
-              <option value="" disabled>{{ getPlaceholder('api') }}</option>
+              <option
+                value=""
+                disabled
+              >
+                {{ getPlaceholder('api') }}
+              </option>
               <option
                 v-for="item in settingPreset.api.optionList"
                 :key="item.value"
@@ -93,7 +112,9 @@
     >
       <div class="section-header">
         <Settings class="section-icon" />
-        <h2 class="section-title">{{ platform.toUpperCase() }} {{ $t('configuration') || 'Configuration' }}</h2>
+        <h2 class="section-title">
+          {{ platform.toUpperCase() }} {{ $t('configuration') || 'Configuration' }}
+        </h2>
       </div>
       <div class="settings-content">
         <!-- Input Settings -->
@@ -108,7 +129,7 @@
               class="text-input"
               :type="item.toLowerCase().includes('key') || item.toLowerCase().includes('token') ? 'password' : 'text'"
               :placeholder="$t(getPlaceholder(item))"
-            />
+            >
           </div>
         </template>
 
@@ -124,7 +145,12 @@
                 v-model="settingForm[item as SettingNames]"
                 class="select-input"
               >
-                <option value="" disabled>{{ $t(getPlaceholder(item)) }}</option>
+                <option
+                  value=""
+                  disabled
+                >
+                  {{ $t(getPlaceholder(item)) }}
+                </option>
                 <option
                   v-for="option in settingPreset[item as SettingNames].optionList"
                   :key="option.value"
@@ -153,7 +179,7 @@
               :max="item.includes('Temperature') ? 2 : 4000"
               :step="item.includes('Temperature') ? 0.1 : 1"
               :placeholder="$t(getPlaceholder(item))"
-            />
+            >
           </div>
         </template>
       </div>

@@ -7,6 +7,16 @@
   <p align="center">
     将 AI 直接集成到 Microsoft Word
     <br />
+    <a href="https://github.com/Kuingsmile/word-GPT-Plus/blob/master/LICENSE">
+      <img src="https://img.shields.io/github/license/Kuingsmile/word-GPT-Plus?style=flat-square" alt="license" />
+    </a>
+    <a href="https://github.com/Kuingsmile/word-GPT-Plus/releases">
+      <img src="https://img.shields.io/github/v/release/Kuingsmile/word-GPT-Plus?style=flat-square" alt="release" />
+    </a>
+    <a href="https://github.com/Kuingsmile/word-GPT-Plus/stargazers">
+      <img src="https://img.shields.io/github/stars/Kuingsmile/word-GPT-Plus?style=flat-square" alt="stars" />
+    </a>
+    <br />
     <a href="#功能特点">功能特点</a> •
     <a href="#开始使用">开始使用</a> •
     <a href="#安装说明">安装说明</a> •
@@ -20,12 +30,7 @@
 
 Word GPT Plus 是一款将 AI 模型无缝集成到 Microsoft Word 中的插件，使您能够在文档中直接生成、翻译、总结和润色文本。增强您的写作流程，无需离开 Word 环境。
 
-![Image](https://github.com/user-attachments/assets/5288d7a1-0859-4e2f-9f36-c98a12f898fa)
-
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/96409857/233878627-6b5abdfd-7ff6-4818-8b26-d78f74ea0e85.gif" width="45%" alt="Word GPT Plus 演示" />
-  <img src="https://user-images.githubusercontent.com/96409857/233878368-3a793d8b-3740-4471-822b-0e062415b704.gif" width="45%" alt="Word GPT Plus 演示" />
-</p>
+![Image](https://github.com/user-attachments/assets/303bafff-a53a-4c76-aa17-4e637a13387a)
 
 ## ✨ 功能特点
 
@@ -66,7 +71,7 @@ Word GPT Plus 是一款将 AI 模型无缝集成到 Microsoft Word 中的插件�
 
 - Microsoft Word 2016/2019 零售版、Word 2021 或 Microsoft 365
 - [Edge WebView2 运行时](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
-- Node.js 18+（仅用于自托管）
+- Node.js 20+（仅用于自托管）
 
 > **注意**：仅适用于 .docx 文件（不兼容旧版 .doc 格式）
 
@@ -79,44 +84,63 @@ Word GPT Plus 是一款将 AI 模型无缝集成到 Microsoft Word 中的插件�
 
 ## 💻 安装说明
 
-选择以下安装方法之一：
+选择最适合的安装方式：
 
-### 方案一：使用托管服务（推荐）
+### 方式一：即刻使用（推荐）
 
-1. 下载 [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml)
-2. 保存到您计算机上的目录（例如：`C:\Users\用户名\Documents\WordGPT`）
-3. 按照下方[旁加载插件](#旁加载插件)操作
+*适合大多数用户，无需编写代码。*
+
+1. 下载 `release/instant-use/manifest.xml` [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml)。
+2. 将其保存到计算机上的专用文件夹中（例如：`C:\Users\username\Documents\WordGPT`）。
+3. 继续阅读下方的 [旁加载插件指南](#旁加载插件)。
 
 > **中国用户注意**：如果遇到连接问题，请尝试将 `msq.pub` 添加到您的代理规则，或使用自托管选项。
 
-### 方案二：本地运行
+### 方式二：自托管（高级）
 
-如果你想要自己搭建服务，你需要克隆这个仓库并安装依赖项，然后运行项目。需要 Node.js 18+。
+*适合开发人员或需要私有后端的用户。*
 
-```bash
-git clone https://github.com/Kuingsmile/Word-GPT-Plus.git
-yarn
-yarn run serve
-```
+<details>
+<summary><strong>Docker 部署</strong></summary>
 
-[manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml)
+1. 拉取并运行 Docker 镜像：
 
-### 方案三：docker运行
+   ```bash
+   docker pull kuingsmile/word-gpt-plus
+   docker run -d -p 3000:80 kuingsmile/word-gpt-plus
+   ```
 
-你也可以使用docker运行服务，首先docker pull镜像，然后运行容器。
+2. 下载 [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml)。
+3. 编辑 `manifest.xml`：将所有 `http://localhost:3000` 替换为您的服务器地址。
+4. 继续阅读下方的 [旁加载插件指南](#旁加载插件)。
 
-```bash
-docker pull kuingsmile/word-gpt-plus
-docker run -d -p 3000:80 kuingsmile/word-gpt-plus
-```
+</details>
 
-manifest.xml需要修改所有的`[localhost:3000](http://localhost:3000)`为你的服务器地址。
+<details>
+<summary><strong>源码构建</strong></summary>
 
-然后，按照下面的 [旁加载插件](#旁加载插件) 说明安装插件。
+*需要 Node.js 20+*
 
-### 方案四：部署到腾讯 EdgeOne
+1. 克隆并启动项目：
+
+   ```bash
+   git clone https://github.com/Kuingsmile/Word-GPT-Plus.git
+   cd Word-GPT-Plus
+   yarn
+   yarn run serve
+   ```
+
+2. 使用 [自托管 manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml)。
+3. 继续阅读下方的 [旁加载插件指南](#旁加载插件)。
+
+</details>
+
+<details>
+<summary><strong>部署到腾讯 EdgeOne</strong></summary>
 
 [![使用 EdgeOne Pages 部署](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2FKuingsmile%2FWord-GPT-Plus%2Ftree%2Fmaster&build-command=npm%20run%20build&output-directory=.%2Fdist&install-command=yarn%20install)
+
+</details>
 
 ## 旁加载插件
 
@@ -144,6 +168,11 @@ manifest.xml需要修改所有的`[localhost:3000](http://localhost:3000)`为你
 ## 如何填写API key
 
 进入Word GPT Plus后，点击主页的橙色`设置`按钮，进入设置页面，即可切换API和填写API key。
+
+## 🔒 隐私与安全
+
+- **本地存储**：您的 API 密钥和自定义提示词存储在浏览器本地存储中（在 Word 插件环境内）。它们永远不会发送到我们的服务器。
+- **直接连接**：插件直接与 AI 提供商（OpenAI、Azure 等）或您的本地 Ollama 实例通信。除非您使用自定义代理，否则没有中间服务器处理您的数据。
 
 ## 贡献
 

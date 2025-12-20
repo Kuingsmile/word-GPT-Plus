@@ -179,6 +179,7 @@ Respond with ONLY the JSON array - no explanations, no markdown, no other text.`
           this.debugLog('JSON repair successful via truncation')
           return result
         } catch {
+          // ignore
         }
       }
     }
@@ -195,6 +196,7 @@ Respond with ONLY the JSON array - no explanations, no markdown, no other text.`
               extractedSteps.push(obj)
             }
           } catch {
+            // ignore
           }
         }
         
@@ -206,6 +208,7 @@ Respond with ONLY the JSON array - no explanations, no markdown, no other text.`
         }
       }
     } catch {
+      // ignore
     }
     
     try {
@@ -213,13 +216,14 @@ Respond with ONLY the JSON array - no explanations, no markdown, no other text.`
         .replace(/[\u201C\u201D]/g, '"')
         .replace(/[\u2018\u2019]/g, "'")
         .replace(/([^"]\w+):/g, '"$1":')
-        .replace(/:\s*([^",\[\]{}]+)(?=\s*[,\]}])/g, ': "$1"')
+        .replace(/:\s*([^",[\]{}]+)(?=\s*[,\]}])/g, ': "$1"')
         .replace(/,(\s*[\]}])/g, '$1')
 
       const result = JSON.parse(repairedJson)
       this.debugLog('JSON repair successful via syntax fixing')
       return result
     } catch {
+      // ignore
     }
     
     this.debugLog('All JSON repair strategies failed')

@@ -7,6 +7,16 @@
   <p align="center">
     Integrate AI directly into Microsoft Word
     <br />
+    <a href="https://github.com/Kuingsmile/word-GPT-Plus/blob/master/LICENSE">
+      <img src="https://img.shields.io/github/license/Kuingsmile/word-GPT-Plus?style=flat-square" alt="license" />
+    </a>
+    <a href="https://github.com/Kuingsmile/word-GPT-Plus/releases">
+      <img src="https://img.shields.io/github/v/release/Kuingsmile/word-GPT-Plus?style=flat-square" alt="release" />
+    </a>
+    <a href="https://github.com/Kuingsmile/word-GPT-Plus/stargazers">
+      <img src="https://img.shields.io/github/stars/Kuingsmile/word-GPT-Plus?style=flat-square" alt="stars" />
+    </a>
+    <br />
     <a href="#features">Features</a> •
     <a href="#getting-started">Getting Started</a> •
     <a href="#installation">Installation</a> •
@@ -20,12 +30,7 @@ English | [简体中文](https://github.com/Kuingsmile/word-GPT-Plus/blob/master
 
 Word GPT Plus seamlessly integrates AI models into Microsoft Word, allowing you to generate, translate, summarize, and polish text directly within your documents. Enhance your writing workflow without leaving your Word environment.
 
-![Image](https://github.com/user-attachments/assets/5288d7a1-0859-4e2f-9f36-c98a12f898fa)
-
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/96409857/233878627-6b5abdfd-7ff6-4818-8b26-d78f74ea0e85.gif" width="45%" alt="Word GPT Plus Demo" />
-  <img src="https://user-images.githubusercontent.com/96409857/233878368-3a793d8b-3740-4471-822b-0e062415b704.gif" width="45%" alt="Word GPT Plus Demo" />
-</p>
+![Image](https://github.com/user-attachments/assets/303bafff-a53a-4c76-aa17-4e637a13387a)
 
 ## ✨ Features
 
@@ -66,7 +71,7 @@ Word GPT Plus seamlessly integrates AI models into Microsoft Word, allowing you 
 
 - Microsoft Word 2016/2019 (retail version), Word 2021, or Microsoft 365
 - [Edge WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
-- Node.js 18+ (only for self-hosting)
+- Node.js 20+ (only for self-hosting)
 
 > **Note**: Works only with .docx files (not compatible with older .doc format)
 
@@ -79,44 +84,63 @@ Word GPT Plus seamlessly integrates AI models into Microsoft Word, allowing you 
 
 ## 💻 Installation
 
-Choose one of the following installation methods:
+Choose the method that best suits your needs:
 
-### Option 1: Use Hosted Service (Recommended)
+### Method 1: Instant Use (Recommended)
 
-1. Download [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml)
-2. Save it to a directory on your computer (e.g., `C:\Users\username\Documents\WordGPT`)
-3. Follow the [Add-in Installation Guide](#add-in-installation-guide) below
+*Best for most users. No coding required.*
+
+1. Download `release/instant-use/manifest.xml` [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml).
+2. Save it to a dedicated folder on your computer (e.g., `C:\Users\username\Documents\WordGPT`).
+3. Proceed to the [Add-in Installation Guide](#add-in-installation-guide).
 
 > **Note for users in China**: If you experience connectivity issues, try adding `msq.pub` to your proxy rules or use the self-hosted option.
 
-### Option 2: Docker Deployment
+### Method 2: Self-Hosted (Advanced)
 
-```bash
-docker pull kuingsmile/word-gpt-plus
-docker run -d -p 3000:80 kuingsmile/word-gpt-plus
-```
+*For developers or those requiring a private backend.*
 
-You need to modify all `[localhost:3000](http://localhost:3000)` in manifest.xml to your server address.
+<details>
+<summary><strong>Docker Deployment</strong></summary>
 
-Follow the [Add-in Installation Guide](#add-in-installation-guide) below.
+1. Pull and run the Docker image:
 
-### Option 3: Self-hosted
+   ```bash
+   docker pull kuingsmile/word-gpt-plus
+   docker run -d -p 3000:80 kuingsmile/word-gpt-plus
+   ```
 
-If you want to host the add-in yourself, you will need to clone this repo and install dependencies, then run the project. Need Node.js 18+.
+2. Download [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml).
+3. Edit `manifest.xml`: Replace all instances of `http://localhost:3000` with your server's address.
+4. Proceed to the [Add-in Installation Guide](#add-in-installation-guide).
 
-```bash
-git clone https://github.com/Kuingsmile/Word-GPT-Plus.git
-yarn
-yarn run serve
-```
+</details>
 
-[manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml)
+<details>
+<summary><strong>Build from Source</strong></summary>
 
-Then, follow the [Add-in Installation Guide](#add-in-installation-guide) below.
+*Requires Node.js 20+*
 
-### Option 4: Deploy to Tencent EdgeOne
+1. Clone and start the project:
+
+   ```bash
+   git clone https://github.com/Kuingsmile/Word-GPT-Plus.git
+   cd Word-GPT-Plus
+   yarn
+   yarn run serve
+   ```
+
+2. Use the [self-hosted manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml).
+3. Proceed to the [Add-in Installation Guide](#add-in-installation-guide).
+
+</details>
+
+<details>
+<summary><strong>Deploy to Tencent EdgeOne</strong></summary>
 
 [![Deploy to Tencent EdgeOne](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2FKuingsmile%2FWord-GPT-Plus%2Ftree%2Fmaster&build-command=npm%20run%20build&output-directory=.%2Fdist&install-command=yarn%20install)
+
+</details>
 
 ## Add-in Installation Guide
 

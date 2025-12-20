@@ -27,7 +27,7 @@ export function checkAuth(auth: Auth): boolean {
       return !!auth.groqAPIKey
     case 'ollama':
       return true
-    case 'agent':
+    case 'agent': {
       if (!auth.agentBaseModeAPI) return false
       const baseAuth: Auth = {
         type: auth.agentBaseModeAPI as supportedPlatforms,
@@ -37,6 +37,7 @@ export function checkAuth(auth: Auth): boolean {
         groqAPIKey: auth.groqAPIKey
       }
       return checkAuth(baseAuth)
+    }
     default:
       return false
   }

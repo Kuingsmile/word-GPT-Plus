@@ -5,7 +5,11 @@
         {{ $t(label) }}
       </span>
     </template>
-    <el-input v-model="value" size="small" :placeholder="$t(placeholder)" />
+    <el-input
+      v-model="value"
+      size="small"
+      :placeholder="$t(placeholder)"
+    />
   </el-form-item>
 </template>
 

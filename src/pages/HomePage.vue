@@ -4,12 +4,14 @@
     <div class="header">
       <div class="brand">
         <Zap class="brand-icon" />
-        <h1 class="brand-title">Word GPT+</h1>
+        <h1 class="brand-title">
+          Word GPT+
+        </h1>
       </div>
       <button 
         class="settings-btn"
-        @click="settings"
         :disabled="loading"
+        @click="settings"
       >
         <Settings class="icon" />
       </button>
@@ -19,8 +21,8 @@
     <div class="main-actions">
       <button 
         class="primary-btn"
-        @click="StartChat"
         :disabled="loading"
+        @click="StartChat"
       >
         <Play class="icon" />
         {{ $t('start') }}
@@ -28,8 +30,8 @@
       <button 
         v-if="['azure', 'official', 'gemini', 'ollama', 'groq', 'agent'].includes(settingForm.api)"
         class="secondary-btn"
-        @click="continueChat"
         :disabled="loading"
+        @click="continueChat"
       >
         <ArrowRight class="icon" />
         {{ $t('continue') }}
@@ -37,7 +39,10 @@
     </div>
 
     <!-- Progress Indicator -->
-    <div v-if="loading" class="progress-section">
+    <div
+      v-if="loading"
+      class="progress-section"
+    >
       <div class="progress-indicator">
         <Loader2 class="spinning-icon" />
         <span class="progress-text">AI is processing...</span>
@@ -48,15 +53,24 @@
     <div class="section">
       <div class="section-header">
         <Sliders class="section-icon" />
-        <h2 class="section-title">Quick Settings</h2>
+        <h2 class="section-title">
+          Quick Settings
+        </h2>
       </div>
       <div class="settings-grid">
         <div class="settings-row">
           <div class="setting-item">
             <label class="setting-label">{{ $t('apiLabel') }}</label>
             <div class="select-wrapper">
-              <select v-model="settingForm.api" class="select-input">
-                <option v-for="item in settingPreset.api.optionList" :key="item.value" :value="item.value">
+              <select
+                v-model="settingForm.api"
+                class="select-input"
+              >
+                <option
+                  v-for="item in settingPreset.api.optionList"
+                  :key="item.value"
+                  :value="item.value"
+                >
                   {{ item.label }}
                 </option>
               </select>
@@ -66,8 +80,16 @@
           <div class="setting-item">
             <label class="setting-label">{{ $t('modelLabel') }}</label>
             <div class="select-wrapper">
-              <select v-model="currentModelSelect" class="select-input" :disabled="!currentModelOptions || currentModelOptions.length === 0">
-                <option v-for="item in currentModelOptions" :key="item.value" :value="item.value">
+              <select
+                v-model="currentModelSelect"
+                class="select-input"
+                :disabled="!currentModelOptions || currentModelOptions.length === 0"
+              >
+                <option
+                  v-for="item in currentModelOptions"
+                  :key="item.value"
+                  :value="item.value"
+                >
                   {{ item.label }}
                 </option>
               </select>
@@ -79,8 +101,16 @@
           <div class="setting-item">
             <label class="setting-label">{{ $t('insertTypeLabel') }}</label>
             <div class="select-wrapper">
-              <select v-model="insertType" class="select-input" @change="(e) => handleInsertTypeChange((e.target as HTMLSelectElement)?.value as insertTypes)">
-                <option v-for="item in insertTypeList" :key="item.value" :value="item.value">
+              <select
+                v-model="insertType"
+                class="select-input"
+                @change="(e) => handleInsertTypeChange((e.target as HTMLSelectElement)?.value as insertTypes)"
+              >
+                <option
+                  v-for="item in insertTypeList"
+                  :key="item.value"
+                  :value="item.value"
+                >
                   {{ item.label }}
                 </option>
               </select>
@@ -90,16 +120,28 @@
           <div class="setting-item">
             <label class="setting-label">{{ $t('useWordFormattingLabel') }}</label>
             <label class="toggle-wrapper">
-              <input type="checkbox" v-model="useWordFormatting" class="toggle-input" @change="() => handleWordFormattingChange(useWordFormatting)" />
-              <div class="toggle-slider"></div>
+              <input
+                v-model="useWordFormatting"
+                type="checkbox"
+                class="toggle-input"
+                @change="() => handleWordFormattingChange(useWordFormatting)"
+              >
+              <div class="toggle-slider" />
             </label>
           </div>
         </div>
         <div class="setting-item">
           <label class="setting-label">{{ $t('replyLanguageLabel') }}</label>
           <div class="select-wrapper">
-            <select v-model="settingForm.replyLanguage" class="select-input">
-              <option v-for="item in settingPreset.replyLanguage.optionList" :key="item.value" :value="item.value">
+            <select
+              v-model="settingForm.replyLanguage"
+              class="select-input"
+            >
+              <option
+                v-for="item in settingPreset.replyLanguage.optionList"
+                :key="item.value"
+                :value="item.value"
+              >
                 {{ item.label }}
               </option>
             </select>
@@ -111,21 +153,30 @@
 
     <!-- AI Tools - Collapsible -->
     <div class="collapsible-section">
-      <div class="collapsible-header" @click="aiToolsExpanded = !aiToolsExpanded">
+      <div
+        class="collapsible-header"
+        @click="aiToolsExpanded = !aiToolsExpanded"
+      >
         <div class="collapsible-title">
           <Sparkles class="collapsible-icon" />
           {{ $t('aiTools') }}
         </div>
-        <ChevronDown class="collapse-icon" :class="{ expanded: aiToolsExpanded }" />
+        <ChevronDown
+          class="collapse-icon"
+          :class="{ expanded: aiToolsExpanded }"
+        />
       </div>
-      <div class="collapsible-content" :class="{ expanded: aiToolsExpanded }">
+      <div
+        class="collapsible-content"
+        :class="{ expanded: aiToolsExpanded }"
+      >
         <div class="action-grid">
           <button 
             v-for="item in actionList"
             :key="item"
             class="action-btn"
-            @click="performAction(item)"
             :disabled="loading"
+            @click="performAction(item)"
           >
             {{ $t(item) }}
           </button>
@@ -137,43 +188,73 @@
     <div class="section">
       <div class="section-header">
         <FileText class="section-icon" />
-        <h2 class="section-title">{{ $t('result') }}</h2>
+        <h2 class="section-title">
+          {{ $t('result') }}
+        </h2>
       </div>
       <textarea 
         v-model="result"
         class="result-textarea"
         :placeholder="$t('result')"
         rows="3"
-      ></textarea>
+      />
     </div>
 
     <!-- Prompts - Collapsible -->
     <div class="collapsible-section">
-      <div class="collapsible-header" @click="promptsExpanded = !promptsExpanded">
+      <div
+        class="collapsible-header"
+        @click="promptsExpanded = !promptsExpanded"
+      >
         <div class="collapsible-title">
           <MessageSquare class="collapsible-icon" />
           {{ $t('prompts') }}
         </div>
-        <ChevronDown class="collapse-icon" :class="{ expanded: promptsExpanded }" />
+        <ChevronDown
+          class="collapse-icon"
+          :class="{ expanded: promptsExpanded }"
+        />
       </div>
-      <div class="collapsible-content" :class="{ expanded: promptsExpanded }">
+      <div
+        class="collapsible-content"
+        :class="{ expanded: promptsExpanded }"
+      >
         <!-- System Prompt -->
         <div class="prompt-section">
           <div class="prompt-header">
             <label class="prompt-label">{{ $t('homeSystem') }}</label>
             <div class="prompt-actions">
-              <button class="icon-btn add-btn" @click="addSystemPromptVisible = true">
+              <button
+                class="icon-btn add-btn"
+                @click="addSystemPromptVisible = true"
+              >
                 <Plus class="small-icon" />
               </button>
-              <button class="icon-btn remove-btn" @click="removeSystemPromptVisible = true">
+              <button
+                class="icon-btn remove-btn"
+                @click="removeSystemPromptVisible = true"
+              >
                 <Minus class="small-icon" />
               </button>
             </div>
           </div>
           <div class="select-wrapper">
-            <select v-model="systemPromptSelected" class="select-input" @change="(e) => handleSystemPromptChange((e.target as HTMLSelectElement)?.value ?? '')">
-              <option value="" disabled>{{ $t('homeSystemDescription') }}</option>
-              <option v-for="item in systemPromptList" :key="item.value" :value="item.value">
+            <select
+              v-model="systemPromptSelected"
+              class="select-input"
+              @change="(e) => handleSystemPromptChange((e.target as HTMLSelectElement)?.value ?? '')"
+            >
+              <option
+                value=""
+                disabled
+              >
+                {{ $t('homeSystemDescription') }}
+              </option>
+              <option
+                v-for="item in systemPromptList"
+                :key="item.value"
+                :value="item.value"
+              >
                 {{ item.key }}
               </option>
             </select>
@@ -185,7 +266,7 @@
             :placeholder="$t('homeSystemDescription')"
             rows="2"
             @blur="handleSystemPromptChange(systemPrompt)"
-          ></textarea>
+          />
         </div>
 
         <!-- User Prompt -->
@@ -193,18 +274,37 @@
           <div class="prompt-header">
             <label class="prompt-label">{{ $t('homePrompt') }}</label>
             <div class="prompt-actions">
-              <button class="icon-btn add-btn" @click="addPromptVisible = true">
+              <button
+                class="icon-btn add-btn"
+                @click="addPromptVisible = true"
+              >
                 <Plus class="small-icon" />
               </button>
-              <button class="icon-btn remove-btn" @click="removePromptVisible = true">
+              <button
+                class="icon-btn remove-btn"
+                @click="removePromptVisible = true"
+              >
                 <Minus class="small-icon" />
               </button>
             </div>
           </div>
           <div class="select-wrapper">
-            <select v-model="promptSelected" class="select-input" @change="(e) => handlePromptChange((e.target as HTMLSelectElement)?.value ?? '')">
-              <option value="" disabled>{{ $t('homePromptDescription') }}</option>
-              <option v-for="item in promptList" :key="item.value" :value="item.value">
+            <select
+              v-model="promptSelected"
+              class="select-input"
+              @change="(e) => handlePromptChange((e.target as HTMLSelectElement)?.value ?? '')"
+            >
+              <option
+                value=""
+                disabled
+              >
+                {{ $t('homePromptDescription') }}
+              </option>
+              <option
+                v-for="item in promptList"
+                :key="item.value"
+                :value="item.value"
+              >
                 {{ item.key }}
               </option>
             </select>
@@ -216,16 +316,16 @@
             :placeholder="$t('homePromptDescription')"
             rows="2"
             @blur="handlePromptChange(prompt)"
-          ></textarea>
+          />
         </div>
       </div>
     </div>
 
     <!-- Dialogs -->
     <HomePageAddDialog
-      v-model:addVisible="addSystemPromptVisible"
-      v-model:addAlias="addSystemPromptAlias"
-      v-model:addValue="addSystemPromptValue"
+      v-model:add-visible="addSystemPromptVisible"
+      v-model:add-alias="addSystemPromptAlias"
+      v-model:add-value="addSystemPromptValue"
       title="addSystemPrompt"
       alias-label="addSystemPromptAlias"
       alias-placeholder="addSystemPromptAliasDescription"
@@ -234,9 +334,9 @@
       @add="addSystemPrompt"
     />
     <HomePageAddDialog
-      v-model:addVisible="addPromptVisible"
-      v-model:addAlias="addPromptAlias"
-      v-model:addValue="addPromptValue"
+      v-model:add-visible="addPromptVisible"
+      v-model:add-alias="addPromptAlias"
+      v-model:add-value="addPromptValue"
       title="addPrompt"
       alias-label="addPromptAlias"
       alias-placeholder="addPromptAliasDescription"
@@ -245,15 +345,15 @@
       @add="addPrompt"
     />
     <HomePageDialog
-      v-model:removeVisible="removeSystemPromptVisible"
-      v-model:removeValue="removeSystemPromptValue"
+      v-model:remove-visible="removeSystemPromptVisible"
+      v-model:remove-value="removeSystemPromptValue"
       title="removeSystemPrompt"
       :option-list="systemPromptList"
       @remove="removeSystemPrompt"
     />
     <HomePageDialog
-      v-model:removeVisible="removePromptVisible"
-      v-model:removeValue="removePromptValue"
+      v-model:remove-visible="removePromptVisible"
+      v-model:remove-value="removePromptValue"
       title="removePrompt"
       :option-list="promptList"
       @remove="removePrompt"

@@ -1,59 +1,64 @@
-import { defineConfig, globalIgnores } from 'eslint/config'
-
+import js from '@eslint/js';
 import globals from 'globals';
-const { node } = globals;
-import parser from 'vue-eslint-parser'
-import typescriptEslint from '@typescript-eslint/eslint-plugin'
-import eslingjs from '@eslint/js';
-const { configs } = eslingjs;
+import pluginVue from 'eslint-plugin-vue';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsparser from '@typescript-eslint/parser';
+import vueParser from 'vue-eslint-parser';
 
-import { FlatCompat } from '@eslint/eslintrc'
-
-const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-  recommendedConfig: configs.recommended,
-  allConfig: configs.all
-})
-
-export default defineConfig([
+export default [
   {
-    languageOptions: {
-      globals: {
-        ...node
-      },
-
-      parser: parser,
-
-      parserOptions: {
-        parser: '@typescript-eslint/parser'
-      }
-    },
-
-    plugins: {
-      '@typescript-eslint': typescriptEslint
-    },
-
-    rules: {
-      'no-console': process.env.NODE_ENV === 'production' ? 'off' : 'off',
-      'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-      indent: 'off',
-      'no-async-promise-executor': 'off',
-      'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/indent': 'off',
-      '@typescript-eslint/no-this-alias': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      'vue/no-v-html': 'off',
-    }
+    ignores: [
+      '**/dist/**',
+      '**/node_modules/**',
+      'src/**/*.d.ts',
+      'src/**/*.js',
+      'release/**',
+    ],
   },
+  js.configs.recommended,
+  ...pluginVue.configs['flat/recommended'],
   {
     files: ['**/*.ts', '**/*.vue'],
-
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        parser: tsparser,
+        extraFileExtensions: ['.vue'],
+        sourceType: 'module',
+        ecmaVersion: 'latest',
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        Office: 'readonly',
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tseslint,
+    },
     rules: {
-      'no-undef': 'off'
-    }
+      // TypeScript recommended rules
+      ...tseslint.configs.recommended.rules,
+      
+      // Custom overrides
+      'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+      'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-this-alias': 'off',
+      'vue/no-v-html': 'off',
+      'vue/multi-word-component-names': 'off',
+      'no-undef': 'off', // TypeScript handles this
+      'no-async-promise-executor': 'off',
+    },
   },
-  globalIgnores(['src/**/*.d.ts']),
-  globalIgnores(['src/**/*.js']),
-  compat
-])
+  {
+    files: ['*.config.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+];

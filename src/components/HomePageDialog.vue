@@ -1,5 +1,9 @@
 <template>
-  <el-dialog v-model="removeVisible" width="90%" :title="$t(title)">
+  <el-dialog
+    v-model="removeVisible"
+    width="90%"
+    :title="$t(title)"
+  >
     <el-select
       v-model="removeValue"
       multiple
@@ -19,7 +23,10 @@
       <el-button @click="removeVisible = false">
         {{ $t('cancel') }}
       </el-button>
-      <el-button type="primary" @click="handleRemove">
+      <el-button
+        type="primary"
+        @click="handleRemove"
+      >
         {{ $t('confirm') }}
       </el-button>
     </template>
