@@ -1,7 +1,7 @@
 import { Ref } from 'vue'
 import { WordFormatter } from '../utils/wordFormatter'
 
-function insertResult(result: Ref, insertType: Ref): void {
+export function insertResult(result: Ref, insertType: Ref): void {
   const paragraph = result.value
     .replace(/\n+/g, '\n')
     .replace(/\r+/g, '\n')
@@ -41,7 +41,7 @@ function insertResult(result: Ref, insertType: Ref): void {
   }
 }
 
-async function insertFormattedResult(result: Ref, insertType: Ref): Promise<void> {
+export async function insertFormattedResult(result: Ref, insertType: Ref): Promise<void> {
   try {
     await WordFormatter.insertFormattedResult(result, insertType)
   } catch (error) {
@@ -50,7 +50,3 @@ async function insertFormattedResult(result: Ref, insertType: Ref): Promise<void
   }
 }
 
-export default {
-  insertResult,
-  insertFormattedResult
-}

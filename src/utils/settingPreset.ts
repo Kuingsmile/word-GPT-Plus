@@ -5,7 +5,6 @@ import {
   availableModelsForGemini,
   availableModelsForGroq,
   availableModelsForOllama,
-  availableModelsForAgent
 } from './constant'
 import { localStorageKey } from './enum'
 
@@ -51,11 +50,6 @@ export type SettingNames =
   | 'groqMaxTokens'
   | 'groqModelSelect'
   | 'groqCustomModel'
-  | 'agentMode'
-  | 'agentMaxSteps'
-  | 'agentThinkingDepth'
-  | 'agentAutoExecute'
-  | 'agentBaseModeAPI'
 
 // Helper functions
 const createStorageFuncs = (key: string, defaultValue: any) => ({
@@ -173,25 +167,4 @@ export const settingPreset: Record<SettingNames, ISettingOption> = {
     availableModelsForGroq
   ),
   groqCustomModel: defaultInputSetting,
-  agentMode: selectSetting(
-    availableModelsForAgent['auto-workflow'],
-    'agentMode',
-    optionLists.agentModelList,
-    availableModelsForAgent
-  ),
-  agentMaxSteps: inputNumSetting(5, 'agentMaxSteps', 'maxTokens'),
-  agentThinkingDepth: inputNumSetting(3, 'agentThinkingDepth', 'temperature'),
-  agentAutoExecute: {
-    defaultValue: 'true',
-    type: 'select',
-    optionList: [
-      { label: 'Yes', value: 'true' },
-      { label: 'No', value: 'false' }
-    ]
-  },
-  agentBaseModeAPI: {
-    defaultValue: 'official',
-    type: 'select',
-    optionList: optionLists.apiList.filter(api => api.value !== 'agent')
-  }
 }

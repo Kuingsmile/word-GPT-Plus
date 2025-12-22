@@ -4,7 +4,6 @@ import {
   availableModelsForGemini,
   availableModelsForGroq,
   availableModelsForOllama,
-  availableModelsForAgent,
   languageMap
 } from './constant'
 
@@ -27,17 +26,6 @@ export function checkAuth(auth: Auth): boolean {
       return !!auth.groqAPIKey
     case 'ollama':
       return true
-    case 'agent': {
-      if (!auth.agentBaseModeAPI) return false
-      const baseAuth: Auth = {
-        type: auth.agentBaseModeAPI as supportedPlatforms,
-        apiKey: auth.apiKey,
-        azureAPIKey: auth.azureAPIKey,
-        geminiAPIKey: auth.geminiAPIKey,
-        groqAPIKey: auth.groqAPIKey
-      }
-      return checkAuth(baseAuth)
-    }
     default:
       return false
   }
@@ -75,8 +63,7 @@ export const optionLists = {
   officialModelList: getOptionList(availableModels),
   geminiModelList: getOptionList(availableModelsForGemini),
   ollamaModelList: getOptionList(availableModelsForOllama),
-  groqModelList: getOptionList(availableModelsForGroq),
-  agentModelList: getOptionList(availableModelsForAgent)
+  groqModelList: getOptionList(availableModelsForGroq)
 }
 
 export const getLabel = (key: string) => `${key}Label`

@@ -8,7 +8,7 @@
           Word GPT+
         </h1>
       </div>
-      <button 
+      <button
         class="settings-btn"
         :disabled="loading"
         @click="settings"
@@ -19,7 +19,7 @@
 
     <!-- Main Actions -->
     <div class="main-actions">
-      <button 
+      <button
         class="primary-btn"
         :disabled="loading"
         @click="StartChat"
@@ -27,8 +27,12 @@
         <Play class="icon" />
         {{ $t('start') }}
       </button>
-      <button 
-        v-if="['azure', 'official', 'gemini', 'ollama', 'groq', 'agent'].includes(settingForm.api)"
+      <button
+        v-if="
+          ['azure', 'official', 'gemini', 'ollama', 'groq'].includes(
+            settingForm.api
+          )
+        "
         class="secondary-btn"
         :disabled="loading"
         @click="continueChat"
@@ -83,7 +87,9 @@
               <select
                 v-model="currentModelSelect"
                 class="select-input"
-                :disabled="!currentModelOptions || currentModelOptions.length === 0"
+                :disabled="
+                  !currentModelOptions || currentModelOptions.length === 0
+                "
               >
                 <option
                   v-for="item in currentModelOptions"
@@ -104,7 +110,12 @@
               <select
                 v-model="insertType"
                 class="select-input"
-                @change="(e) => handleInsertTypeChange((e.target as HTMLSelectElement)?.value as insertTypes)"
+                @change="
+                  e =>
+                    handleInsertTypeChange(
+                      (e.target as HTMLSelectElement)?.value as insertTypes
+                    )
+                "
               >
                 <option
                   v-for="item in insertTypeList"
@@ -118,7 +129,9 @@
             </div>
           </div>
           <div class="setting-item">
-            <label class="setting-label">{{ $t('useWordFormattingLabel') }}</label>
+            <label class="setting-label">{{
+              $t('useWordFormattingLabel')
+            }}</label>
             <label class="toggle-wrapper">
               <input
                 v-model="useWordFormatting"
@@ -171,7 +184,7 @@
         :class="{ expanded: aiToolsExpanded }"
       >
         <div class="action-grid">
-          <button 
+          <button
             v-for="item in actionList"
             :key="item"
             class="action-btn"
@@ -192,7 +205,7 @@
           {{ $t('result') }}
         </h2>
       </div>
-      <textarea 
+      <textarea
         v-model="result"
         class="result-textarea"
         :placeholder="$t('result')"
@@ -242,7 +255,12 @@
             <select
               v-model="systemPromptSelected"
               class="select-input"
-              @change="(e) => handleSystemPromptChange((e.target as HTMLSelectElement)?.value ?? '')"
+              @change="
+                e =>
+                  handleSystemPromptChange(
+                    (e.target as HTMLSelectElement)?.value ?? ''
+                  )
+              "
             >
               <option
                 value=""
@@ -260,7 +278,7 @@
             </select>
             <ChevronDown class="select-icon" />
           </div>
-          <textarea 
+          <textarea
             v-model="systemPrompt"
             class="prompt-textarea"
             :placeholder="$t('homeSystemDescription')"
@@ -292,7 +310,12 @@
             <select
               v-model="promptSelected"
               class="select-input"
-              @change="(e) => handlePromptChange((e.target as HTMLSelectElement)?.value ?? '')"
+              @change="
+                e =>
+                  handlePromptChange(
+                    (e.target as HTMLSelectElement)?.value ?? ''
+                  )
+              "
             >
               <option
                 value=""
@@ -310,7 +333,7 @@
             </select>
             <ChevronDown class="select-icon" />
           </div>
-          <textarea 
+          <textarea
             v-model="prompt"
             class="prompt-textarea"
             :placeholder="$t('homePromptDescription')"
@@ -380,7 +403,6 @@ import { onBeforeMount, ref, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import API from '@/api'
 import { message } from '@/utils/message'
 
 import { buildInPrompt } from '@/utils/constant'
@@ -393,6 +415,8 @@ import { settingPreset } from '@/utils/settingPreset'
 
 import HomePageDialog from '@/components/HomePageDialog.vue'
 import HomePageAddDialog from '@/components/HomePageAddDialog.vue'
+import { getChatResponse } from '@/api/union'
+import { insertFormattedResult, insertResult } from '@/api/common'
 
 const { t } = useI18n()
 
@@ -458,8 +482,6 @@ const currentModelOptions = computed(() => {
       return []
   }
 })
-
-
 
 const currentModelSelect = computed({
   get() {
@@ -574,7 +596,7 @@ async function initData() {
   insertType.value =
     (localStorage.getItem(localStorageKey.insertType) as insertTypes) ||
     'replace'
-  useWordFormatting.value = 
+  useWordFormatting.value =
     localStorage.getItem(localStorageKey.useWordFormatting) === 'true'
   systemPrompt.value =
     localStorage.getItem(localStorageKey.defaultSystemPrompt) ||
@@ -600,235 +622,141 @@ function handleWordFormattingChange(val: boolean) {
   localStorage.setItem(localStorageKey.useWordFormatting, String(val))
 }
 
-async function template(taskType: keyof typeof buildInPrompt | 'custom') {
-  loading.value = true
-  let systemMessage
-  let userMessage = ''
-  const getSeletedText = async () => {
-    return Word.run(async context => {
-      const range = context.document.getSelection()
-      range.load('text')
-      await context.sync()
-      return range.text
-    })
-  }
-  const selectedText = await getSeletedText()
-  if (taskType === 'custom') {
-    if (systemPrompt.value.includes('{language}')) {
-      systemMessage = systemPrompt.value.replace(
-        '{language}',
-        settingForm.value.replyLanguage
-      )
-    } else {
-      systemMessage = systemPrompt.value
+// Helper: Build provider configuration
+function buildProviderConfig(settings: any, customMessages?: string): Record<string, any> {
+  return {
+    official: {
+      provider: 'official',
+      config: {
+        apiKey: settings.officialAPIKey,
+        baseURL: settings.officialBasePath,
+        dangerouslyAllowBrowser: true
+      },
+      maxTokens: settings.officialMaxTokens,
+      temperature: settings.officialTemperature,
+      model: settings.officialCustomModel || settings.officialModelSelect
+    },
+    groq: {
+      provider: 'groq',
+      groqAPIKey: settings.groqAPIKey,
+      groqModel: settings.groqCustomModel || settings.groqModelSelect,
+      maxTokens: settings.groqMaxTokens,
+      temperature: settings.groqTemperature
+    },
+    azure: {
+      provider: 'azure',
+      azureAPIKey: settings.azureAPIKey,
+      azureAPIEndpoint: settings.azureAPIEndpoint,
+      azureDeploymentName: settings.azureDeploymentName,
+      azureAPIVersion: settings.azureAPIVersion,
+      maxTokens: settings.azureMaxTokens,
+      temperature: settings.azureTemperature
+    },
+    gemini: {
+      provider: 'gemini',
+      geminiAPIKey: settings.geminiAPIKey,
+      messages: customMessages,
+      maxTokens: settings.geminiMaxTokens,
+      temperature: settings.geminiTemperature,
+      geminiModel: settings.geminiCustomModel || settings.geminiModelSelect
+    },
+    ollama: {
+      provider: 'ollama',
+      ollamaEndpoint: settings.ollamaEndpoint,
+      ollamaModel: settings.ollamaCustomModel || settings.ollamaModelSelect,
+      temperature: settings.ollamaTemperature
     }
-    if (userMessage.includes('{text}')) {
-      userMessage = userMessage.replace('{text}', selectedText)
-    } else {
-      userMessage = `Reply in ${settingForm.value.replyLanguage} ${prompt.value} ${selectedText}`
-    }
-  } else {
-    systemMessage = buildInPrompt[taskType].system(
-      settingForm.value.replyLanguage
-    )
-    userMessage = buildInPrompt[taskType].user(
-      selectedText,
-      settingForm.value.replyLanguage
-    )
   }
-  if (
-    settingForm.value.api === 'official' &&
-    settingForm.value.officialAPIKey
-  ) {
-    const config = API.official.setConfig(
-      settingForm.value.officialAPIKey,
-      settingForm.value.officialBasePath
-    )
-    historyDialog.value = [
-      {
-        role: 'system',
-        content: systemMessage
-      },
-      {
-        role: 'user',
-        content: userMessage
-      }
-    ]
-    await API.official.createChatCompletionStream({
-      config,
-      messages: historyDialog.value,
-      result,
-      historyDialog,
-      errorIssue,
-      loading,
-      maxTokens: settingForm.value.officialMaxTokens,
-      temperature: settingForm.value.officialTemperature,
-      model:
-        settingForm.value.officialCustomModel ||
-        settingForm.value.officialModelSelect
-    })
-  } else if (settingForm.value.api === 'groq' && settingForm.value.groqAPIKey) {
-    historyDialog.value = [
-      {
-        role: 'system',
-        content: systemMessage
-      },
-      {
-        role: 'user',
-        content: userMessage
-      }
-    ]
-    await API.groq.createChatCompletionStream({
-      groqAPIKey: settingForm.value.groqAPIKey,
-      groqModel:
-        settingForm.value.groqCustomModel || settingForm.value.groqModelSelect,
-      messages: historyDialog.value,
-      result,
-      historyDialog,
-      errorIssue,
-      loading,
-      maxTokens: settingForm.value.officialMaxTokens,
-      temperature: settingForm.value.officialTemperature
-    })
-  } else if (
-    settingForm.value.api === 'azure' &&
-    settingForm.value.azureAPIKey
-  ) {
-    historyDialog.value = [
-      {
-        role: 'system',
-        content: systemMessage
-      },
-      {
-        role: 'user',
-        content: userMessage
-      }
-    ]
-    await API.azure.createChatCompletionStream({
-      azureAPIKey: settingForm.value.azureAPIKey,
-      azureAPIEndpoint: settingForm.value.azureAPIEndpoint,
-      azureDeploymentName: settingForm.value.azureDeploymentName,
-      azureAPIVersion: settingForm.value.azureAPIVersion,
-      messages: historyDialog.value,
-      result,
-      historyDialog,
-      errorIssue,
-      loading,
-      maxTokens: settingForm.value.azureMaxTokens,
-      temperature: settingForm.value.azureTemperature
-    })
-  } else if (
-    settingForm.value.api === 'gemini' &&
-    settingForm.value.geminiAPIKey
-  ) {
-    historyDialog.value = [
-      {
-        role: 'user',
-        parts: [
-          {
-            text: systemMessage + '\n' + userMessage
-          }
-        ]
-      },
-      {
-        role: 'model',
-        parts: [
-          {
-            text: 'Hi, what can I help you?'
-          }
-        ]
-      }
-    ]
-    await API.gemini.createChatCompletionStream({
-      geminiAPIKey: settingForm.value.geminiAPIKey,
-      messages: userMessage,
-      result,
-      historyDialog,
-      errorIssue,
-      loading,
-      maxTokens: settingForm.value.geminiMaxTokens,
-      temperature: settingForm.value.geminiTemperature,
-      geminiModel:
-        settingForm.value.geminiCustomModel ||
-        settingForm.value.geminiModelSelect
-    })
-  } else if (
-    settingForm.value.api === 'ollama' &&
-    settingForm.value.ollamaEndpoint
-  ) {
-    historyDialog.value = [
-      {
-        role: 'user',
-        content: systemMessage + '\n' + userMessage
-      }
-    ]
-    await API.ollama.createChatCompletionStream({
-      ollamaEndpoint: settingForm.value.ollamaEndpoint,
-      ollamaModel:
-        settingForm.value.ollamaCustomModel ||
-        settingForm.value.ollamaModelSelect,
-      messages: historyDialog.value,
-      result,
-      historyDialog,
-      errorIssue,
-      loading,
-      temperature: settingForm.value.ollamaTemperature
-    })
-  } else if (settingForm.value.api === 'agent') {
-    historyDialog.value = [
-      {
-        role: 'system',
-        content: systemMessage
-      },
-      {
-        role: 'user',
-        content: userMessage
-      }
-    ]
-    await API.agent.createChatCompletionStream({
-      agentMode: settingForm.value.agentMode,
-      agentMaxSteps: settingForm.value.agentMaxSteps,
-      agentThinkingDepth: settingForm.value.agentThinkingDepth,
-      agentAutoExecute: settingForm.value.agentAutoExecute === 'true',
-      agentBaseModeAPI: settingForm.value.agentBaseModeAPI,
-      // Pass API credentials based on base mode
-      apiKey: settingForm.value.officialAPIKey,
-      azureAPIKey: settingForm.value.azureAPIKey,
-      azureAPIEndpoint: settingForm.value.azureAPIEndpoint,
-      azureDeploymentName: settingForm.value.azureDeploymentName,
-      azureAPIVersion: settingForm.value.azureAPIVersion,
-      geminiAPIKey: settingForm.value.geminiAPIKey,
-      geminiModel: settingForm.value.geminiCustomModel || settingForm.value.geminiModelSelect,
-      groqAPIKey: settingForm.value.groqAPIKey,
-      groqModel: settingForm.value.groqCustomModel || settingForm.value.groqModelSelect,
-      ollamaEndpoint: settingForm.value.ollamaEndpoint,
-      ollamaModel: settingForm.value.ollamaCustomModel || settingForm.value.ollamaModelSelect,
-      officialModel: settingForm.value.officialCustomModel || settingForm.value.officialModelSelect,
-      officialBasePath: settingForm.value.officialBasePath,
-      messages: historyDialog.value,
-      result,
-      historyDialog,
-      errorIssue,
-      loading,
-      maxTokens: settingForm.value.officialMaxTokens,
-      temperature: settingForm.value.officialTemperature
-    })
-  } else {
-    message.error('Set API Key or Access Token first')
-    return
-  }
-  if (errorIssue.value === true) {
+}
+
+// Helper: Handle API response and insert result
+async function handleApiResponse() {
+  if (errorIssue.value) {
     errorIssue.value = false
     message.error('Something is wrong')
-    return
+    return false
   }
+
   if (!jsonIssue.value) {
     if (useWordFormatting.value) {
-      API.common.insertFormattedResult(result, insertType)
+      insertFormattedResult(result, insertType)
     } else {
-      API.common.insertResult(result, insertType)
+      insertResult(result, insertType)
     }
   }
+  return true
+}
+
+async function template(taskType: keyof typeof buildInPrompt | 'custom') {
+  loading.value = true;
+
+  // 1. Extract Selected Text
+  const selectedText = await Word.run(async (ctx) => {
+    const range = ctx.document.getSelection();
+    range.load('text');
+    await ctx.sync();
+    return range.text;
+  });
+
+  const settings = settingForm.value;
+  const { replyLanguage: lang, api: provider } = settings;
+
+  // 2. Build Messages
+  let systemMessage = '';
+  let userMessage = '';
+
+  if (taskType === 'custom') {
+    systemMessage = systemPrompt.value.includes('{language}')
+      ? systemPrompt.value.replace('{language}', lang)
+      : systemPrompt.value;
+    userMessage = prompt.value.includes('{text}') 
+      ? prompt.value.replace('{text}', selectedText)
+      : `Reply in ${lang} ${prompt.value} ${selectedText}`;
+  } else {
+    systemMessage = buildInPrompt[taskType].system(lang);
+    userMessage = buildInPrompt[taskType].user(selectedText, lang);
+  }
+
+  // 3. Format History based on Provider requirements
+  const historyMap: Record<string, any> = {
+    gemini: [
+      { role: 'user', parts: [{ text: `${systemMessage}\n${userMessage}` }] },
+      { role: 'model', parts: [{ text: 'Hi, what can I help you?' }] }
+    ],
+    ollama: [{ role: 'user', content: `${systemMessage}\n${userMessage}` }],
+    default: [
+      { role: 'system', content: systemMessage },
+      { role: 'user', content: userMessage }
+    ]
+  };
+  historyDialog.value = historyMap[provider] || historyMap.default;
+
+  // Build provider configuration
+  const providerConfigs: Record<string, any> = buildProviderConfig(settings, userMessage)
+  const currentConfig = providerConfigs[provider]
+
+  if (!currentConfig) {
+    message.error('Not supported provider')
+    loading.value = false
+    return
+  }
+
+  try {
+    await getChatResponse({
+      ...currentConfig,
+      messages: provider === 'gemini' ? userMessage : historyDialog.value,
+      result,
+      historyDialog,
+      errorIssue,
+      loading
+    })
+  } catch (error) {
+    result.value = String(error)
+    errorIssue.value = true
+    console.error(error)
+  }
+
+  await handleApiResponse()
 }
 
 function checkApiKey() {
@@ -837,8 +765,7 @@ function checkApiKey() {
     apiKey: settingForm.value.officialAPIKey,
     azureAPIKey: settingForm.value.azureAPIKey,
     geminiAPIKey: settingForm.value.geminiAPIKey,
-    groqAPIKey: settingForm.value.groqAPIKey,
-    agentBaseModeAPI: settingForm.value.agentBaseModeAPI
+    groqAPIKey: settingForm.value.groqAPIKey
   }
   if (!checkAuth(auth)) {
     message.error('Set API Key or Access Token first')
@@ -866,172 +793,46 @@ function StartChat() {
 async function continueChat() {
   if (!checkApiKey()) return
   loading.value = true
-  try {
-    switch (settingForm.value.api) {
-      case 'official':
-        historyDialog.value.push({
-          role: 'user',
-          content: 'continue'
-        })
 
-        await API.official.createChatCompletionStream({
-          config: API.official.setConfig(
-            settingForm.value.officialAPIKey,
-            settingForm.value.officialBasePath
-          ),
-          messages: historyDialog.value,
-          result,
-          historyDialog,
-          errorIssue,
-          loading,
-          maxTokens: settingForm.value.officialMaxTokens,
-          temperature: settingForm.value.officialTemperature,
-          model:
-            settingForm.value.officialCustomModel ||
-            settingForm.value.officialModelSelect
-        })
-        break
-      case 'groq':
-        historyDialog.value.push({
-          role: 'user',
-          content: 'continue'
-        })
-        await API.groq.createChatCompletionStream({
-          groqAPIKey: settingForm.value.groqAPIKey,
-          groqModel:
-            settingForm.value.groqCustomModel ||
-            settingForm.value.groqModelSelect,
-          messages: historyDialog.value,
-          result,
-          historyDialog,
-          errorIssue,
-          loading,
-          maxTokens: settingForm.value.officialMaxTokens,
-          temperature: settingForm.value.officialTemperature
-        })
-        break
-      case 'azure':
-        historyDialog.value.push({
-          role: 'user',
-          content: 'continue'
-        })
-        await API.azure.createChatCompletionStream({
-          azureAPIKey: settingForm.value.azureAPIKey,
-          azureAPIEndpoint: settingForm.value.azureAPIEndpoint,
-          azureDeploymentName: settingForm.value.azureDeploymentName,
-          azureAPIVersion: settingForm.value.azureAPIVersion,
-          messages: historyDialog.value,
-          result,
-          historyDialog,
-          errorIssue,
-          loading,
-          maxTokens: settingForm.value.azureMaxTokens,
-          temperature: settingForm.value.azureTemperature
-        })
-        break
-      case 'gemini':
-        historyDialog.value.push(
-          ...[
-            {
-              role: 'user',
-              parts: [
-                {
-                  text: 'continue'
-                }
-              ]
-            },
-            {
-              role: 'model',
-              parts: [
-                {
-                  text: 'OK, I will continue to help you.'
-                }
-              ]
-            }
-          ]
-        )
-        await API.gemini.createChatCompletionStream({
-          geminiAPIKey: settingForm.value.geminiAPIKey,
-          messages: 'continue',
-          result,
-          historyDialog,
-          errorIssue,
-          loading,
-          maxTokens: settingForm.value.geminiMaxTokens,
-          temperature: settingForm.value.geminiTemperature,
-          geminiModel:
-            settingForm.value.geminiCustomModel ||
-            settingForm.value.geminiModelSelect
-        })
-        break
-      case 'ollama':
-        historyDialog.value.push({
-          role: 'user',
-          content: 'continue'
-        })
-        await API.ollama.createChatCompletionStream({
-          ollamaEndpoint: settingForm.value.ollamaEndpoint,
-          ollamaModel:
-            settingForm.value.ollamaCustomModel ||
-            settingForm.value.ollamaModelSelect,
-          messages: historyDialog.value,
-          result,
-          historyDialog,
-          errorIssue,
-          loading,
-          temperature: settingForm.value.ollamaTemperature
-        })
-        break
-      case 'agent':
-        historyDialog.value.push({
-          role: 'user',
-          content: 'continue'
-        })
-        await API.agent.createChatCompletionStream({
-          agentMode: settingForm.value.agentMode,
-          agentMaxSteps: settingForm.value.agentMaxSteps,
-          agentThinkingDepth: settingForm.value.agentThinkingDepth,
-          agentAutoExecute: settingForm.value.agentAutoExecute === 'true',
-          agentBaseModeAPI: settingForm.value.agentBaseModeAPI,
-          // Pass API credentials based on base mode
-          apiKey: settingForm.value.officialAPIKey,
-          azureAPIKey: settingForm.value.azureAPIKey,
-          azureAPIEndpoint: settingForm.value.azureAPIEndpoint,
-          azureDeploymentName: settingForm.value.azureDeploymentName,
-          azureAPIVersion: settingForm.value.azureAPIVersion,
-          geminiAPIKey: settingForm.value.geminiAPIKey,
-          geminiModel: settingForm.value.geminiCustomModel || settingForm.value.geminiModelSelect,
-          groqAPIKey: settingForm.value.groqAPIKey,
-          groqModel: settingForm.value.groqCustomModel || settingForm.value.groqModelSelect,
-          ollamaEndpoint: settingForm.value.ollamaEndpoint,
-          ollamaModel: settingForm.value.ollamaCustomModel || settingForm.value.ollamaModelSelect,
-          officialModel: settingForm.value.officialCustomModel || settingForm.value.officialModelSelect,
-          officialBasePath: settingForm.value.officialBasePath,
-          messages: historyDialog.value,
-          result,
-          historyDialog,
-          errorIssue,
-          loading,
-          maxTokens: settingForm.value.officialMaxTokens,
-          temperature: settingForm.value.officialTemperature
-        })
-        break
-    }
+  const settings = settingForm.value
+  const provider = settings.api
+
+  // Push continue message based on provider format
+  if (provider === 'gemini') {
+    historyDialog.value.push(
+      { role: 'user', parts: [{ text: 'continue' }] },
+      { role: 'model', parts: [{ text: 'OK, I will continue to help you.' }] }
+    )
+  } else {
+    historyDialog.value.push({ role: 'user', content: 'continue' })
+  }
+
+  // Build provider configuration
+  const providerConfigs: Record<string, any> = buildProviderConfig(settings, 'continue')
+  const config = providerConfigs[provider]
+
+  if (!config) {
+    message.error('Not supported provider')
+    loading.value = false
+    return
+  }
+
+  try {
+    await getChatResponse({
+      ...config,
+      messages: provider === 'gemini' ? 'continue' : historyDialog.value,
+      result,
+      historyDialog,
+      errorIssue,
+      loading
+    })
   } catch (error) {
     result.value = String(error)
     errorIssue.value = true
     console.error(error)
   }
-  if (errorIssue.value === true) {
-    errorIssue.value = false
-    message.error('Something is wrong')
-    return
-  }
-  if (useWordFormatting.value) {
-    API.common.insertFormattedResult(result, insertType)
-  } else {
-    API.common.insertResult(result, insertType)
-  }
+
+  await handleApiResponse()
 }
 
 onBeforeMount(() => {
@@ -1041,5 +842,3 @@ onBeforeMount(() => {
 </script>
 
 <style scoped src="./HomePage.css"></style>
-
-
