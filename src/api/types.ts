@@ -59,3 +59,28 @@ export type ProviderOptions =
   | GroqOptions
   | GeminiOptions
   | AzureOptions
+
+// Agent options with tools support
+export interface AgentOptions extends BaseChatCompletionOptions {
+  provider: 'official' | 'ollama' | 'groq' | 'gemini' | 'azure'
+  tools?: any[]
+  onToolCall?: (toolName: string, args: any) => void
+  onToolResult?: (toolName: string, result: string) => void
+  // Provider-specific options
+  model?: string
+  config?: {
+    apiKey: string
+    baseURL?: string
+    dangerouslyAllowBrowser?: boolean
+  }
+  ollamaModel?: string
+  ollamaEndpoint?: string
+  groqModel?: string
+  groqAPIKey?: string
+  geminiModel?: string
+  geminiAPIKey?: string
+  azureAPIKey?: string
+  azureAPIEndpoint?: string
+  azureDeploymentName?: string
+  azureAPIVersion?: string
+}

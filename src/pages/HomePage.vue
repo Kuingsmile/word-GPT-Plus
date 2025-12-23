@@ -211,7 +211,7 @@ import { checkAuth } from '@/utils/common'
 import { localStorageKey } from '@/utils/enum'
 import useSettingForm from '@/utils/settingForm'
 import { settingPreset } from '@/utils/settingPreset'
-import { getChatResponse } from '@/api/union'
+import { getChatResponse, getAgentResponse } from '@/api/union'
 import { insertFormattedResult, insertResult } from '@/api/common'
 import { v4 as uuidv4 } from 'uuid'
 import { useI18n } from 'vue-i18n'
@@ -221,14 +221,43 @@ import {
   AIMessage,
   SystemMessage
 } from '@langchain/core/messages'
+import { createWordTools, WordToolName } from '@/utils/wordTools'
+import { useMCPManager } from '@/utils/mcpManager'
 
 const router = useRouter()
 const { t } = useI18n()
 
 const { settingForm } = useSettingForm()
+const { createLangChainTools: createMCPTools } = useMCPManager()
+
+// Tool state
+const enabledWordTools = ref<WordToolName[]>(loadEnabledWordTools())
+
+function loadEnabledWordTools(): WordToolName[] {
+  return [
+    'getSelectedText',
+    'getDocumentContent',
+    'insertText',
+    'replaceSelectedText',
+    'appendText',
+    'insertParagraph',
+    'formatText',
+    'searchAndReplace',
+    'getDocumentProperties',
+    'insertTable',
+    'insertList'
+  ]
+}
+
+function getActiveTools() {
+  const wordTools = createWordTools(enabledWordTools.value)
+  const mcpTools = createMCPTools()
+
+  return [...wordTools, ...mcpTools]
+}
 
 // Chat state
-const mode = ref<'ask' | 'agent'>('ask')
+const mode = useStorage(localStorageKey.chatMode, 'agent' as 'ask' | 'agent')
 const history = ref<Array<Message>>([])
 const userInput = ref('')
 const loading = ref(false)
@@ -486,9 +515,13 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
   const settings = settingForm.value
   const { replyLanguage: lang, api: provider } = settings
 
+  const isAgentMode = mode.value === 'agent'
+
   const defaultSystemMessage = new SystemMessage(
     systemMessage ||
-      `You are a helpful AI assistant for Microsoft Word. Reply in ${lang}.`
+      (isAgentMode
+        ? `You are a helpful AI assistant for Microsoft Word with access to tools. You can interact with the Word document directly using available tools. Reply in ${lang}.`
+        : `You are a helpful AI assistant for Microsoft Word. Reply in ${lang}.`)
   )
 
   const finalMessages = [defaultSystemMessage, userMessage]
@@ -549,19 +582,59 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
 
   history.value.push(new AIMessage(''))
 
-  await getChatResponse({
-    ...currentConfig,
-    messages: finalMessages,
-    errorIssue,
-    loading,
-    abortSignal: abortController.value?.signal,
-    threadId: threadId.value,
-    onStream: (text: string) => {
-      const lastIndex = history.value.length - 1
-      history.value[lastIndex] = new AIMessage(text)
-      scrollToBottom()
-    }
-  })
+  // Use agent mode with tools if enabled
+  if (isAgentMode) {
+    const tools = getActiveTools()
+
+    await getAgentResponse({
+      ...currentConfig,
+      messages: finalMessages,
+      tools,
+      errorIssue,
+      loading,
+      abortSignal: abortController.value?.signal,
+      threadId: threadId.value,
+      onStream: (text: string) => {
+        const lastIndex = history.value.length - 1
+        history.value[lastIndex] = new AIMessage(text)
+        scrollToBottom()
+      },
+      onToolCall: (toolName: string, _args: any) => {
+        // Show tool call in UI
+        const lastIndex = history.value.length - 1
+        const currentContent = getMessageText(history.value[lastIndex])
+        history.value[lastIndex] = new AIMessage(
+          currentContent + `\n\n🔧 Calling tool: ${toolName}...`
+        )
+        scrollToBottom()
+      },
+      onToolResult: (toolName: string, _result: string) => {
+        // Update with tool result
+        const lastIndex = history.value.length - 1
+        const currentContent = getMessageText(history.value[lastIndex])
+        const updatedContent = currentContent.replace(
+          `🔧 Calling tool: ${toolName}...`,
+          `✅ Tool ${toolName} completed`
+        )
+        history.value[lastIndex] = new AIMessage(updatedContent)
+        scrollToBottom()
+      }
+    })
+  } else {
+    await getChatResponse({
+      ...currentConfig,
+      messages: finalMessages,
+      errorIssue,
+      loading,
+      abortSignal: abortController.value?.signal,
+      threadId: threadId.value,
+      onStream: (text: string) => {
+        const lastIndex = history.value.length - 1
+        history.value[lastIndex] = new AIMessage(text)
+        scrollToBottom()
+      }
+    })
+  }
 
   if (errorIssue.value) {
     errorIssue.value = false
@@ -679,6 +752,12 @@ const addWatch = () => {
         localStorageKey.replyLanguage,
         settingForm.value.replyLanguage
       )
+    }
+  )
+  watch(
+    () => settingForm.value.api,
+    () => {
+      localStorage.setItem(localStorageKey.api, settingForm.value.api)
     }
   )
 }

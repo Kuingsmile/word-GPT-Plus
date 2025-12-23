@@ -1,5 +1,6 @@
 export enum localStorageKey {
   // common
+  chatMode = 'chatMode',
   api = 'api',
   localLanguage = 'localLanguage',
   replyLanguage = 'replyLanguage',

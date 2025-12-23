@@ -13,25 +13,27 @@
     "lint:dpdm": "dpdm -T --tsconfig ./tsconfig.json --no-tree --no-warning --exit-code circular:1 src/main.ts"
   },
   "dependencies": {
-    "@langchain/core": "^1.1.7",
-    "@langchain/google-genai": "^2.1.2",
+    "@langchain/core": "^1.1.8",
+    "@langchain/google-genai": "^2.1.3",
     "@langchain/groq": "^1.0.2",
+    "@langchain/langgraph": "^1.0.7",
     "@langchain/ollama": "^1.1.0",
     "@langchain/openai": "^1.2.0",
     "@vueuse/core": "^14.1.0",
     "element-plus": "2.13.0",
-    "langchain": "^1.2.2",
+    "langchain": "^1.2.3",
     "lucide-vue-next": "^0.562.0",
     "uuid": "^13.0.0",
     "vue": "^3.5.26",
     "vue-i18n": "^11.2.7",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.6.4",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/office-js": "^1.0.565",
-    "@typescript-eslint/eslint-plugin": "^8.50.0",
-    "@typescript-eslint/parser": "^8.50.0",
+    "@typescript-eslint/eslint-plugin": "^8.50.1",
+    "@typescript-eslint/parser": "^8.50.1",
     "@vitejs/plugin-vue": "^6.0.3",
     "dpdm": "^3.14.0",
     "eslint": "^9.39.2",
