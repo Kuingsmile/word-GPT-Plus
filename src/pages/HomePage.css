@@ -203,6 +203,40 @@
   max-width: 95%;
 }
 
+.think-block {
+  margin: 0 0 4px;
+  border: 1px solid #d0d7de;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.think-block summary {
+  cursor: pointer;
+  padding: 6px 8px;
+  font-weight: 600;
+  color: #57606a;
+  list-style: none;
+}
+
+.think-block summary::-webkit-details-marker {
+  display: none;
+}
+
+.think-block[open] summary {
+  color: #0969da;
+}
+
+.think-block pre {
+  margin: 0;
+  padding: 3px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  color: #8894a2ff;
+  background: transparent;
+}
+
 .message.assistant {
   justify-content: flex-start;
 }
@@ -231,7 +265,7 @@
 
 .message.user .message-content {
   align-items: flex-end;
-  text-align: right;
+  text-align: left;
 }
 
 .message.user .message-avatar {

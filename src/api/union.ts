@@ -15,7 +15,7 @@ import { MemorySaver } from '@langchain/langgraph'
 import { createAgent } from 'langchain'
 
 const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
-  openai: (opts: OpenAIOptions) => {
+  official: (opts: OpenAIOptions) => {
     const modelName = opts.model || 'gpt-5'
     return new ChatOpenAI({
       modelName,

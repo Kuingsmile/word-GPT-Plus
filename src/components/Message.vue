@@ -32,7 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const visible = ref(false)
-
+defineEmits(['close'])
 onMounted(() => {
   visible.value = true
   if (props.duration > 0) {

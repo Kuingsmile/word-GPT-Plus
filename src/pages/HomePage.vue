@@ -58,27 +58,35 @@
       >
         <div class="message-content">
           <div class="message-text">
-            {{ msg.content }}
+            <template v-for="(segment, idx) in renderSegments(msg)" :key="idx">
+              <span v-if="segment.type === 'text'">{{
+                segment.text.trim()
+              }}</span>
+              <details v-else class="think-block">
+                <summary>Thought process</summary>
+                <pre>{{ segment.text.trim() }}</pre>
+              </details>
+            </template>
           </div>
           <div v-if="msg instanceof AIMessage" class="message-actions">
             <button
               class="action-icon"
               :title="$t('replaceSelectedText')"
-              @click="insertToDocument(msg.text, 'replace')"
+              @click="insertToDocument(cleanMessageText(msg), 'replace')"
             >
               <FileText :size="12" />
             </button>
             <button
               class="action-icon"
               :title="$t('appendToSelection')"
-              @click="insertToDocument(msg.text, 'append')"
+              @click="insertToDocument(cleanMessageText(msg), 'append')"
             >
               <Plus :size="12" />
             </button>
             <button
               class="action-icon"
               :title="$t('copyToClipboard')"
-              @click="copyToClipboard(msg.text)"
+              @click="copyToClipboard(cleanMessageText(msg))"
             >
               <Copy :size="12" />
             </button>
@@ -414,7 +422,6 @@ async function sendMessage() {
     } else {
       console.error(error)
       messageUtil.error('Failed to get response')
-      // Remove failed message
       history.value.pop()
     }
   } finally {
@@ -476,8 +483,6 @@ async function applyQuickAction(actionKey: keyof typeof buildInPrompt) {
 }
 
 async function processChat(userMessage: HumanMessage, systemMessage?: string) {
-  let lastUpdateTime = 0
-  const UPDATE_INTERVAL = 80
   const settings = settingForm.value
   const { replyLanguage: lang, api: provider } = settings
 
@@ -552,13 +557,9 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
     abortSignal: abortController.value?.signal,
     threadId: threadId.value,
     onStream: (text: string) => {
-      const now = Date.now()
       const lastIndex = history.value.length - 1
-      if (now - lastUpdateTime > UPDATE_INTERVAL) {
-        history.value[lastIndex] = new AIMessage(text)
-        scrollToBottom()
-        lastUpdateTime = now
-      }
+      history.value[lastIndex] = new AIMessage(text)
+      scrollToBottom()
     }
   })
 
@@ -599,6 +600,75 @@ function checkApiKey() {
     return false
   }
   return true
+}
+
+const THINK_TAG = '<think>'
+const THINK_TAG_END = '</think>'
+
+type RenderSegment = { type: 'text' | 'think'; text: string }
+
+const flattenContentArray = (content: any[]): string =>
+  content
+    .map((part: any) => {
+      if (typeof part === 'string') return part
+      if (part?.text && typeof part.text === 'string') return part.text
+      if (part?.data && typeof part.data === 'string') return part.data
+      return ''
+    })
+    .join('')
+
+const getMessageText = (msg: Message): string => {
+  const content: any = (msg as any).content
+  if (typeof content === 'string') return content
+  if (Array.isArray(content)) return flattenContentArray(content)
+  return ''
+}
+
+const cleanMessageText = (msg: Message): string => {
+  const raw = getMessageText(msg)
+  const regex = new RegExp(`${THINK_TAG}[\\s\\S]*?${THINK_TAG_END}`, 'g')
+  return raw.replace(regex, '').trim()
+}
+
+const splitThinkSegments = (text: string): RenderSegment[] => {
+  if (!text) return []
+
+  const segments: RenderSegment[] = []
+  let cursor = 0
+
+  while (cursor < text.length) {
+    const start = text.indexOf(THINK_TAG, cursor)
+    if (start === -1) {
+      segments.push({ type: 'text', text: text.slice(cursor) })
+      break
+    }
+
+    if (start > cursor) {
+      segments.push({ type: 'text', text: text.slice(cursor, start) })
+    }
+
+    const end = text.indexOf(THINK_TAG_END, start + THINK_TAG.length)
+    if (end === -1) {
+      segments.push({
+        type: 'think',
+        text: text.slice(start + THINK_TAG.length)
+      })
+      break
+    }
+
+    segments.push({
+      type: 'think',
+      text: text.slice(start + THINK_TAG.length, end)
+    })
+    cursor = end + THINK_TAG_END.length
+  }
+
+  return segments.filter(segment => segment.text)
+}
+
+const renderSegments = (msg: Message): RenderSegment[] => {
+  const raw = getMessageText(msg)
+  return splitThinkSegments(raw)
 }
 
 const addWatch = () => {
