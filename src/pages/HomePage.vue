@@ -196,7 +196,7 @@ import {
 } from 'lucide-vue-next'
 import { ref, computed, nextTick, onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
-
+import { useStorage } from '@vueuse/core'
 import { message as messageUtil } from '@/utils/message'
 import { buildInPrompt } from '@/utils/constant'
 import { checkAuth } from '@/utils/common'
@@ -230,8 +230,8 @@ const abortController = ref<AbortController | null>(null)
 const threadId = ref<string>(uuidv4())
 
 // Settings
-const useWordFormatting = ref(true)
-const useSelectedText = ref(true)
+const useWordFormatting = useStorage(localStorageKey.useWordFormatting, true)
+const useSelectedText = useStorage(localStorageKey.useSelectedText, true)
 const insertType = ref<insertTypes>('replace')
 
 const errorIssue = ref(false)
@@ -292,7 +292,6 @@ const currentModelOptions = computed(() => {
       return []
   }
 
-  customModels = customModels.map(model => `${model} *`)
   return [...presetOptions, ...customModels]
 })
 
@@ -317,18 +316,23 @@ const currentModelSelect = computed({
     switch (settingForm.value.api) {
       case 'official':
         settingForm.value.officialModelSelect = value
+        localStorage.setItem(localStorageKey.model, value)
         break
       case 'gemini':
         settingForm.value.geminiModelSelect = value
+        localStorage.setItem(localStorageKey.geminiModel, value)
         break
       case 'ollama':
         settingForm.value.ollamaModelSelect = value
+        localStorage.setItem(localStorageKey.ollamaModel, value)
         break
       case 'groq':
         settingForm.value.groqModelSelect = value
+        localStorage.setItem(localStorageKey.groqModel, value)
         break
       case 'azure':
         settingForm.value.azureDeploymentName = value
+        localStorage.setItem(localStorageKey.azureDeploymentName, value)
         break
     }
   }
@@ -533,7 +537,6 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
   }
 
   const currentConfig = providerConfigs[provider]
-
   if (!currentConfig) {
     messageUtil.error('Not supported provider')
     return
@@ -602,7 +605,10 @@ const addWatch = () => {
   watch(
     () => settingForm.value.replyLanguage,
     () => {
-      localStorage.setItem('replyLanguage', settingForm.value.replyLanguage)
+      localStorage.setItem(
+        localStorageKey.replyLanguage,
+        settingForm.value.replyLanguage
+      )
     }
   )
 }
@@ -613,6 +619,8 @@ async function initData() {
     'replace'
   useWordFormatting.value =
     localStorage.getItem(localStorageKey.useWordFormatting) === 'true'
+  useSelectedText.value =
+    localStorage.getItem(localStorageKey.useSelectedText) === 'true'
 }
 
 onBeforeMount(() => {

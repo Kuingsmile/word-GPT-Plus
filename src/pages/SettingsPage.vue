@@ -216,11 +216,6 @@
                         v-for="option in getMergedModelOptions(platform)"
                         :key="option"
                         :value="option"
-                        :style="{
-                          backgroundColor: option.includes('*')
-                            ? '#addaf5ff'
-                            : ''
-                        }"
                       >
                         {{ option }}
                       </option>
@@ -516,9 +511,7 @@ const removeCustomModel = (platform: string, model: string) => {
 const getMergedModelOptions = (platform: string) => {
   const selectKey = `${platform}ModelSelect` as SettingNames
   const presetOptions = settingPreset[selectKey]?.optionList || []
-  const customModels = (customModelsMap.value[platform] || []).map(
-    model => `${model} *`
-  )
+  const customModels = customModelsMap.value[platform] || []
 
   return [...customModels, ...presetOptions]
 }

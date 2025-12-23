@@ -5,6 +5,7 @@ export enum localStorageKey {
   replyLanguage = 'replyLanguage',
   insertType = 'insertType',
   useWordFormatting = 'useWordFormatting',
+  useSelectedText = 'useSelectedText',
   // official api
   apiKey = 'apiKey',
   model = 'model',

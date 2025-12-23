@@ -1075,6 +1075,11 @@
   resolved "https://registry.yarnpkg.com/@types/web-bluetooth/-/web-bluetooth-0.0.20.tgz#f066abfcd1cbe66267cdbbf0de010d8a41b41597"
   integrity sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==
 
+"@types/web-bluetooth@^0.0.21":
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/@types/web-bluetooth/-/web-bluetooth-0.0.21.tgz#525433c784aed9b457aaa0ee3d92aeb71f346b63"
+  integrity sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==
+
 "@typescript-eslint/eslint-plugin@^8.50.0":
   version "8.50.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.50.0.tgz#a6ce899690542e2affa9543306d2d3935740abb7"
@@ -1339,10 +1344,24 @@
     "@vueuse/shared" "10.11.1"
     vue-demi ">=0.14.8"
 
+"@vueuse/core@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-14.1.0.tgz#274e98e591a505333b7dfb2bcaf7b4530a10b9c9"
+  integrity sha512-rgBinKs07hAYyPF834mDTigH7BtPqvZ3Pryuzt1SD/lg5wEcWqvwzXXYGEDb2/cP0Sj5zSvHl3WkmMELr5kfWw==
+  dependencies:
+    "@types/web-bluetooth" "^0.0.21"
+    "@vueuse/metadata" "14.1.0"
+    "@vueuse/shared" "14.1.0"
+
 "@vueuse/metadata@10.11.1":
   version "10.11.1"
   resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-10.11.1.tgz#209db7bb5915aa172a87510b6de2ca01cadbd2a7"
   integrity sha512-IGa5FXd003Ug1qAZmyE8wF3sJ81xGLSqTqtQ6jaVfkeZ4i5kS2mwQF61yhVqojRnenVew5PldLyRgvdl4YYuSw==
+
+"@vueuse/metadata@14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-14.1.0.tgz#70fc2e94775e4a07369f11f86f6f0a465b04a381"
+  integrity sha512-7hK4g015rWn2PhKcZ99NyT+ZD9sbwm7SGvp7k+k+rKGWnLjS/oQozoIZzWfCewSUeBmnJkIb+CNr7Zc/EyRnnA==
 
 "@vueuse/shared@10.11.1":
   version "10.11.1"
@@ -1350,6 +1369,11 @@
   integrity sha512-LHpC8711VFZlDaYUXEBbFBCQ7GS3dVU9mjOhhMhXP6txTV4EhYQg/KGnQuvt/sPAtoUKq7VVUnL6mVtFoL42sA==
   dependencies:
     vue-demi ">=0.14.8"
+
+"@vueuse/shared@14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-14.1.0.tgz#49b2face86a9c0c52e20eaf4c732a0223276c11f"
+  integrity sha512-EcKxtYvn6gx1F8z9J5/rsg3+lTQnvOruQd8fUecW99DCK04BkWD7z5KQ/wTAx+DazyoEE9dJt/zV8OIEQbM6kw==
 
 JSONStream@^1.3.5:
   version "1.3.5"
