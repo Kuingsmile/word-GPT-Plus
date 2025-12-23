@@ -1,13 +1,15 @@
 import { Ref } from 'vue'
 
 export interface BaseChatCompletionOptions {
-  messages: any[] | string
+  messages: any
   result: Ref<string>
-  historyDialog: Ref<any[]>
   errorIssue: Ref<boolean>
   loading: Ref<boolean>
   maxTokens?: number
   temperature?: number
+  abortSignal?: AbortSignal
+  threadId: string
+  onStream: (text: string) => void
 }
 
 export interface CompletionResponse {

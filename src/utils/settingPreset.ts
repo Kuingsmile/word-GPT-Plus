@@ -50,6 +50,8 @@ export type SettingNames =
   | 'groqMaxTokens'
   | 'groqModelSelect'
   | 'groqCustomModel'
+  | 'systemPrompt'
+  | 'userPrompt'
 
 // Helper functions
 const createStorageFuncs = (key: string, defaultValue: any) => ({
@@ -167,4 +169,12 @@ export const settingPreset: Record<SettingNames, ISettingOption> = {
     availableModelsForGroq
   ),
   groqCustomModel: defaultInputSetting,
+  systemPrompt: {
+    ...inputSetting('', 'defaultSystemPrompt'),
+    type: 'input'
+  },
+  userPrompt: {
+    ...inputSetting('', 'defaultPrompt'),
+    type: 'input'
+  }
 }

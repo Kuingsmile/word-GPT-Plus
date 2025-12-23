@@ -154,8 +154,8 @@ class WordFormatter {
     return parts
   }
 
-  static async insertFormattedResult(result: Ref, insertType: Ref): Promise<void> {
-    const content = result.value
+  static async insertFormattedResult(result: string, insertType: Ref): Promise<void> {
+    const content = result
     if (!content || typeof content !== 'string') return
 
     const formatParts = this.parseMarkdown(content)
@@ -236,8 +236,8 @@ class WordFormatter {
     })
   }
 
-  static async insertPlainResult(result: Ref, insertType: Ref): Promise<void> {
-    const paragraph = result.value
+  static async insertPlainResult(result: string, insertType: Ref): Promise<void> {
+    const paragraph = result
       .replace(/\n+/g, '\n')
       .replace(/\r+/g, '\n')
       .split('\n')

@@ -3,7 +3,13 @@
     "source.fixAll.eslint": "explicit"
   },
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "i18n-ally.localesPaths": [
-    "src/i18n"
-  ]
+  "i18n-ally.localesPaths": ["src/i18n/locales"],
+ "i18n-ally.keystyle": "flat",
+ "i18n-ally.sortKeys": true,
+ "i18n-ally.namespace": true,
+ "i18n-ally.enabledParsers": ["json"],
+ "i18n-ally.sourceLanguage": "zh-cn",
+ "i18n-ally.displayLanguage": "zh-cn",
+ "i18n-ally.enabledFrameworks": ["vue"],
+ "i18n-ally.encoding": "utf-8"
 }

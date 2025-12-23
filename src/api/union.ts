@@ -5,6 +5,8 @@ import { ChatOpenAI, AzureChatOpenAI } from '@langchain/openai'
 import { ChatGroq } from '@langchain/groq'
 import { ChatOllama } from '@langchain/ollama'
 import { BaseChatModel } from '@langchain/core/language_models/chat_models'
+import { MemorySaver } from "@langchain/langgraph";
+import { createAgent } from "langchain";
 
 const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
   openai: (opts: OpenAIOptions) => {
@@ -61,39 +63,45 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
   }
 }
 
+const checkpointer = new MemorySaver();
+
 async function executeChatFlow(
   model: BaseChatModel,
   options: ProviderOptions
 ): Promise<void> {
   try {
-    const response = await model.invoke(options.messages)
+    const agent = createAgent(
+      {
+        model,
+        tools: [],
+        checkpointer
+      }
+    )
+    const stream = await agent.stream({
+      messages: options.messages
+    }, {
+      signal: options.abortSignal,
+      configurable: { thread_id: options.threadId },
+      streamMode: "messages"
+    })
 
-    const content = (
-      typeof response.content === 'string'
-        ? response.content
-        : (response as any).text || ''
-    ).replace(/\\n/g, '\n')
+    let fullContent = ''
+    for await (const chunk of stream) {
+      if (options.abortSignal?.aborted) {
+        break
+      }
 
-    options.result.value = content
-    if (options.provider === 'gemini') {
-      options.historyDialog.value.push(
-        {
-          role: 'user',
-          parts: [{ text: options.messages as string }]
-        },
-        {
-          role: 'model',
-          parts: [{ text: content }]
-        }
-      )
-    } else {
-      options.historyDialog.value.push({
-        role: 'assistant',
-        content: response.content
-      })
+      const content = typeof chunk[0].content === 'string' ? chunk[0].content : ''
+      fullContent += content
+      options.onStream(fullContent)
     }
-  } catch (error) {
-    options.result.value = String(error)
+
+
+  } catch (error: any) {
+    if (error.name === 'AbortError' || options.abortSignal?.aborted) {
+      // Don't mark as error if intentionally aborted
+      throw error
+    }
     options.errorIssue.value = true
     console.error(error)
   } finally {
