@@ -402,7 +402,7 @@
 }
 
 .input-wrapper:focus-within {
-  border-color: #0969da;
+  border-color: #0969da ;
   box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
 }
 

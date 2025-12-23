@@ -41,12 +41,17 @@ export function insertResult(result: string, insertType: Ref): void {
   }
 }
 
-export async function insertFormattedResult(result: string, insertType: Ref): Promise<void> {
+export async function insertFormattedResult(
+  result: string,
+  insertType: Ref
+): Promise<void> {
   try {
     await WordFormatter.insertFormattedResult(result, insertType)
   } catch (error) {
-    console.warn('Formatted insertion failed, falling back to plain text:', error)
+    console.warn(
+      'Formatted insertion failed, falling back to plain text:',
+      error
+    )
     insertResult(result, insertType)
   }
 }
-

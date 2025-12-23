@@ -15,7 +15,7 @@ window.Office.onReady(() => {
     return function () {
       // @ts-expect-error ts-migrate(2538) FIXME: Type 'this' cannot be used as an index type.
       const context = this
-       
+
       const args = arguments as IArguments
       clearTimeout(timer as number)
       timer = setTimeout(function () {

@@ -1,9 +1,12 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import pluginVue from 'eslint-plugin-vue';
-import tseslint from '@typescript-eslint/eslint-plugin';
-import tsparser from '@typescript-eslint/parser';
-import vueParser from 'vue-eslint-parser';
+import js from '@eslint/js'
+import globals from 'globals'
+import pluginVue from 'eslint-plugin-vue'
+import tseslint from '@typescript-eslint/eslint-plugin'
+import tsparser from '@typescript-eslint/parser'
+import vueParser from 'vue-eslint-parser'
+import pluginUnicorn from 'eslint-plugin-unicorn'
+import pluginPrettier from 'eslint-plugin-prettier/recommended'
+import configPrettier from 'eslint-config-prettier'
 
 export default [
   {
@@ -12,8 +15,8 @@ export default [
       '**/node_modules/**',
       'src/**/*.d.ts',
       'src/**/*.js',
-      'release/**',
-    ],
+      'release/**'
+    ]
   },
   js.configs.recommended,
   ...pluginVue.configs['flat/recommended'],
@@ -25,40 +28,45 @@ export default [
         parser: tsparser,
         extraFileExtensions: ['.vue'],
         sourceType: 'module',
-        ecmaVersion: 'latest',
+        ecmaVersion: 'latest'
       },
       globals: {
         ...globals.browser,
         ...globals.node,
-        Office: 'readonly',
-      },
+        Office: 'readonly'
+      }
     },
     plugins: {
       '@typescript-eslint': tseslint,
+      unicorn: pluginUnicorn
     },
     rules: {
-      // TypeScript recommended rules
       ...tseslint.configs.recommended.rules,
-      
-      // Custom overrides
+      'unicorn/prefer-node-protocol': 'error',
+      'unicorn/prefer-module': 'error',
       'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_' }
+      ],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-this-alias': 'off',
       'vue/no-v-html': 'off',
       'vue/multi-word-component-names': 'off',
       'no-undef': 'off', // TypeScript handles this
-      'no-async-promise-executor': 'off',
-    },
+      'no-async-promise-executor': 'off'
+    }
   },
+  configPrettier,
+  pluginPrettier,
   {
     files: ['*.config.js'],
     languageOptions: {
       globals: {
-        ...globals.node,
-      },
-    },
-  },
-];
+        ...globals.node
+      }
+    }
+  }
+]

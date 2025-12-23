@@ -13,7 +13,6 @@ function useSettingForm() {
     )
   )
 
-  // Load values from storage
   Object.keys(settingForm.value).forEach(key => {
     const typedKey = key as SettingNames
     if (settingPreset[typedKey].getFunc) {

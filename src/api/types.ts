@@ -53,4 +53,9 @@ export interface AzureOptions extends BaseChatCompletionOptions {
   azureAPIVersion?: string
 }
 
-export type ProviderOptions = OpenAIOptions | OllamaOptions | GroqOptions | GeminiOptions | AzureOptions
+export type ProviderOptions =
+  | OpenAIOptions
+  | OllamaOptions
+  | GroqOptions
+  | GeminiOptions
+  | AzureOptions

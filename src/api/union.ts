@@ -1,17 +1,22 @@
-import { availableModels } from '@/utils/constant'
-import { AzureOptions, GeminiOptions, GroqOptions, OllamaOptions, OpenAIOptions, ProviderOptions } from './types'
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai"
+import {
+  AzureOptions,
+  GeminiOptions,
+  GroqOptions,
+  OllamaOptions,
+  OpenAIOptions,
+  ProviderOptions
+} from './types'
+import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { ChatOpenAI, AzureChatOpenAI } from '@langchain/openai'
 import { ChatGroq } from '@langchain/groq'
 import { ChatOllama } from '@langchain/ollama'
 import { BaseChatModel } from '@langchain/core/language_models/chat_models'
-import { MemorySaver } from "@langchain/langgraph";
-import { createAgent } from "langchain";
+import { MemorySaver } from '@langchain/langgraph'
+import { createAgent } from 'langchain'
 
 const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
   openai: (opts: OpenAIOptions) => {
-    const modelName =
-      availableModels[opts.model ?? ''] || opts.model || 'gpt-3.5-turbo'
+    const modelName = opts.model || 'gpt-5'
     return new ChatOpenAI({
       modelName,
       configuration: {
@@ -43,7 +48,7 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
 
   gemini: (opts: GeminiOptions) => {
     return new ChatGoogleGenerativeAI({
-      model: opts.geminiModel ?? 'gemini-2.5-pro',
+      model: opts.geminiModel ?? 'gemini-3-pro-preview',
       apiKey: opts.geminiAPIKey,
       temperature: opts.temperature ?? 0.7,
       maxOutputTokens: opts.maxTokens ?? 800
@@ -63,27 +68,28 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
   }
 }
 
-const checkpointer = new MemorySaver();
+const checkpointer = new MemorySaver()
 
 async function executeChatFlow(
   model: BaseChatModel,
   options: ProviderOptions
 ): Promise<void> {
   try {
-    const agent = createAgent(
+    const agent = createAgent({
+      model,
+      tools: [],
+      checkpointer
+    })
+    const stream = await agent.stream(
       {
-        model,
-        tools: [],
-        checkpointer
+        messages: options.messages
+      },
+      {
+        signal: options.abortSignal,
+        configurable: { thread_id: options.threadId },
+        streamMode: 'messages'
       }
     )
-    const stream = await agent.stream({
-      messages: options.messages
-    }, {
-      signal: options.abortSignal,
-      configurable: { thread_id: options.threadId },
-      streamMode: "messages"
-    })
 
     let fullContent = ''
     for await (const chunk of stream) {
@@ -91,12 +97,11 @@ async function executeChatFlow(
         break
       }
 
-      const content = typeof chunk[0].content === 'string' ? chunk[0].content : ''
+      const content =
+        typeof chunk[0].content === 'string' ? chunk[0].content : ''
       fullContent += content
       options.onStream(fullContent)
     }
-
-
   } catch (error: any) {
     if (error.name === 'AbortError' || options.abortSignal?.aborted) {
       // Don't mark as error if intentionally aborted
@@ -108,7 +113,6 @@ async function executeChatFlow(
     options.loading.value = false
   }
 }
-
 
 export async function getChatResponse(options: ProviderOptions) {
   const creator = ModelCreators[options.provider]

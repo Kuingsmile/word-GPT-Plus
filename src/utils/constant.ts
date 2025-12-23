@@ -52,78 +52,62 @@ export const availableAPIs: IStringKeyMap = {
 }
 
 // official API 可用的模型
-export const availableModels: IStringKeyMap = {
-  'gpt-5': 'gpt-5',
-  'gpt-5-mini': 'gpt-5-mini',
-  'gpt-5-nano': 'gpt-5-nano',
-  'gpt-4.1': 'gpt-4.1',
-  'gpt-4.1-mini': 'gpt-4.1-mini',
-  'gpt-4.1-nano': 'gpt-4.1-nano',
-  'gpt-4o': 'gpt-4o',
-  'gpt-4o-mini': 'gpt-4o-mini',
-  'o1': 'o1',
-  'o1-pro': 'o1-pro',
-  'o1-mini': 'o1-mini',
-  'o3': 'o3',
-  'o3-pro': 'o3-pro',
-  'o3-mini': 'o3-mini',
-}
+export const availableModels: string[] = [
+  'gpt-5',
+  'gpt-5-mini',
+  'gpt-5-nano',
+  'gpt-4.1',
+  'gpt-4.1-mini',
+  'gpt-4.1-nano',
+  'gpt-4o',
+  'gpt-4o-mini',
+  'o1',
+  'o1-pro',
+  'o1-mini',
+  'o3',
+  'o3-pro',
+  'o3-mini'
+]
 
 // Gemini API 可用的模型
-export const availableModelsForGemini: IStringKeyMap = {
-  'gemini-3-pro-preview': 'gemini-3-pro-preview',
-  'gemini-3-flash-preview': 'gemini-3-flash-preview',
-  'gemini-2.5-pro': 'gemini-2.5-pro',
-  'gemini-2.5-flash': 'gemini-2.5-flash',
-  'gemini-2.5-flash-lite': 'gemini-2.5-flash-lite',
-  'gemini-2.0-flash': 'gemini-2.0-flash',
-  'gemini-2.0-flash-lite': 'gemini-2.0-flash-lite',
-  aqa: 'aqa'
-}
+export const availableModelsForGemini: string[] = [
+  'gemini-3-pro-preview',
+  'gemini-3-flash-preview',
+  'gemini-2.5-pro',
+  'gemini-2.5-flash',
+  'gemini-2.5-flash-lite',
+  'gemini-2.0-flash',
+  'gemini-2.0-flash-lite',
+  'aqa'
+]
 
 // Ollama API 可用的模型
-export const availableModelsForOllama: IStringKeyMap = {
-  llama3: 'llama3',
-  llama2: 'llama2',
-  phi3: 'phi3',
-  wizardlm2: 'wizardlm2',
-  mistral: 'mistral',
-  'llama2-uncensored': 'llama2-uncensored',
-  'llama2:13b': 'llama2:13b',
-  'llama2:70b': 'llama2:70b',
-  'gemma:2b': 'gemma:2b',
-  'gemma:7b': 'gemma:7b',
-  qwen: 'qwen',
-  codegemma: 'codegemma',
-  'command-r': 'command-r',
-  'command-r-plus': 'command-r-plus',
-  llava: 'llava',
-  codellama: 'codellama',
-  yi: 'yi',
-  codeqwen: 'codeqwen',
-  'dolphin-phi': 'dolphin-phi',
-  phi: 'phi',
-  'neural-chat': 'neural-chat',
-  'starlinh-lm': 'starlinh-lm',
-  'orca-mini': 'orca-mini',
-  vicuna: 'vicuna'
-}
+export const availableModelsForOllama: string[] = [
+  'qwen3:latest',
+  'llama4:latest',
+  'deepseek-r1:latest',
+  'gpt-oss:latest',
+  'kimi-k2:1t-cloud',
+  'gemini-3-flash-preview:latest',
+  'ministral-3:latest'
+]
 
-export const availableModelsForGroq: IStringKeyMap = {
-  'llama-3.1-8b-instant': 'llama-3.1-8b-instant',
-  'llama-3.3-70b-versatile': 'llama-3.3-70b-versatile',
-  'meta-llama/llama-guard-4-12b': 'meta-llama/llama-guard-4-12b',
-  'openai/gpt-oss-120b': 'openai/gpt-oss-120b',
-  'openai/gpt-oss-20b': 'openai/gpt-oss-20b',
-  'whisper-large-v3': 'whisper-large-v3',
-  'whisper-large-v3-turbo': 'whisper-large-v3-turbo',
-  'meta-llama/llama-4-maverick-17b-128e-instruct': 'meta-llama/llama-4-maverick-17b-128e-instruct',
-  'meta-llama/llama-4-scout-17b-16e-instruct': 'meta-llama/llama-4-scout-17b-16e-instruct',
-  'meta-llama/llama-prompt-guard-2-22m': 'meta-llama/llama-prompt-guard-2-22m',
-  'meta-llama/llama-prompt-guard-2-86m': 'meta-llama/llama-prompt-guard-2-86m',
-  'moonshotai/kimi-k2-instruct-0905': 'moonshotai/kimi-k2-instruct-0905',
-  'qwen/qwen3-32b': 'qwen/qwen3-32b'  
-}
+export const availableModelsForGroq: string[] = [
+  'llama-3.1-8b-instant',
+  'llama-3.3-70b-versatile',
+  'meta-llama/llama-guard-4-12b',
+  'openai/gpt-oss-120b',
+  'openai/gpt-oss-20b',
+  'whisper-large-v3',
+  'whisper-large-v3-turbo',
+  'meta-llama/llama-4-maverick-17b-128e-instruct',
+  'meta-llama/llama-4-scout-17b-16e-instruct',
+  'meta-llama/llama-4-scout-17b-16e-instruct',
+  'meta-llama/llama-prompt-guard-2-22m',
+  'meta-llama/llama-prompt-guard-2-86m',
+  'moonshotai/kimi-k2-instruct-0905',
+  'qwen/qwen3-32b'
+]
 
 export const buildInPrompt = {
   translate: {

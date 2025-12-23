@@ -1,11 +1,4 @@
-import {
-  availableAPIs,
-  availableModels,
-  availableModelsForGemini,
-  availableModelsForGroq,
-  availableModelsForOllama,
-  languageMap
-} from './constant'
+import { availableAPIs, languageMap } from './constant'
 
 export interface Auth {
   type: supportedPlatforms
@@ -37,12 +30,11 @@ export function forceNumber(val: any): number {
 
 export function getOptionList(
   map: Record<string, string>,
-  from: 'key' | 'value' = 'key',
-  isUseValueAsLabel = false
+  from: 'key' | 'value' = 'key'
 ) {
   return from === 'key'
     ? Object.keys(map).map(key => ({
-        label: isUseValueAsLabel ? map[key] : key,
+        label: key,
         value: map[key]
       }))
     : Object.values(map).map(key => ({
@@ -51,19 +43,13 @@ export function getOptionList(
       }))
 }
 
-const localLanguageList = [
-  { label: 'English', value: 'en' },
-  { label: '简体中文', value: 'zh-cn' }
-]
-
 export const optionLists = {
-  localLanguageList,
+  localLanguageList: [
+    { label: 'English', value: 'en' },
+    { label: '简体中文', value: 'zh-cn' }
+  ],
   apiList: getOptionList(availableAPIs),
-  replyLanguageList: getOptionList(languageMap, 'value'),
-  officialModelList: getOptionList(availableModels),
-  geminiModelList: getOptionList(availableModelsForGemini),
-  ollamaModelList: getOptionList(availableModelsForOllama),
-  groqModelList: getOptionList(availableModelsForGroq)
+  replyLanguageList: getOptionList(languageMap, 'value')
 }
 
 export const getLabel = (key: string) => `${key}Label`

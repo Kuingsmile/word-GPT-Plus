@@ -9,6 +9,7 @@ export enum localStorageKey {
   apiKey = 'apiKey',
   model = 'model',
   customModel = 'customModel',
+  customModels = 'customModels',
   temperature = 'temperature',
   maxTokens = 'maxTokens',
   basePath = 'basePath',
@@ -25,17 +26,20 @@ export enum localStorageKey {
   geminiTemperature = 'geminiTemperature',
   geminiModel = 'geminiModel',
   geminiCustomModel = 'geminiCustomModel',
+  geminiCustomModels = 'geminiCustomModels',
   // ollama api
   ollamaEndpoint = 'ollamaEndpoint',
   ollamaModel = 'ollamaModel',
   ollamaTemperature = 'ollamaTemperature',
   ollamaCustomModel = 'ollamaCustomModel',
+  ollamaCustomModels = 'ollamaCustomModels',
   // groq api
   groqAPIKey = 'groqAPIKey',
   groqTemperature = 'groqTemperature',
   groqMaxTokens = 'groqMaxTokens',
   groqModel = 'groqModel',
   groqCustomModel = 'groqCustomModel',
+  groqCustomModels = 'groqCustomModels',
   // proxy
   enableProxy = 'enableProxy',
   proxy = 'proxy',

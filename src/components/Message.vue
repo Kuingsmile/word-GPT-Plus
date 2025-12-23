@@ -1,11 +1,7 @@
 <template>
   <Teleport to="body">
     <Transition name="message-fade">
-      <div
-        v-if="visible"
-        class="message-container"
-        :class="`message-${type}`"
-      >
+      <div v-if="visible" class="message-container" :class="`message-${type}`">
         <div class="message-content">
           <div class="message-icon">
             <AlertCircle v-if="type === 'error'" />

@@ -34,22 +34,13 @@
         :disabled="loading"
         @click="applyQuickAction(action.key)"
       >
-        <component
-          :is="action.icon"
-          :size="16"
-        />
+        <component :is="action.icon" :size="16" />
       </button>
     </div>
 
     <!-- Chat Messages Container -->
-    <div
-      ref="messagesContainer"
-      class="chat-messages"
-    >
-      <div
-        v-if="history.length === 0"
-        class="empty-state"
-      >
+    <div ref="messagesContainer" class="chat-messages">
+      <div v-if="history.length === 0" class="empty-state">
         <Sparkles :size="32" />
         <p class="empty-title">
           {{ $t('emptyTitle') }}
@@ -69,10 +60,7 @@
           <div class="message-text">
             {{ msg.content }}
           </div>
-          <div
-            v-if="msg instanceof AIMessage"
-            class="message-actions"
-          >
+          <div v-if="msg instanceof AIMessage" class="message-actions">
             <button
               class="action-icon"
               :title="$t('replaceSelectedText')"
@@ -121,16 +109,13 @@
           </button>
         </div>
         <div class="model-controls">
-          <select
-            v-model="settingForm.api"
-            class="compact-select"
-          >
+          <select v-model="settingForm.api" class="compact-select">
             <option
-              v-for="item in settingPreset.api.optionList"
+              v-for="item in settingPreset.api.optionObj"
               :key="item.value"
               :value="item.value"
             >
-              {{ item.label }}
+              {{ item.label.replace('official', 'OpenAI') }}
             </option>
           </select>
           <select
@@ -140,10 +125,10 @@
           >
             <option
               v-for="item in currentModelOptions"
-              :key="item.value"
-              :value="item.value"
+              :key="item"
+              :value="item"
             >
-              {{ item.label }}
+              {{ item }}
             </option>
           </select>
         </div>
@@ -154,9 +139,7 @@
           v-model="userInput"
           class="chat-input"
           :placeholder="
-            mode === 'ask'
-              ? $t('askAnything')
-              : $t('directTheAgent')
+            mode === 'ask' ? $t('askAnything') : $t('directTheAgent')
           "
           rows="1"
           @keydown.enter.exact.prevent="sendMessage"
@@ -182,17 +165,11 @@
       </div>
       <div class="input-footer">
         <label class="checkbox-small">
-          <input
-            v-model="useWordFormatting"
-            type="checkbox"
-          >
+          <input v-model="useWordFormatting" type="checkbox" />
           <span>{{ $t('useWordFormattingLabel') }}</span>
         </label>
         <label class="checkbox-small">
-          <input
-            v-model="useSelectedText"
-            type="checkbox"
-          >
+          <input v-model="useSelectedText" type="checkbox" />
           <span>{{ $t('includeSelectionLabel') }}</span>
         </label>
       </div>
@@ -272,22 +249,51 @@ const quickActions: Array<{
   { key: 'grammar', label: t('grammar'), icon: CheckCircle }
 ]
 
-// Dynamic model selection
+const getCustomModels = (key: string, oldKey: string): string[] => {
+  const stored = localStorage.getItem(key)
+  if (stored) {
+    try {
+      return JSON.parse(stored)
+    } catch {
+      return []
+    }
+  }
+  const oldModel = localStorage.getItem(oldKey)
+  if (oldModel && oldModel.trim()) {
+    return [oldModel]
+  }
+  return []
+}
+
 const currentModelOptions = computed(() => {
+  let presetOptions: string[] = []
+  let customModels: string[] = []
+
   switch (settingForm.value.api) {
     case 'official':
-      return settingPreset.officialModelSelect.optionList
+      presetOptions = settingPreset.officialModelSelect.optionList || []
+      customModels = getCustomModels('customModels', 'customModel')
+      break
     case 'gemini':
-      return settingPreset.geminiModelSelect.optionList
+      presetOptions = settingPreset.geminiModelSelect.optionList || []
+      customModels = getCustomModels('geminiCustomModels', 'geminiCustomModel')
+      break
     case 'ollama':
-      return settingPreset.ollamaModelSelect.optionList
+      presetOptions = settingPreset.ollamaModelSelect.optionList || []
+      customModels = getCustomModels('ollamaCustomModels', 'ollamaCustomModel')
+      break
     case 'groq':
-      return settingPreset.groqModelSelect.optionList
+      presetOptions = settingPreset.groqModelSelect.optionList || []
+      customModels = getCustomModels('groqCustomModels', 'groqCustomModel')
+      break
     case 'azure':
       return []
     default:
       return []
   }
+
+  customModels = customModels.map(model => `${model} *`)
+  return [...presetOptions, ...customModels]
 })
 
 const currentModelSelect = computed({
@@ -493,12 +499,12 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
       },
       maxTokens: settings.officialMaxTokens,
       temperature: settings.officialTemperature,
-      model: settings.officialCustomModel || settings.officialModelSelect
+      model: settings.officialModelSelect
     },
     groq: {
       provider: 'groq',
       groqAPIKey: settings.groqAPIKey,
-      groqModel: settings.groqCustomModel || settings.groqModelSelect,
+      groqModel: settings.groqModelSelect,
       maxTokens: settings.groqMaxTokens,
       temperature: settings.groqTemperature
     },
@@ -516,12 +522,12 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
       geminiAPIKey: settings.geminiAPIKey,
       maxTokens: settings.geminiMaxTokens,
       temperature: settings.geminiTemperature,
-      geminiModel: settings.geminiCustomModel || settings.geminiModelSelect
+      geminiModel: settings.geminiModelSelect
     },
     ollama: {
       provider: 'ollama',
       ollamaEndpoint: settings.ollamaEndpoint,
-      ollamaModel: settings.ollamaCustomModel || settings.ollamaModelSelect,
+      ollamaModel: settings.ollamaModelSelect,
       temperature: settings.ollamaTemperature
     }
   }
