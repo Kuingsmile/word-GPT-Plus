@@ -51,7 +51,7 @@
       </div>
 
       <div
-        v-for="(msg, index) in history"
+        v-for="(msg, index) in displayHistory"
         :key="msg.id || index"
         class="message"
         :class="msg instanceof AIMessage ? 'assistant' : 'user'"
@@ -113,7 +113,7 @@
             title="Agent Mode"
             @click="mode = 'agent'"
           >
-            <Zap :size="14" />
+            <BotMessageSquare :size="17" />
           </button>
         </div>
         <div class="model-controls">
@@ -192,7 +192,6 @@ import {
   Sparkles,
   FileText,
   MessageSquare,
-  Zap,
   Send,
   Copy,
   Globe,
@@ -200,7 +199,8 @@ import {
   BookOpen,
   FileCheck,
   CheckCircle,
-  Square
+  Square,
+  BotMessageSquare
 } from 'lucide-vue-next'
 import { ref, computed, nextTick, onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -272,7 +272,7 @@ function getActiveTools() {
 }
 
 // Chat state
-const mode = useStorage(localStorageKey.chatMode, 'agent' as 'ask' | 'agent')
+const mode = useStorage(localStorageKey.chatMode, 'ask' as 'ask' | 'agent')
 const history = ref<Array<Message>>([])
 const userInput = ref('')
 const loading = ref(false)
@@ -287,6 +287,10 @@ const useSelectedText = useStorage(localStorageKey.useSelectedText, true)
 const insertType = ref<insertTypes>('replace')
 
 const errorIssue = ref(false)
+
+const displayHistory = computed(() => {
+  return history.value.filter(msg => !(msg instanceof SystemMessage))
+})
 
 // Quick actions
 const quickActions: Array<{
