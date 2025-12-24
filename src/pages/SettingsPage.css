@@ -942,3 +942,56 @@
     color: #6e7681 !important;
   }
 }
+/* Built-in Prompts Styles */
+.builtin-prompt-item {
+  background: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: all 0.2s ease;
+}
+
+.builtin-prompt-item:hover {
+  border-color: #0969da;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.builtin-prompt-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #24292f;
+  text-transform: capitalize;
+}
+
+.preview-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #656d76;
+  margin: 12px 0 4px 0;
+}
+
+.preview-label:first-child {
+  margin-top: 0;
+}
+
+/* Dark mode for Built-in Prompts */
+@media (prefers-color-scheme: dark) {
+  .builtin-prompt-item {
+    background: #0d1117;
+    border-color: #30363d;
+  }
+
+  .builtin-prompt-item:hover {
+    border-color: #58a6ff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  .builtin-prompt-name {
+    color: #c9d1d9;
+  }
+
+  .preview-label {
+    color: #8b949e;
+  }
+}

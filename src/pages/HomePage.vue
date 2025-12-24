@@ -206,7 +206,7 @@ import { ref, computed, nextTick, onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStorage } from '@vueuse/core'
 import { message as messageUtil } from '@/utils/message'
-import { buildInPrompt } from '@/utils/constant'
+import { buildInPrompt, getBuiltInPrompt } from '@/utils/constant'
 import { checkAuth } from '@/utils/common'
 import { localStorageKey } from '@/utils/enum'
 import useSettingForm from '@/utils/settingForm'
@@ -494,7 +494,8 @@ async function applyQuickAction(actionKey: keyof typeof buildInPrompt) {
     return
   }
 
-  const action = buildInPrompt[actionKey]
+  const builtInPrompts = getBuiltInPrompt()
+  const action = builtInPrompts[actionKey]
   const settings = settingForm.value
   const { replyLanguage: lang } = settings
 

@@ -189,3 +189,34 @@ export const buildInPrompt = {
       Text: ${text}`
   }
 }
+
+export const getBuiltInPrompt = () => {
+  const stored = localStorage.getItem('customBuiltInPrompts')
+  if (!stored) {
+    return buildInPrompt
+  }
+
+  try {
+    const customPrompts = JSON.parse(stored)
+    const result = { ...buildInPrompt }
+
+    Object.keys(customPrompts).forEach(key => {
+      const typedKey = key as keyof typeof buildInPrompt
+      if (result[typedKey]) {
+        result[typedKey] = {
+          system: (language: string) =>
+            customPrompts[key].system.replace(/\$\{language\}/g, language),
+          user: (text: string, language: string) =>
+            customPrompts[key].user
+              .replace(/\$\{text\}/g, text)
+              .replace(/\$\{language\}/g, language)
+        }
+      }
+    })
+
+    return result
+  } catch (error) {
+    console.error('Error loading custom built-in prompts:', error)
+    return buildInPrompt
+  }
+}

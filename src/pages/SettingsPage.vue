@@ -398,6 +398,89 @@
             </div>
           </div>
         </div>
+
+        <!-- Built-in Prompts Settings -->
+        <div v-show="currentTab === 'builtinPrompts'" class="settings-section">
+          <div class="setting-card" style="margin-top: 16px">
+            <div class="list-header">
+              <h3 class="list-title">
+                {{ $t('builtinPrompts') || 'Built-in Prompts' }}
+              </h3>
+            </div>
+            <p class="section-description">
+              {{
+                $t('builtinPromptsDescription', {
+                  language: '${language}',
+                  text: '${text}'
+                }) ||
+                'Customize the system and user prompts for built-in tools like Translate, Polish, Academic, Summary, and Grammar.'
+              }}
+            </p>
+
+            <div
+              v-for="(promptConfig, key) in builtInPromptsData"
+              :key="key"
+              class="builtin-prompt-item"
+            >
+              <div class="prompt-header">
+                <div class="prompt-title-row">
+                  <span class="builtin-prompt-name">{{ $t(key) || key }}</span>
+                </div>
+                <div class="prompt-actions">
+                  <button
+                    class="icon-button"
+                    :title="
+                      editingBuiltinPromptKey === key ? $t('save') : $t('edit')
+                    "
+                    @click="toggleEditBuiltinPrompt(key)"
+                  >
+                    <component
+                      :is="editingBuiltinPromptKey === key ? Plus : Edit2"
+                      :size="14"
+                    />
+                  </button>
+                  <button
+                    v-if="isBuiltinPromptModified(key)"
+                    class="icon-button"
+                    :title="$t('reset') || 'Reset'"
+                    @click="resetBuiltinPrompt(key)"
+                  >
+                    <component :is="X" :size="14" />
+                  </button>
+                </div>
+              </div>
+
+              <div v-if="editingBuiltinPromptKey === key" class="prompt-editor">
+                <label class="editor-label">{{ $t('systemPrompt') }}</label>
+                <textarea
+                  v-model="editingBuiltinPrompt.system"
+                  class="textarea-input"
+                  rows="3"
+                  :placeholder="$t('systemPromptPlaceholder')"
+                />
+
+                <label class="editor-label">{{ $t('userPrompt') }}</label>
+                <textarea
+                  v-model="editingBuiltinPrompt.user"
+                  class="textarea-input"
+                  rows="4"
+                  :placeholder="$t('userPromptPlaceholder')"
+                />
+              </div>
+
+              <div v-else class="prompt-preview">
+                <p class="preview-label">{{ $t('systemPrompt') }}:</p>
+                <p class="preview-text">
+                  {{ getSystemPromptPreview(promptConfig.system) }}
+                </p>
+                <p class="preview-label">{{ $t('userPrompt') }}:</p>
+                <p class="preview-text">
+                  {{ getUserPromptPreview(promptConfig.user) }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -415,11 +498,12 @@ import {
   Edit2,
   Trash2,
   X,
-  Wrench
+  Wrench,
+  Settings
 } from 'lucide-vue-next'
 
 import { getLabel, getPlaceholder } from '@/utils/common'
-import { availableAPIs } from '@/utils/constant'
+import { availableAPIs, buildInPrompt } from '@/utils/constant'
 import { SettingNames, settingPreset } from '@/utils/settingPreset'
 import useSettingForm from '@/utils/settingForm'
 import { getWordToolDefinitions } from '@/utils/wordTools'
@@ -457,6 +541,38 @@ const editingPrompt = ref<Prompt>({
   userPrompt: ''
 })
 
+// Built-in prompts management
+interface BuiltinPromptConfig {
+  system: (language: string) => string
+  user: (text: string, language: string) => string
+}
+
+type BuiltinPromptKey =
+  | 'translate'
+  | 'polish'
+  | 'academic'
+  | 'summary'
+  | 'grammar'
+
+const builtInPromptsData = ref<Record<BuiltinPromptKey, BuiltinPromptConfig>>({
+  translate: { ...buildInPrompt.translate },
+  polish: { ...buildInPrompt.polish },
+  academic: { ...buildInPrompt.academic },
+  summary: { ...buildInPrompt.summary },
+  grammar: { ...buildInPrompt.grammar }
+})
+
+const editingBuiltinPromptKey = ref<BuiltinPromptKey | ''>('')
+const editingBuiltinPrompt = ref<{
+  system: string
+  user: string
+}>({
+  system: '',
+  user: ''
+})
+
+const originalBuiltInPrompts = { ...buildInPrompt }
+
 const tabs = [
   { id: 'general', label: 'general', defaultLabel: 'General', icon: Globe },
   {
@@ -470,6 +586,12 @@ const tabs = [
     label: 'prompts',
     defaultLabel: 'Prompts',
     icon: MessageSquare
+  },
+  {
+    id: 'builtinPrompts',
+    label: 'builtinPrompts',
+    defaultLabel: 'Built-in Prompts',
+    icon: Settings
   },
   {
     id: 'tools',
@@ -596,8 +718,7 @@ const loadPrompts = () => {
       {
         id: 'default',
         name: 'Default',
-        systemPrompt:
-          settingForm.value.systemPrompt || 'You are a helpful assistant.',
+        systemPrompt: settingForm.value.systemPrompt || '',
         userPrompt: settingForm.value.userPrompt || ''
       }
     ]
@@ -684,9 +805,102 @@ const deletePrompt = (id: string) => {
   }
 }
 
+// Built-in prompts functions
+const loadBuiltInPrompts = () => {
+  const stored = localStorage.getItem('customBuiltInPrompts')
+  if (stored) {
+    try {
+      const customPrompts = JSON.parse(stored)
+      Object.keys(customPrompts).forEach(key => {
+        const typedKey = key as BuiltinPromptKey
+        if (builtInPromptsData.value[typedKey]) {
+          builtInPromptsData.value[typedKey] = {
+            system: (language: string) =>
+              customPrompts[key].system.replace('${language}', language),
+            user: (text: string, language: string) =>
+              customPrompts[key].user
+                .replace('${text}', text)
+                .replace('${language}', language)
+          }
+        }
+      })
+    } catch (error) {
+      console.error('Error loading custom built-in prompts:', error)
+    }
+  }
+}
+
+const saveBuiltInPrompts = () => {
+  const customPrompts: Record<string, { system: string; user: string }> = {}
+  Object.keys(builtInPromptsData.value).forEach(key => {
+    const typedKey = key as BuiltinPromptKey
+    customPrompts[key] = {
+      system: builtInPromptsData.value[typedKey].system('${language}'),
+      user: builtInPromptsData.value[typedKey].user('${text}', '${language}')
+    }
+  })
+  localStorage.setItem('customBuiltInPrompts', JSON.stringify(customPrompts))
+}
+
+const toggleEditBuiltinPrompt = (key: BuiltinPromptKey) => {
+  if (editingBuiltinPromptKey.value === key) {
+    builtInPromptsData.value[key] = {
+      system: (language: string) =>
+        editingBuiltinPrompt.value.system.replace(/\$\{language\}/g, language),
+      user: (text: string, language: string) =>
+        editingBuiltinPrompt.value.user
+          .replace(/\$\{text\}/g, text)
+          .replace(/\$\{language\}/g, language)
+    }
+    saveBuiltInPrompts()
+    editingBuiltinPromptKey.value = ''
+  } else {
+    editingBuiltinPromptKey.value = key
+    editingBuiltinPrompt.value = {
+      system: builtInPromptsData.value[key].system('${language}'),
+      user: builtInPromptsData.value[key].user('${text}', '${language}')
+    }
+  }
+}
+
+const isBuiltinPromptModified = (key: BuiltinPromptKey): boolean => {
+  const current = {
+    system: builtInPromptsData.value[key].system('English'),
+    user: builtInPromptsData.value[key].user('sample text', 'English')
+  }
+  const original = {
+    system: originalBuiltInPrompts[key].system('English'),
+    user: originalBuiltInPrompts[key].user('sample text', 'English')
+  }
+  return current.system !== original.system || current.user !== original.user
+}
+
+const resetBuiltinPrompt = (key: BuiltinPromptKey) => {
+  builtInPromptsData.value[key] = { ...originalBuiltInPrompts[key] }
+  saveBuiltInPrompts()
+  if (editingBuiltinPromptKey.value === key) {
+    editingBuiltinPromptKey.value = ''
+  }
+}
+
+const getSystemPromptPreview = (
+  systemFunc: (language: string) => string
+): string => {
+  const full = systemFunc('English')
+  return full.length > 100 ? full.substring(0, 100) + '...' : full
+}
+
+const getUserPromptPreview = (
+  userFunc: (text: string, language: string) => string
+): string => {
+  const full = userFunc('[selected text]', 'English')
+  return full.length > 100 ? full.substring(0, 100) + '...' : full
+}
+
 onBeforeMount(() => {
   loadPrompts()
   loadCustomModels()
+  loadBuiltInPrompts()
   addWatch()
 })
 
