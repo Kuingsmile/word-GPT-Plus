@@ -150,7 +150,7 @@
                       $t('customModelsLabel')
                     }}</label>
                   </div>
-                  <div class="setting-control full-width">
+                  <div class="setting-control left-gap">
                     <div style="display: flex; gap: 8px; margin-bottom: 8px">
                       <input
                         v-model="newCustomModel[platform]"

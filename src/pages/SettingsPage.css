@@ -155,6 +155,11 @@
   width: 100%;
 }
 
+.setting-control.left-gap {
+  width: 100%;
+  margin-left: 4.2%;
+}
+
 .setting-divider {
   height: 1px;
   background: #d0d7de;
@@ -167,6 +172,21 @@
 .textarea-input {
   width: 90%;
   padding: 6px 10px;
+  font-size: 13px;
+  line-height: 18px;
+  color: #24292f;
+  background-color: #f6f8fa;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  text-align: center;
+}
+
+.number-input {
+  width: 95%;
+  padding: 6px 10px;
+  margin-left: 4.2%;
   font-size: 13px;
   line-height: 18px;
   color: #24292f;
