@@ -13,6 +13,7 @@
   "polish": "润色",
   "grammar": "语法",
   "academic": "学术",
+  "selectPrompt": "选择提示词",
   "askAnything": "问我任何问题",
   "directTheAgent": "指挥助手操作",
   "useWordFormattingLabel": "Word格式化",

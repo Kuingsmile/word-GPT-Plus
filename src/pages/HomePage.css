@@ -106,6 +106,31 @@
   cursor: not-allowed;
 }
 
+.prompt-selector {
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #d0d7de;
+  background: #ffffff;
+  border-radius: 6px;
+  color: #1f2328;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  min-width: 80px;
+  max-width: 120px;
+  flex-shrink: 0;
+}
+
+.prompt-selector:hover:not(:disabled) {
+  border-color: #0969da;
+  background: #f6f8fa;
+}
+
+.prompt-selector:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .chat-messages {
   flex: 1;
   overflow-y: auto;

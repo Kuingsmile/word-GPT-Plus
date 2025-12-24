@@ -252,30 +252,6 @@
 
         <!-- Prompts Settings -->
         <div v-show="currentTab === 'prompts'" class="settings-section">
-          <!-- Active Prompt Display -->
-          <div class="setting-card">
-            <div class="setting-item">
-              <div class="setting-info">
-                <label class="setting-label">{{ $t('activePrompt') }}</label>
-              </div>
-              <div style="width: 100%">
-                <select
-                  v-model="activePromptId"
-                  class="select-input"
-                  @change="switchActivePrompt"
-                >
-                  <option
-                    v-for="prompt in savedPrompts"
-                    :key="prompt.id"
-                    :value="prompt.id"
-                  >
-                    {{ prompt.name }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-
           <!-- Prompt List -->
           <div class="prompts-list">
             <div class="list-header">
@@ -292,7 +268,6 @@
               v-for="prompt in savedPrompts"
               :key="prompt.id"
               class="prompt-item"
-              :class="{ active: prompt.id === activePromptId }"
             >
               <div class="prompt-header">
                 <div class="prompt-title-row">
@@ -304,11 +279,6 @@
                     @keyup.enter="savePromptEdit"
                   />
                   <span v-else class="prompt-name">{{ prompt.name }}</span>
-                  <span
-                    v-if="prompt.id === activePromptId"
-                    class="active-badge"
-                    >{{ $t('active') }}</span
-                  >
                 </div>
                 <div class="prompt-actions">
                   <button
@@ -532,7 +502,6 @@ interface Prompt {
 }
 
 const savedPrompts = ref<Prompt[]>([])
-const activePromptId = ref<string>('')
 const editingPromptId = ref<string>('')
 const editingPrompt = ref<Prompt>({
   id: '',
@@ -724,34 +693,10 @@ const loadPrompts = () => {
     ]
     savePromptsToStorage()
   }
-
-  const storedActiveId = localStorage.getItem('activePromptId')
-  if (storedActiveId && savedPrompts.value.some(p => p.id === storedActiveId)) {
-    activePromptId.value = storedActiveId
-  } else {
-    activePromptId.value = savedPrompts.value[0]?.id || ''
-  }
-
-  syncActivePromptToForm()
 }
 
 const savePromptsToStorage = () => {
   localStorage.setItem('savedPrompts', JSON.stringify(savedPrompts.value))
-}
-
-const syncActivePromptToForm = () => {
-  const activePrompt = savedPrompts.value.find(
-    p => p.id === activePromptId.value
-  )
-  if (activePrompt) {
-    settingForm.value.systemPrompt = activePrompt.systemPrompt
-    settingForm.value.userPrompt = activePrompt.userPrompt
-  }
-}
-
-const switchActivePrompt = () => {
-  localStorage.setItem('activePromptId', activePromptId.value)
-  syncActivePromptToForm()
 }
 
 const addNewPrompt = () => {
@@ -778,10 +723,6 @@ const savePromptEdit = () => {
   if (index !== -1) {
     savedPrompts.value[index] = { ...editingPrompt.value }
     savePromptsToStorage()
-
-    if (editingPromptId.value === activePromptId.value) {
-      syncActivePromptToForm()
-    }
   }
   editingPromptId.value = ''
 }
@@ -797,11 +738,6 @@ const deletePrompt = (id: string) => {
   if (index !== -1) {
     savedPrompts.value.splice(index, 1)
     savePromptsToStorage()
-
-    if (id === activePromptId.value) {
-      activePromptId.value = savedPrompts.value[0].id
-      switchActivePrompt()
-    }
   }
 }
 

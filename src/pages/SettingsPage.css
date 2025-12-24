@@ -221,7 +221,6 @@
   font-weight: 600;
   color: #656d76;
   margin: 0 0 8px 0;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: 0 4px;
 }
@@ -273,7 +272,6 @@
   font-weight: 600;
   color: #656d76;
   margin: 0;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
@@ -314,12 +312,6 @@
   margin-bottom: 12px;
   transition: all 0.15s ease;
 }
-
-.prompt-item.active {
-  border-color: #0969da;
-  box-shadow: 0 0 0 1px #0969da;
-}
-
 .prompt-header {
   display: flex;
   align-items: flex-start;
@@ -519,11 +511,6 @@
   .setting-card,
   .prompt-item {
     background: #161b22;
-  }
-
-  .prompt-item.active {
-    border-color: #58a6ff;
-    box-shadow: 0 0 0 1px #58a6ff;
   }
 
   .setting-desc,

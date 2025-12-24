@@ -36,6 +36,21 @@
       >
         <component :is="action.icon" :size="16" />
       </button>
+      <select
+        v-model="selectedPromptId"
+        class="prompt-selector"
+        :disabled="loading"
+        @change="loadSelectedPrompt"
+      >
+        <option value="">{{ $t('selectPrompt') }}</option>
+        <option
+          v-for="prompt in savedPrompts"
+          :key="prompt.id"
+          :value="prompt.id"
+        >
+          {{ prompt.name }}
+        </option>
+      </select>
     </div>
 
     <!-- Chat Messages Container -->
@@ -229,6 +244,17 @@ const { t } = useI18n()
 
 const { settingForm } = useSettingForm()
 
+interface SavedPrompt {
+  id: string
+  name: string
+  systemPrompt: string
+  userPrompt: string
+}
+
+const savedPrompts = ref<SavedPrompt[]>([])
+const selectedPromptId = ref<string>('')
+const customSystemPrompt = ref<string>('')
+
 // Tool state
 const enabledWordTools = ref<WordToolName[]>(loadEnabledWordTools())
 const enabledGeneralTools = ref<GeneralToolName[]>(loadEnabledGeneralTools())
@@ -269,6 +295,36 @@ function getActiveTools() {
   const wordTools = createWordTools(enabledWordTools.value)
   const generalTools = createGeneralTools(enabledGeneralTools.value)
   return [...generalTools, ...wordTools]
+}
+
+function loadSavedPrompts() {
+  const stored = localStorage.getItem('savedPrompts')
+  if (stored) {
+    try {
+      savedPrompts.value = JSON.parse(stored)
+    } catch (error) {
+      console.error('Error loading saved prompts:', error)
+      savedPrompts.value = []
+    }
+  }
+}
+
+function loadSelectedPrompt() {
+  if (!selectedPromptId.value) {
+    customSystemPrompt.value = ''
+    return
+  }
+
+  const prompt = savedPrompts.value.find(p => p.id === selectedPromptId.value)
+  if (prompt) {
+    customSystemPrompt.value = prompt.systemPrompt
+    userInput.value = prompt.userPrompt
+    adjustTextareaHeight()
+
+    if (inputTextarea.value) {
+      inputTextarea.value.focus()
+    }
+  }
 }
 
 // Chat state
@@ -405,6 +461,8 @@ function startNewChat() {
   userInput.value = ''
   history.value = []
   threadId.value = uuidv4()
+  customSystemPrompt.value = ''
+  selectedPromptId.value = ''
   adjustTextareaHeight()
 }
 
@@ -552,9 +610,12 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
 
   const isAgentMode = mode.value === 'agent'
 
-  const defaultSystemMessage = new SystemMessage(
-    systemMessage || (isAgentMode ? agentPrompt(lang) : standardPrompt(lang))
-  )
+  const finalSystemMessage =
+    customSystemPrompt.value ||
+    systemMessage ||
+    (isAgentMode ? agentPrompt(lang) : standardPrompt(lang))
+
+  const defaultSystemMessage = new SystemMessage(finalSystemMessage)
 
   const finalMessages = [defaultSystemMessage, userMessage]
   if (history.value.length === 0) {
@@ -807,6 +868,7 @@ async function initData() {
 onBeforeMount(() => {
   addWatch()
   initData()
+  loadSavedPrompts()
 })
 </script>
 
