@@ -423,6 +423,7 @@ import { availableAPIs } from '@/utils/constant'
 import { SettingNames, settingPreset } from '@/utils/settingPreset'
 import useSettingForm from '@/utils/settingForm'
 import { getWordToolDefinitions } from '@/utils/wordTools'
+import { getGeneralToolDefinitions } from '@/utils/generalTools'
 
 const router = useRouter()
 const { settingForm, settingFormKeys } = useSettingForm()
@@ -430,7 +431,10 @@ const { settingForm, settingFormKeys } = useSettingForm()
 const currentTab = ref('provider')
 
 // Word tools list
-const wordToolsList = getWordToolDefinitions()
+const wordToolsList = [
+  ...getGeneralToolDefinitions(),
+  ...getWordToolDefinitions()
+]
 
 const newCustomModel = ref<Record<string, string>>({})
 const customModelsMap = ref<Record<string, string[]>>({})

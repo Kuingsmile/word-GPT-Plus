@@ -166,5 +166,13 @@
   "wordTool_insertContentControl": "插入内容控件",
   "wordTool_insertContentControl_desc": "在当前选中位置插入内容控件容器。",
   "wordTool_findText": "查找文本",
-  "wordTool_findText_desc": "在文档中查找文本并返回匹配信息。"
+  "wordTool_findText_desc": "在文档中查找文本并返回匹配信息。",
+  "wordTool_fetchWebContent": "获取网页内容",
+  "wordTool_fetchWebContent_desc": "从 URL 获取网页内容。",
+  "wordTool_searchWeb": "搜索网页",
+  "wordTool_searchWeb_desc": "在网页上搜索信息并返回结果。",
+  "wordTool_getCurrentDate": "获取当前日期",
+  "wordTool_getCurrentDate_desc": "获取当前日期。",
+  "wordTool_calculateMath": "计算数学",
+  "wordTool_calculateMath_desc": "执行数学计算。"
 }

@@ -222,6 +222,7 @@ import {
   SystemMessage
 } from '@langchain/core/messages'
 import { createWordTools, WordToolName } from '@/utils/wordTools'
+import { createGeneralTools, GeneralToolName } from '@/utils/generalTools'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -230,6 +231,7 @@ const { settingForm } = useSettingForm()
 
 // Tool state
 const enabledWordTools = ref<WordToolName[]>(loadEnabledWordTools())
+const enabledGeneralTools = ref<GeneralToolName[]>(loadEnabledGeneralTools())
 
 function loadEnabledWordTools(): WordToolName[] {
   return [
@@ -259,8 +261,14 @@ function loadEnabledWordTools(): WordToolName[] {
   ]
 }
 
+function loadEnabledGeneralTools(): GeneralToolName[] {
+  return ['fetchWebContent', 'searchWeb', 'getCurrentDate', 'calculateMath']
+}
+
 function getActiveTools() {
-  return createWordTools(enabledWordTools.value)
+  const wordTools = createWordTools(enabledWordTools.value)
+  const generalTools = createGeneralTools(enabledGeneralTools.value)
+  return [...generalTools, ...wordTools]
 }
 
 // Chat state

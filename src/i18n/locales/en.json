@@ -166,5 +166,13 @@
   "wordTool_insertContentControl": "Insert Content Control",
   "wordTool_insertContentControl_desc": "Insert a content control container at the current selection.",
   "wordTool_findText": "Find Text",
-  "wordTool_findText_desc": "Find text in the document and return information about matches."
+  "wordTool_findText_desc": "Find text in the document and return information about matches.",
+  "wordTool_fetchWebContent": "Fetch Web Content",
+  "wordTool_fetchWebContent_desc": "Fetch content from the URL.",
+  "wordTool_searchWeb": "Search Web",
+  "wordTool_searchWeb_desc": "Search the web for information and return the results.",
+  "wordTool_getCurrentDate": "Get Current Date",
+  "wordTool_getCurrentDate_desc": "Get the current date.",
+  "wordTool_calculateMath": "Calculate Math",
+  "wordTool_calculateMath_desc": "Perform mathematical calculations."
 }
