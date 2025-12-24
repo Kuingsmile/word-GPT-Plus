@@ -5,7 +5,7 @@
 
   <h2 align="center">Word GPT Plus</h2>
   <p align="center">
-    Integrate AI directly into Microsoft Word
+    Integrate AI & Agentdirectly into Microsoft Word
     <br />
     <a href="https://github.com/Kuingsmile/word-GPT-Plus/blob/master/LICENSE">
       <img src="https://img.shields.io/github/license/Kuingsmile/word-GPT-Plus?style=flat-square" alt="license" />
@@ -28,7 +28,7 @@ English | [简体中文](https://github.com/Kuingsmile/word-GPT-Plus/blob/master
 
 ## 📋 Introduction
 
-Word GPT Plus seamlessly integrates AI models into Microsoft Word, allowing you to generate, translate, summarize, and polish text directly within your documents. Enhance your writing workflow without leaving your Word environment.
+Word GPT Plus seamlessly integrates AI and Agent directly into Microsoft Word, allowing you to generate, translate, summarize, and polish text directly within your documents. Enhance your writing workflow without leaving your Word environment.
 
 ![Image](https://github.com/user-attachments/assets/e5b077ca-b8d4-4e28-97c7-b708524e1188)
 

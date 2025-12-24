@@ -5,7 +5,7 @@
 
   <h2 align="center">Word GPT Plus</h2>
   <p align="center">
-    将 AI 直接集成到 Microsoft Word
+    将 AI 和 Agent 直接集成到 Microsoft Word
     <br />
     <a href="https://github.com/Kuingsmile/word-GPT-Plus/blob/master/LICENSE">
       <img src="https://img.shields.io/github/license/Kuingsmile/word-GPT-Plus?style=flat-square" alt="license" />
@@ -28,7 +28,7 @@
 
 ## 📋 简介
 
-Word GPT Plus 是一款将 AI 模型无缝集成到 Microsoft Word 中的插件，使您能够在文档中直接生成、翻译、总结和润色文本。增强您的写作流程，无需离开 Word 环境。
+Word GPT Plus 是一款将 AI 和 Agent 无缝集成到 Microsoft Word 中的插件，使您能够在文档中直接生成、翻译、总结和润色文本。增强您的写作流程，无需离开 Word 环境。
 
 ![Image](https://github.com/user-attachments/assets/e5b077ca-b8d4-4e28-97c7-b708524e1188)
 
