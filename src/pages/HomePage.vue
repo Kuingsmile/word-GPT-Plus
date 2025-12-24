@@ -255,40 +255,71 @@ const savedPrompts = ref<SavedPrompt[]>([])
 const selectedPromptId = ref<string>('')
 const customSystemPrompt = ref<string>('')
 
+const allWordToolNames: WordToolName[] = [
+  'getSelectedText',
+  'getDocumentContent',
+  'insertText',
+  'replaceSelectedText',
+  'appendText',
+  'insertParagraph',
+  'formatText',
+  'searchAndReplace',
+  'getDocumentProperties',
+  'insertTable',
+  'insertList',
+  'deleteText',
+  'clearFormatting',
+  'setFontName',
+  'insertPageBreak',
+  'getRangeInfo',
+  'selectText',
+  'insertImage',
+  'getTableInfo',
+  'insertBookmark',
+  'goToBookmark',
+  'insertContentControl',
+  'findText'
+]
+
+const allGeneralToolNames: GeneralToolName[] = [
+  'fetchWebContent',
+  'searchWeb',
+  'getCurrentDate',
+  'calculateMath'
+]
+
 // Tool state
 const enabledWordTools = ref<WordToolName[]>(loadEnabledWordTools())
 const enabledGeneralTools = ref<GeneralToolName[]>(loadEnabledGeneralTools())
 
 function loadEnabledWordTools(): WordToolName[] {
-  return [
-    'getSelectedText',
-    'getDocumentContent',
-    'insertText',
-    'replaceSelectedText',
-    'appendText',
-    'insertParagraph',
-    'formatText',
-    'searchAndReplace',
-    'getDocumentProperties',
-    'insertTable',
-    'insertList',
-    'deleteText',
-    'clearFormatting',
-    'setFontName',
-    'insertPageBreak',
-    'getRangeInfo',
-    'selectText',
-    'insertImage',
-    'getTableInfo',
-    'insertBookmark',
-    'goToBookmark',
-    'insertContentControl',
-    'findText'
-  ]
+  const stored = localStorage.getItem('enabledWordTools')
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored)
+      return parsed.filter((name: string) =>
+        allWordToolNames.includes(name as WordToolName)
+      )
+    } catch {
+      return [...allWordToolNames]
+    }
+  }
+  return [...allWordToolNames]
 }
 
 function loadEnabledGeneralTools(): GeneralToolName[] {
-  return ['fetchWebContent', 'searchWeb', 'getCurrentDate', 'calculateMath']
+  const stored = localStorage.getItem('enabledGeneralTools')
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored)
+      return parsed.filter((name: string) =>
+        allGeneralToolNames.includes(name as GeneralToolName)
+      )
+    } catch {
+      return [...allGeneralToolNames]
+    }
+  }
+  return [...allGeneralToolNames]
 }
 
 function getActiveTools() {

@@ -355,11 +355,21 @@
                 :key="tool.name"
                 class="word-tool-item compact"
               >
+                <input
+                  :id="'tool-' + tool.name"
+                  type="checkbox"
+                  :checked="isToolEnabled(tool.name, !isGeneralTool(tool.name))"
+                  class="tool-checkbox"
+                  @change="toggleTool(tool.name, !isGeneralTool(tool.name))"
+                />
                 <component :is="Wrench" :size="14" class="tool-icon-inline" />
-                <div class="tool-info-compact">
-                  <span class="tool-name-compact">{{
+                <div
+                  class="tool-info-compact"
+                  @click="toggleTool(tool.name, !isGeneralTool(tool.name))"
+                >
+                  <label :for="'tool-' + tool.name" class="tool-name-compact">{{
                     $t(`wordTool_${tool.name}`)
-                  }}</span>
+                  }}</label>
                   <span class="tool-description-compact">
                     {{ $t(`wordTool_${tool.name}_desc`) }}
                   </span>
@@ -542,6 +552,10 @@ const editingBuiltinPrompt = ref<{
 
 const originalBuiltInPrompts = { ...buildInPrompt }
 
+// Tool enable/disable state
+const enabledWordTools = ref<Set<string>>(new Set())
+const enabledGeneralTools = ref<Set<string>>(new Set())
+
 const tabs = [
   { id: 'general', label: 'general', defaultLabel: 'General', icon: Globe },
   {
@@ -703,7 +717,7 @@ const addNewPrompt = () => {
   const newPrompt: Prompt = {
     id: `prompt_${Date.now()}`,
     name: `Prompt ${savedPrompts.value.length + 1}`,
-    systemPrompt: 'You are a helpful assistant.',
+    systemPrompt: '',
     userPrompt: ''
   }
   savedPrompts.value.push(newPrompt)
@@ -833,10 +847,79 @@ const getUserPromptPreview = (
   return full.length > 100 ? full.substring(0, 100) + '...' : full
 }
 
+const loadToolPreferences = () => {
+  const wordTools = localStorage.getItem('enabledWordTools')
+  const generalTools = localStorage.getItem('enabledGeneralTools')
+
+  if (wordTools) {
+    try {
+      enabledWordTools.value = new Set(JSON.parse(wordTools))
+    } catch {
+      enabledWordTools.value = new Set(
+        getWordToolDefinitions().map(t => t.name)
+      )
+    }
+  } else {
+    enabledWordTools.value = new Set(getWordToolDefinitions().map(t => t.name))
+  }
+
+  if (generalTools) {
+    try {
+      enabledGeneralTools.value = new Set(JSON.parse(generalTools))
+    } catch {
+      const generalToolNames = getGeneralToolDefinitions().map(t => t.name)
+      enabledGeneralTools.value = new Set(generalToolNames)
+    }
+  } else {
+    const generalToolNames = getGeneralToolDefinitions().map(t => t.name)
+    enabledGeneralTools.value = new Set(generalToolNames)
+  }
+}
+
+const saveToolPreferences = () => {
+  localStorage.setItem(
+    'enabledWordTools',
+    JSON.stringify([...enabledWordTools.value])
+  )
+  localStorage.setItem(
+    'enabledGeneralTools',
+    JSON.stringify([...enabledGeneralTools.value])
+  )
+}
+
+const toggleTool = (toolName: string, isWordTool: boolean) => {
+  if (isWordTool) {
+    if (enabledWordTools.value.has(toolName)) {
+      enabledWordTools.value.delete(toolName)
+    } else {
+      enabledWordTools.value.add(toolName)
+    }
+  } else {
+    if (enabledGeneralTools.value.has(toolName)) {
+      enabledGeneralTools.value.delete(toolName)
+    } else {
+      enabledGeneralTools.value.add(toolName)
+    }
+  }
+  saveToolPreferences()
+}
+
+const isToolEnabled = (toolName: string, isWordTool: boolean): boolean => {
+  return isWordTool
+    ? enabledWordTools.value.has(toolName)
+    : enabledGeneralTools.value.has(toolName)
+}
+
+const isGeneralTool = (toolName: string): boolean => {
+  const generalToolNames = getGeneralToolDefinitions().map(t => t.name)
+  return generalToolNames.includes(toolName as any)
+}
+
 onBeforeMount(() => {
   loadPrompts()
   loadCustomModels()
   loadBuiltInPrompts()
+  loadToolPreferences()
   addWatch()
 })
 
