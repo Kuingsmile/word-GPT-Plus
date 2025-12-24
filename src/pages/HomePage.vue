@@ -497,13 +497,6 @@ async function applyQuickAction(actionKey: keyof typeof buildInPrompt) {
   const systemMessage = action.system(lang)
   const userMessage = new HumanMessage(action.user(selectedText, lang))
 
-  // Add user message
-  history.value.push(
-    new HumanMessage(
-      `${quickActions.find(a => a.key === actionKey)?.label}: ${selectedText}`
-    )
-  )
-
   scrollToBottom()
 
   loading.value = true
@@ -526,6 +519,28 @@ async function applyQuickAction(actionKey: keyof typeof buildInPrompt) {
   }
 }
 
+const agentPrompt = (lang: string) =>
+  `
+# Role
+You are a highly skilled Microsoft Word Expert Agent. Your goal is to assist users in creating, editing, and formatting documents with professional precision.
+
+# Capabilities
+- You can interact with the document directly using provided tools (reading text, applying styles, inserting content, etc.).
+- You understand document structure, typography, and professional writing standards.
+
+# Guidelines
+1. **Tool First**: If a request requires document modification or inspection or web search and fetch, prioritize using the available tools.
+2. **Accuracy**: Ensure formatting and content changes are precise and follow the user's intent.
+3. **Conciseness**: Provide brief, helpful explanations of your actions.
+4. **Language**: You must communicate entirely in ${lang}.
+
+# Safety
+Do not perform destructive actions (like clearing the whole document) unless explicitly instructed.
+`.trim()
+
+const standardPrompt = (lang: string) =>
+  `You are a helpful Microsoft Word specialist. Help users with drafting, brainstorming, and Word-related questions. Reply in ${lang}.`
+
 async function processChat(userMessage: HumanMessage, systemMessage?: string) {
   const settings = settingForm.value
   const { replyLanguage: lang, api: provider } = settings
@@ -533,10 +548,7 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
   const isAgentMode = mode.value === 'agent'
 
   const defaultSystemMessage = new SystemMessage(
-    systemMessage ||
-      (isAgentMode
-        ? `You are a helpful AI assistant for Microsoft Word with access to tools. You can interact with the Word document directly using available tools. Reply in ${lang}.`
-        : `You are a helpful AI assistant for Microsoft Word. Reply in ${lang}.`)
+    systemMessage || (isAgentMode ? agentPrompt(lang) : standardPrompt(lang))
   )
 
   const finalMessages = [defaultSystemMessage, userMessage]

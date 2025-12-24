@@ -30,38 +30,54 @@ English | [简体中文](https://github.com/Kuingsmile/word-GPT-Plus/blob/master
 
 Word GPT Plus seamlessly integrates AI models into Microsoft Word, allowing you to generate, translate, summarize, and polish text directly within your documents. Enhance your writing workflow without leaving your Word environment.
 
-![Image](https://github.com/user-attachments/assets/303bafff-a53a-4c76-aa17-4e637a13387a)
+![Image](https://github.com/user-attachments/assets/e5b077ca-b8d4-4e28-97c7-b708524e1188)
 
 ## ✨ Features
 
-- **Multiple AI Models Support**:
-  - OpenAI API (compatible with DeepSeek and other OpenAI-compatible endpoints)
-  - Azure OpenAI API
-  - Google Gemini Pro API
-  - Ollama (for local deployment)
-  - Groq API
+- **Multiple AI Models Support** with Latest Models:
+  - **OpenAI**: Latest GPT series (compatible with DeepSeek and other OpenAI-compatible interfaces)
+  - **Azure OpenAI**: Full Azure integration with custom deployment names
+  - **Google Gemini**: Gemini 3 Pro/Flash, Gemini 2.5 Pro/Flash, AQA
+  - **Ollama** : Available for local deployments only
+  - **Groq**: Llama 3.3/4, Qwen3, Kimi-K2, and more
+  - Custom model names supported for all platforms
 
-- **Agent Mode**:
-  - Supports multi-step analysis and result synthesis
-  - Configurable analysis step limits
+- **Intelligent Agent Mode** (Powered by LangChain):
+  - **Direct Word Document Manipulation**: Agent can read, write, and modify your Word documents
+  - **25+ Built-in Word Tools**: Web search, Insert text, format content, create tables, manage bookmarks, search and replace, and more
+  - Multi-step reasoning with conversation memory
+  - Streaming responses with real-time updates
+  - Thought process visualization with collapsible details
 
-- **Built-in Templates**:
-  - Translation (40+ languages)
+- **Dual Chat Modes**:
+  - **Chat Mode**: Quick Q&A and content generation
+  - **Agent Mode**: Advanced document manipulation with tool access
+
+- **Quick Actions**:
+  - One-click translation (40+ languages)
   - Text polishing and improvement
   - Academic writing enhancement
   - Content summarization
-  - Grammar checking
+  - Grammar checking and correction
 
-- **Customization Options**:
-  - Save custom prompts for repeated use
-  - Adjust temperature and max tokens
-  - Support for proxies
-  - Local storage for privacy
+- **Customization & Flexibility**:
+  - Add custom models for each provider
+  - Save and manage custom prompts
+  - Adjust temperature and max tokens per provider
+  - Support for custom base URLs and proxies
+  - Local storage for complete privacy
+  - Multilingual interface (English, 简体中文)
 
 - **Advanced Formatting**:
-  - **Automatic Word Formatting**: AI responses are automatically formatted with proper Word styles (headers, bold, italic, lists, code blocks)
-  - Multiple insertion modes (replace, append, new line)
+  - **Automatic Word Formatting**: AI responses formatted with proper Word styles
   - Markdown parsing and conversion to Word formatting
+  - Per-message actions: replace, append, or copy
+
+- **Modern User Experience**:
+  - Clean, copilot-style interface
+  - Real-time streaming responses
+  - Quick model and provider switching
+  - Abort generation at any time
 
 ## 🚀 Getting Started
 
@@ -166,9 +182,90 @@ You can find instructions provided by MicroSoft at the following link: [sideload
 12. Enjoy it!
 ![image](https://user-images.githubusercontent.com/96409857/234744280-9d9f13cf-536b-4fb5-adfa-cbec262d56a2.png)
 
-## How to fill in API key
+## 📖 Usage
 
-After entering Word GPT Plus, click the orange `Settings` button on the homepage to enter the settings page, where you can switch APIs and fill in API keys.
+### Getting Started
+
+After entering Word GPT Plus, click the `Settings` button on the homepage to configure your preferred AI provider and API key.
+
+### Modes
+
+#### Chat Mode
+
+Use the chat mode for:
+
+- Quick Q&A and information queries
+- Content generation and brainstorming
+- Language translation
+- Text improvement and polishing
+
+Simply type your message and press Enter. Use the quick action buttons for common tasks.
+
+#### Agent Mode
+
+Agent mode gives the AI direct access to your Word document through 25+ specialized tools:
+
+**General Tools:**
+
+- Web search and access
+- Numerical calculations
+- Date retrieval
+
+**Document Reading Tools:**
+
+- Get selected text or full document content
+- Search for specific text
+- Get document properties and table information
+
+**Document Writing Tools:**
+
+- Insert, replace, or append text at specific locations
+- Create formatted paragraphs with styles
+- Insert tables and lists
+- Add bookmarks and content controls
+
+**Document Formatting Tools:**
+
+- Apply bold, italic, underline, and other formatting
+- Change font names and styles
+- Clear formatting
+- Search and replace text patterns
+
+**Example Agent Prompts:**
+
+- "Read the entire document and create a summary at the beginning"
+- "Format all section headings as Heading 2 and make them blue"
+- "Insert a paragraph after the first heading explaining the main topic"
+
+### Quick Actions
+
+Click the quick action buttons for instant operations:
+
+- **🌐 Translate**: Translate selected text to your preferred language
+- **✨ Polish**: Improve writing quality and clarity
+- **📚 Academic**: Enhance for academic writing
+- **📝 Summarize**: Create concise summaries
+- **✔️ Grammar**: Check and correct grammar
+
+### Custom Models
+
+For each AI provider, you can add custom models:
+
+1. Go to Settings → Provider tab
+2. Select your provider
+3. Enter custom model name and click Add
+4. The model will appear in the model dropdown
+
+### Configuration Tips
+
+- **Temperature**: Lower (0.3-0.5) for factual tasks, higher (0.7-1.0) for creative tasks
+- **Max Tokens**: Increase for longer responses, decrease for concise answers
+- **Custom Base URL**: Use for OpenAI-compatible services like DeepSeek
+
+## 🔒 Privacy & Security
+
+- **Local Storage**: Your API keys and custom prompts are stored in browser local storage (within the Word add-in environment). They are never sent to our servers.
+- **Direct Connection**: The add-in communicates directly with AI providers (OpenAI, Azure, etc.) or your local Ollama instance. There are no intermediary servers handling your data unless you use a custom proxy.
 
 ## Contributing
 

@@ -107,75 +107,85 @@ export const availableModelsForGroq: string[] = [
   'moonshotai/kimi-k2-instruct-0905',
   'qwen/qwen3-32b'
 ]
-
 export const buildInPrompt = {
   translate: {
     system: (language: string) =>
-      `You are a professional ${language} translator focused on accuracy and natural-sounding translations.`,
-    user: (
-      text: string,
-      language: string
-    ) => `Translate the following text into ${language}. Maintain the original meaning while using natural, 
-    elegant expressions appropriate for native ${language} speakers. Improve the language quality 
-    from basic to sophisticated where appropriate. Provide only the translation without explanations.
-
-    Text to translate: ${text}`
+      `You are an expert polyglot translator. Your task is to provide professional, context-aware translations into ${language}. 
+      Maintain formatting, keep the original tone, and ensure the output is idiomatic and elegant.`,
+    user: (text: string, language: string) =>
+      `Task: Translate the following text into ${language}.
+      Constraints:
+      1. Provide a natural-sounding translation suitable for native speakers.
+      2. If the text is technical, use appropriate terminology.
+      3. OUTPUT ONLY the translated text. Do not include "Here is the translation" or any explanations.
+      
+      Text: ${text}`
   },
+
   polish: {
     system: (language: string) =>
-      `You are a professional writing improvement assistant. Respond in ${language}.`,
-    user: (
-      text: string,
-      language: string
-    ) => `Improve this text in ${language} for clarity, concision, and readability:
-    - Fix spelling and grammar
-    - Break down overly long sentences
-    - Reduce repetition
-    - Enhance overall flow
-    
-    Provide only the improved version without explanations and any additional information: ${text}`
+      `You are a professional editor and stylist. Your goal is to make the text more professional, engaging, and clear in ${language}.`,
+    user: (text: string, language: string) =>
+      `Task: Polish the following text for better flow and impact.
+      Improvements:
+      - Correct grammar, spelling, and punctuation.
+      - Enhance vocabulary while maintaining the original meaning.
+      - Improve sentence structure and eliminate redundancy.
+      - Ensure the tone is consistent and professional.
+      Constraints: 
+      1. Respond in ${language}.
+      2. OUTPUT ONLY the polished text without any commentary.
+      
+      Text: ${text}`
   },
+
   academic: {
     system: (language: string) =>
-      `You are an expert academic editor specializing in scholarly publications. Respond in ${language}.`,
-    user: (
-      text: string,
-      language: string
-    ) => `Transform the following text into academic-quality writing suitable for a high-impact scientific journal:
-    - Elevate vocabulary and phrasing while preserving meaning
-    - Apply formal academic tone consistent with scholarly publications
-    - Structure sentences and paragraphs for logical flow
-    - Use precise terminology appropriate for scientific literature
-
-    Provide only the revised text without explanations and Reply in ${language}: ${text}`
+      `You are a senior academic editor for high-impact journals (e.g., Nature, Science). You specialize in formal, precise, and objective scholarly writing in ${language}.`,
+    user: (text: string, language: string) =>
+      `Task: Rewrite the following text to meet professional academic standards.
+      Requirements:
+      - Use formal, objective language and avoid colloquialisms.
+      - Ensure logical transitions and precise scientific terminology.
+      - Maintain a third-person perspective unless the context requires otherwise.
+      - Optimize for clarity and conciseness as per peer-review expectations.
+      Constraints:
+      1. Respond in ${language}.
+      2. OUTPUT ONLY the revised text. No pre-amble or meta-talk.
+      
+      Text: ${text}`
   },
+
   summary: {
     system: (language: string) =>
-      `You are a professional text summarization expert. Respond in ${language}.`,
-    user: (
-      text: string,
-      language: string
-    ) => `Create a concise 100-word summary of this text that:
-    - Captures the main points and key information
-    - Is easy to read and understand
-    - Maintains the core message
-    - Uses clear, straightforward language
-    Respond in ${language}.
-    Text to summarize: ${text}`
+      `You are an expert document analyst. You excel at distilling complex information into clear, actionable summaries in ${language}.`,
+    user: (text: string, language: string) =>
+      `Task: Summarize the following text.
+      Structure:
+      - Capture the core message and primary supporting points.
+      - Aim for approximately 100 words (or 3-5 key bullet points).
+      - Ensure the summary is self-contained and easy to understand.
+      Constraints:
+      1. Respond in ${language}.
+      2. OUTPUT ONLY the summary.
+      
+      Text: ${text}`
   },
+
   grammar: {
     system: (language: string) =>
-      `You are an expert grammar checker with exceptional attention to detail. Respond in ${language}.`,
-    user: (
-      text: string,
-      language: string
-    ) => `Review and correct any grammatical issues in this text:
-    - Fix punctuation, spelling, and syntax errors
-    - Ensure proper sentence structure and flow
-    - Correct subject-verb agreement issues
-    - Improve overall readability
-    Respond in ${language}.
-    If the text is already grammatically correct, respond only with "Sounds good." 
-    Otherwise, provide the corrected version: ${text}`
+      `You are a meticulous proofreader. Your sole focus is linguistic accuracy, including syntax, morphology, and orthography in ${language}.`,
+    user: (text: string, language: string) =>
+      `Task: Check and correct the grammar of the following text.
+      Focus:
+      - Fix all spelling and punctuation errors.
+      - Correct subject-verb agreement and tense inconsistencies.
+      - Ensure proper sentence structure.
+      Constraints:
+      1. If the text is already perfect, respond exactly with: "No grammatical issues found."
+      2. Otherwise, provide ONLY the corrected text without explaining the changes.
+      3. Respond in ${language}.
+      
+      Text: ${text}`
   }
 }
