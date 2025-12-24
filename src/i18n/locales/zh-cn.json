@@ -14,7 +14,7 @@
   "grammar": "语法",
   "academic": "学术",
   "askAnything": "问我任何问题",
-  "directTheAgent": "指挥助手，直接操作文档",
+  "directTheAgent": "指挥助手操作",
   "useWordFormattingLabel": "Word格式化",
   "includeSelectionLabel": "同时包含选中内容",
   "replaceSelectedText": "替换",
