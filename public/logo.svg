@@ -1,0 +1,6 @@
+<svg width="300" height="120" viewBox="0 0 300 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <text x="0" y="72" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#1E293B">word</text>
+  <text x="75" y="72" font-family="Arial, sans-serif" font-size="32" font-weight="400" fill="#4F46E5">GPT</text>
+  <rect x="140" y="45" width="45" height="30" rx="15" fill="#4F46E5"/>
+  <path d="M157 60H169M163 54V66" stroke="white" stroke-width="3" stroke-linecap="round"/>
+</svg>

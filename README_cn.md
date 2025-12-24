@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/Kuingsmile/word-GPT-Plus">
-    <img src="https://user-images.githubusercontent.com/96409857/233920113-b6919e19-484e-4a4b-82ff-5c72f7314025.png" alt="Logo" height="100">
+    <img src="./public/logo.svg" alt="Logo" height="100">
   </a>
 
   <h2 align="center">Word GPT Plus</h2>
@@ -86,9 +86,11 @@ Word GPT Plus 是一款将 AI 模型无缝集成到 Microsoft Word 中的插件�
 
 选择最适合的安装方式：
 
-### 方式一：即刻使用（推荐）
+### 方式一：即刻使用
 
 *适合大多数用户，无需编写代码。*
+
+可能会遇到CORS问题，无法解决时请使用自托管方式。
 
 1. 下载 `release/instant-use/manifest.xml` [manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/instant-use/manifest.xml)。
 2. 将其保存到计算机上的专用文件夹中（例如：`C:\Users\username\Documents\WordGPT`）。
@@ -127,6 +129,7 @@ Word GPT Plus 是一款将 AI 模型无缝集成到 Microsoft Word 中的插件�
    git clone https://github.com/Kuingsmile/Word-GPT-Plus.git
    cd Word-GPT-Plus
    yarn
+   yarn run build
    yarn run serve
    ```
 

@@ -222,13 +222,11 @@ import {
   SystemMessage
 } from '@langchain/core/messages'
 import { createWordTools, WordToolName } from '@/utils/wordTools'
-import { useMCPManager } from '@/utils/mcpManager'
 
 const router = useRouter()
 const { t } = useI18n()
 
 const { settingForm } = useSettingForm()
-const { createLangChainTools: createMCPTools } = useMCPManager()
 
 // Tool state
 const enabledWordTools = ref<WordToolName[]>(loadEnabledWordTools())
@@ -245,15 +243,24 @@ function loadEnabledWordTools(): WordToolName[] {
     'searchAndReplace',
     'getDocumentProperties',
     'insertTable',
-    'insertList'
+    'insertList',
+    'deleteText',
+    'clearFormatting',
+    'setFontName',
+    'insertPageBreak',
+    'getRangeInfo',
+    'selectText',
+    'insertImage',
+    'getTableInfo',
+    'insertBookmark',
+    'goToBookmark',
+    'insertContentControl',
+    'findText'
   ]
 }
 
 function getActiveTools() {
-  const wordTools = createWordTools(enabledWordTools.value)
-  const mcpTools = createMCPTools()
-
-  return [...wordTools, ...mcpTools]
+  return createWordTools(enabledWordTools.value)
 }
 
 // Chat state

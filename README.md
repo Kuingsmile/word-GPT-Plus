@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/Kuingsmile/word-GPT-Plus">
-    <img src="https://user-images.githubusercontent.com/96409857/233920113-b6919e19-484e-4a4b-82ff-5c72f7314025.png" alt="Logo" height="100">
+    <img src="./public/logo.svg" alt="Logo" height="100">
   </a>
 
   <h2 align="center">Word GPT Plus</h2>
@@ -127,6 +127,7 @@ Choose the method that best suits your needs:
    git clone https://github.com/Kuingsmile/Word-GPT-Plus.git
    cd Word-GPT-Plus
    yarn
+   yarn build
    yarn run serve
    ```
 

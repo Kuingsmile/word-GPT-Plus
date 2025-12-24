@@ -366,184 +366,8 @@
           </div>
         </div>
 
-        <!-- Tools & MCP Settings -->
+        <!-- Tools Settings -->
         <div v-show="currentTab === 'tools'" class="settings-section">
-          <!-- MCP Servers Section -->
-          <div class="setting-card">
-            <div class="list-header">
-              <h3 class="list-title">
-                {{ $t('mcpServers') }}
-              </h3>
-              <button
-                class="add-button"
-                @click="showAddMCPForm = !showAddMCPForm"
-              >
-                <component :is="Plus" :size="16" />
-                <span>{{ $t('addServer') }}</span>
-              </button>
-            </div>
-            <p class="section-description">
-              {{ $t('mcpDescription') }}
-            </p>
-
-            <!-- Add MCP Server Form -->
-            <div v-if="showAddMCPForm" class="mcp-add-form">
-              <div class="form-row">
-                <label class="form-label">{{ $t('serverName') }}</label>
-                <input
-                  v-model="newMCPServer.name"
-                  class="text-input"
-                  type="text"
-                  :placeholder="$t('serverNamePlaceholder')"
-                />
-              </div>
-              <div class="form-row">
-                <label class="form-label">{{ $t('serverUrl') }}</label>
-                <input
-                  v-model="newMCPServer.url"
-                  class="text-input"
-                  type="text"
-                  :placeholder="$t('serverUrlPlaceholder')"
-                />
-              </div>
-              <div class="form-row">
-                <label class="form-label">{{ $t('apiKeyOptional') }}</label>
-                <input
-                  v-model="newMCPServer.apiKey"
-                  class="text-input"
-                  type="password"
-                  :placeholder="$t('apiKeyPlaceholder')"
-                />
-              </div>
-              <div class="form-actions">
-                <button class="save-button" @click="handleAddMCPServer">
-                  {{ $t('add') || 'Add' }}
-                </button>
-                <button class="cancel-button" @click="showAddMCPForm = false">
-                  {{ $t('cancel') || 'Cancel' }}
-                </button>
-              </div>
-            </div>
-
-            <!-- MCP Servers List -->
-            <div v-if="mcpServers.length > 0" class="mcp-servers-list">
-              <div
-                v-for="server in mcpServers"
-                :key="server.id"
-                class="mcp-server-item"
-                :class="{
-                  connected: server.status === 'connected',
-                  error: server.status === 'error'
-                }"
-              >
-                <div
-                  class="server-header"
-                  @click="toggleServerExpand(server.id)"
-                >
-                  <div class="server-info">
-                    <component
-                      :is="
-                        expandedServerId === server.id
-                          ? ChevronDown
-                          : ChevronRight
-                      "
-                      :size="16"
-                      class="expand-icon"
-                    />
-                    <span class="server-name">{{ server.name }}</span>
-                    <span class="server-status" :class="server.status">
-                      {{ server.status }}
-                    </span>
-                  </div>
-                  <div class="server-actions" @click.stop>
-                    <button
-                      class="icon-button"
-                      :class="{ active: server.enabled }"
-                      :title="server.enabled ? 'Disable' : 'Enable'"
-                      @click="handleToggleServer(server.id, !server.enabled)"
-                    >
-                      <component :is="Power" :size="14" />
-                    </button>
-                    <button
-                      v-if="
-                        server.status === 'disconnected' ||
-                        server.status === 'error'
-                      "
-                      class="icon-button connect"
-                      :title="$t('connect')"
-                      :disabled="connectingServerId === server.id"
-                      @click="handleConnectServer(server.id)"
-                    >
-                      <component
-                        :is="
-                          connectingServerId === server.id ? RefreshCw : Plug
-                        "
-                        :size="14"
-                        :class="{ spinning: connectingServerId === server.id }"
-                      />
-                    </button>
-                    <button
-                      v-else
-                      class="icon-button disconnect"
-                      :title="$t('disconnect')"
-                      @click="handleDisconnectServer(server.id)"
-                    >
-                      <component :is="Plug" :size="14" />
-                    </button>
-                    <button
-                      class="icon-button delete"
-                      :title="$t('delete')"
-                      @click="handleRemoveMCPServer(server.id)"
-                    >
-                      <component :is="Trash2" :size="14" />
-                    </button>
-                  </div>
-                </div>
-
-                <div
-                  v-if="expandedServerId === server.id"
-                  class="server-details"
-                >
-                  <div class="detail-row">
-                    <span class="detail-label">URL:</span>
-                    <span class="detail-value">{{ server.url }}</span>
-                  </div>
-                  <div
-                    v-if="server.tools && server.tools.length > 0"
-                    class="server-tools"
-                  >
-                    <span class="detail-label"
-                      >{{ $t('availableTools') }}:</span
-                    >
-                    <div class="tools-tags">
-                      <span
-                        v-for="tool in server.tools"
-                        :key="tool.name"
-                        class="tool-tag"
-                      >
-                        {{ tool.name }}
-                      </span>
-                    </div>
-                  </div>
-                  <div
-                    v-else-if="server.status === 'connected'"
-                    class="no-tools"
-                  >
-                    {{ $t('noToolsAvailable') }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div v-else class="empty-mcp">
-              <component :is="Plug" :size="24" />
-              <p>{{ $t('noMCPServers') }}</p>
-              <p class="empty-hint">
-                {{ $t('addMCPHint') }}
-              </p>
-            </div>
-          </div>
-
           <!-- Word Tools Section -->
           <div class="setting-card" style="margin-top: 16px">
             <div class="list-header">
@@ -591,96 +415,22 @@ import {
   Edit2,
   Trash2,
   X,
-  Plug,
-  Power,
-  RefreshCw,
-  Wrench,
-  ChevronDown,
-  ChevronRight
+  Wrench
 } from 'lucide-vue-next'
 
 import { getLabel, getPlaceholder } from '@/utils/common'
 import { availableAPIs } from '@/utils/constant'
 import { SettingNames, settingPreset } from '@/utils/settingPreset'
 import useSettingForm from '@/utils/settingForm'
-import { useMCPManager } from '@/utils/mcpManager'
-import { MCPServer } from '@/types/mcp'
 import { getWordToolDefinitions } from '@/utils/wordTools'
 
 const router = useRouter()
 const { settingForm, settingFormKeys } = useSettingForm()
 
-const {
-  addServer,
-  removeServer,
-  getServers,
-  connectServer,
-  disconnectServer,
-  toggleServer
-} = useMCPManager()
-
 const currentTab = ref('provider')
-
-// MCP state
-const mcpServers = ref<MCPServer[]>([])
-const newMCPServer = ref({ name: '', url: '', apiKey: '' })
-const showAddMCPForm = ref(false)
-const connectingServerId = ref<string | null>(null)
-const expandedServerId = ref<string | null>(null)
 
 // Word tools list
 const wordToolsList = getWordToolDefinitions()
-
-function loadMCPServers() {
-  mcpServers.value = getServers()
-}
-
-function handleAddMCPServer() {
-  if (!newMCPServer.value.name || !newMCPServer.value.url) return
-
-  addServer({
-    name: newMCPServer.value.name,
-    url: newMCPServer.value.url.replace(/\/$/, ''),
-    apiKey: newMCPServer.value.apiKey || undefined,
-    enabled: true,
-    description: ''
-  })
-
-  newMCPServer.value = { name: '', url: '', apiKey: '' }
-  showAddMCPForm.value = false
-  loadMCPServers()
-}
-
-function handleRemoveMCPServer(serverId: string) {
-  removeServer(serverId)
-  loadMCPServers()
-}
-
-async function handleConnectServer(serverId: string) {
-  connectingServerId.value = serverId
-  try {
-    await connectServer(serverId)
-    loadMCPServers()
-  } catch (error: any) {
-    console.error('Failed to connect:', error)
-  } finally {
-    connectingServerId.value = null
-  }
-}
-
-function handleDisconnectServer(serverId: string) {
-  disconnectServer(serverId)
-  loadMCPServers()
-}
-
-function handleToggleServer(serverId: string, enabled: boolean) {
-  toggleServer(serverId, enabled)
-  loadMCPServers()
-}
-
-function toggleServerExpand(serverId: string) {
-  expandedServerId.value = expandedServerId.value === serverId ? null : serverId
-}
 
 const newCustomModel = ref<Record<string, string>>({})
 const customModelsMap = ref<Record<string, string[]>>({})
@@ -720,7 +470,7 @@ const tabs = [
   {
     id: 'tools',
     label: 'tools',
-    defaultLabel: 'Tools & MCP',
+    defaultLabel: 'Tools',
     icon: Wrench
   }
 ]
@@ -933,7 +683,6 @@ const deletePrompt = (id: string) => {
 onBeforeMount(() => {
   loadPrompts()
   loadCustomModels()
-  loadMCPServers()
   addWatch()
 })
 

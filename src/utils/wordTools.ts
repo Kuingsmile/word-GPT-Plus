@@ -1,9 +1,6 @@
-// Word Tools - Built-in tools for LLM to interact with Word document
-import { WordToolDefinition } from '@/types/mcp'
 import { tool } from '@langchain/core/tools'
 import { z } from 'zod'
 
-// Built-in Word tools
 export type WordToolName =
   | 'getSelectedText'
   | 'getDocumentContent'
@@ -16,8 +13,19 @@ export type WordToolName =
   | 'getDocumentProperties'
   | 'insertTable'
   | 'insertList'
+  | 'deleteText'
+  | 'clearFormatting'
+  | 'setFontName'
+  | 'insertPageBreak'
+  | 'getRangeInfo'
+  | 'selectText'
+  | 'insertImage'
+  | 'getTableInfo'
+  | 'insertBookmark'
+  | 'goToBookmark'
+  | 'insertContentControl'
+  | 'findText'
 
-// Tool definitions with schemas and implementations
 const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
   getSelectedText: {
     name: 'getSelectedText',
@@ -420,17 +428,448 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return `Successfully inserted ${listType} list with ${items.length} items`
       })
     }
+  },
+
+  deleteText: {
+    name: 'deleteText',
+    description:
+      'Delete the currently selected text or a specific range. If no text is selected, this will delete at the cursor position.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        direction: {
+          type: 'string',
+          description:
+            'Direction to delete if nothing selected: "Before" (backspace) or "After" (delete key)',
+          enum: ['Before', 'After']
+        }
+      },
+      required: []
+    },
+    execute: async args => {
+      const { direction = 'After' } = args
+      return Word.run(async context => {
+        const range = context.document.getSelection()
+        range.load('text')
+        await context.sync()
+
+        if (range.text && range.text.length > 0) {
+          range.delete()
+        } else {
+          if (direction === 'After') {
+            range.insertText('', 'After')
+          } else {
+            range.insertText('', 'Before')
+          }
+        }
+        await context.sync()
+        return 'Successfully deleted text'
+      })
+    }
+  },
+
+  clearFormatting: {
+    name: 'clearFormatting',
+    description:
+      'Clear all formatting from the selected text, returning it to default style.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+      required: []
+    },
+    execute: async () => {
+      return Word.run(async context => {
+        const range = context.document.getSelection()
+        range.font.bold = false
+        range.font.italic = false
+        range.font.underline = 'None'
+        range.styleBuiltIn = 'Normal'
+        await context.sync()
+        return 'Successfully cleared formatting'
+      })
+    }
+  },
+
+  setFontName: {
+    name: 'setFontName',
+    description:
+      'Set the font name/family for the selected text (e.g., Arial, Times New Roman, Calibri).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        fontName: {
+          type: 'string',
+          description:
+            'The font name to apply (e.g., "Arial", "Times New Roman", "Calibri", "Consolas")'
+        }
+      },
+      required: ['fontName']
+    },
+    execute: async args => {
+      const { fontName } = args
+      return Word.run(async context => {
+        const range = context.document.getSelection()
+        range.font.name = fontName
+        await context.sync()
+        return `Successfully set font to ${fontName}`
+      })
+    }
+  },
+
+  insertPageBreak: {
+    name: 'insertPageBreak',
+    description: 'Insert a page break at the current cursor position.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        location: {
+          type: 'string',
+          description: 'Where to insert: "Before", "After", "Start", or "End"',
+          enum: ['Before', 'After', 'Start', 'End']
+        }
+      },
+      required: []
+    },
+    execute: async args => {
+      const { location = 'After' } = args
+      return Word.run(async context => {
+        const range = context.document.getSelection()
+        // insertBreak only supports Before and After for page breaks
+        const insertLoc =
+          location === 'Start' || location === 'Before' ? 'Before' : 'After'
+        range.insertBreak('Page', insertLoc)
+        await context.sync()
+        return `Successfully inserted page break ${location.toLowerCase()}`
+      })
+    }
+  },
+
+  getRangeInfo: {
+    name: 'getRangeInfo',
+    description:
+      'Get detailed information about the current selection including text, formatting, and position.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+      required: []
+    },
+    execute: async () => {
+      return Word.run(async context => {
+        const range = context.document.getSelection()
+        range.load([
+          'text',
+          'style',
+          'font/name',
+          'font/size',
+          'font/bold',
+          'font/italic',
+          'font/underline',
+          'font/color'
+        ])
+        await context.sync()
+
+        return JSON.stringify(
+          {
+            text: range.text || '',
+            style: range.style,
+            font: {
+              name: range.font.name,
+              size: range.font.size,
+              bold: range.font.bold,
+              italic: range.font.italic,
+              underline: range.font.underline,
+              color: range.font.color
+            }
+          },
+          null,
+          2
+        )
+      })
+    }
+  },
+
+  selectText: {
+    name: 'selectText',
+    description: 'Select all text in the document or specific location.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        scope: {
+          type: 'string',
+          description: 'What to select: "All" for entire document',
+          enum: ['All']
+        }
+      },
+      required: ['scope']
+    },
+    execute: async args => {
+      const { scope } = args
+      return Word.run(async context => {
+        if (scope === 'All') {
+          const body = context.document.body
+          body.select()
+          await context.sync()
+          return 'Successfully selected all text'
+        }
+        return 'Invalid scope'
+      })
+    }
+  },
+
+  insertImage: {
+    name: 'insertImage',
+    description:
+      'Insert an image from a URL at the current cursor position. The image URL must be accessible.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        imageUrl: {
+          type: 'string',
+          description: 'The URL of the image to insert'
+        },
+        width: {
+          type: 'number',
+          description: 'Optional width in points'
+        },
+        height: {
+          type: 'number',
+          description: 'Optional height in points'
+        },
+        location: {
+          type: 'string',
+          description:
+            'Where to insert: "Before", "After", "Start", "End", or "Replace"',
+          enum: ['Before', 'After', 'Start', 'End', 'Replace']
+        }
+      },
+      required: ['imageUrl']
+    },
+    execute: async args => {
+      const { imageUrl, width, height, location = 'After' } = args
+      return Word.run(async context => {
+        const range = context.document.getSelection()
+        const image = range.insertInlinePictureFromBase64(
+          imageUrl,
+          location as Word.InsertLocation
+        )
+
+        if (width) image.width = width
+        if (height) image.height = height
+
+        await context.sync()
+        return `Successfully inserted image at ${location}`
+      })
+    }
+  },
+
+  getTableInfo: {
+    name: 'getTableInfo',
+    description:
+      'Get information about tables in the document, including row and column counts.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+      required: []
+    },
+    execute: async () => {
+      return Word.run(async context => {
+        const tables = context.document.body.tables
+        tables.load(['items'])
+        await context.sync()
+
+        const tableInfos = []
+        for (let i = 0; i < tables.items.length; i++) {
+          const table = tables.items[i]
+          table.load(['rowCount', 'values'])
+          await context.sync()
+
+          const columnCount =
+            table.values && table.values[0] ? table.values[0].length : 0
+
+          tableInfos.push({
+            index: i,
+            rowCount: table.rowCount,
+            columnCount: columnCount
+          })
+        }
+
+        return JSON.stringify(
+          {
+            tableCount: tables.items.length,
+            tables: tableInfos
+          },
+          null,
+          2
+        )
+      })
+    }
+  },
+
+  insertBookmark: {
+    name: 'insertBookmark',
+    description:
+      'Insert a bookmark at the current selection to mark a location in the document.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          description:
+            'The name of the bookmark (must be unique, no spaces allowed)'
+        }
+      },
+      required: ['name']
+    },
+    execute: async args => {
+      const { name } = args
+      return Word.run(async context => {
+        const range = context.document.getSelection()
+
+        const bookmarkName = name.replace(/\s+/g, '_')
+
+        const contentControl = range.insertContentControl()
+        contentControl.tag = `bookmark_${bookmarkName}`
+        contentControl.title = bookmarkName
+        contentControl.appearance = 'Tags'
+
+        await context.sync()
+        return `Successfully inserted bookmark: ${bookmarkName}`
+      })
+    }
+  },
+
+  goToBookmark: {
+    name: 'goToBookmark',
+    description: 'Navigate to a previously created bookmark in the document.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          description: 'The name of the bookmark to navigate to'
+        }
+      },
+      required: ['name']
+    },
+    execute: async args => {
+      const { name } = args
+      return Word.run(async context => {
+        const bookmarkName = name.replace(/\s+/g, '_')
+        const contentControls = context.document.contentControls
+        contentControls.load(['items'])
+        await context.sync()
+
+        for (const cc of contentControls.items) {
+          cc.load(['tag', 'title'])
+          await context.sync()
+
+          if (
+            cc.tag === `bookmark_${bookmarkName}` ||
+            cc.title === bookmarkName
+          ) {
+            cc.select()
+            await context.sync()
+            return `Successfully navigated to bookmark: ${bookmarkName}`
+          }
+        }
+
+        return `Bookmark not found: ${bookmarkName}`
+      })
+    }
+  },
+
+  insertContentControl: {
+    name: 'insertContentControl',
+    description:
+      'Insert a content control (a container for content) at the current selection. Useful for creating structured documents.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        title: {
+          type: 'string',
+          description: 'The title of the content control'
+        },
+        tag: {
+          type: 'string',
+          description: 'Optional tag for programmatic identification'
+        },
+        appearance: {
+          type: 'string',
+          description: 'Visual appearance of the control',
+          enum: ['BoundingBox', 'Tags', 'Hidden']
+        }
+      },
+      required: ['title']
+    },
+    execute: async args => {
+      const { title, tag, appearance = 'BoundingBox' } = args
+      return Word.run(async context => {
+        const range = context.document.getSelection()
+        const contentControl = range.insertContentControl()
+        contentControl.title = title
+        if (tag) contentControl.tag = tag
+        contentControl.appearance = appearance as Word.ContentControlAppearance
+
+        await context.sync()
+        return `Successfully inserted content control: ${title}`
+      })
+    }
+  },
+
+  findText: {
+    name: 'findText',
+    description:
+      'Find text in the document and return information about matches. Does not modify the document.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        searchText: {
+          type: 'string',
+          description: 'The text to search for'
+        },
+        matchCase: {
+          type: 'boolean',
+          description: 'Whether to match case (default: false)'
+        },
+        matchWholeWord: {
+          type: 'boolean',
+          description: 'Whether to match whole word only (default: false)'
+        }
+      },
+      required: ['searchText']
+    },
+    execute: async args => {
+      const { searchText, matchCase = false, matchWholeWord = false } = args
+      return Word.run(async context => {
+        const body = context.document.body
+        const searchResults = body.search(searchText, {
+          matchCase,
+          matchWholeWord
+        })
+        searchResults.load(['items'])
+        await context.sync()
+
+        const count = searchResults.items.length
+        return JSON.stringify(
+          {
+            searchText,
+            matchCount: count,
+            found: count > 0
+          },
+          null,
+          2
+        )
+      })
+    }
   }
 }
 
-// Convert to LangChain tools
 export function createWordTools(enabledTools?: WordToolName[]) {
   const tools = Object.entries(wordToolDefinitions)
     .filter(
       ([name]) => !enabledTools || enabledTools.includes(name as WordToolName)
     )
     .map(([, def]) => {
-      // Create zod schema from our definition
       const schemaObj: Record<string, z.ZodTypeAny> = {}
 
       for (const [propName, prop] of Object.entries(
@@ -487,12 +926,10 @@ export function createWordTools(enabledTools?: WordToolName[]) {
   return tools
 }
 
-// Get all available Word tool definitions
 export function getWordToolDefinitions(): WordToolDefinition[] {
   return Object.values(wordToolDefinitions)
 }
 
-// Get specific tool by name
 export function getWordTool(
   name: WordToolName
 ): WordToolDefinition | undefined {
