@@ -890,10 +890,6 @@ async function initData() {
   insertType.value =
     (localStorage.getItem(localStorageKey.insertType) as insertTypes) ||
     'replace'
-  useWordFormatting.value =
-    localStorage.getItem(localStorageKey.useWordFormatting) === 'true'
-  useSelectedText.value =
-    localStorage.getItem(localStorageKey.useSelectedText) === 'true'
 }
 
 onBeforeMount(() => {

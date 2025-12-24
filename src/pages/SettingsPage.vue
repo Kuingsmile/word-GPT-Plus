@@ -695,18 +695,22 @@ const addWatch = () => {
 const loadPrompts = () => {
   const stored = localStorage.getItem('savedPrompts')
   if (stored) {
-    savedPrompts.value = JSON.parse(stored)
-  } else {
-    savedPrompts.value = [
-      {
-        id: 'default',
-        name: 'Default',
-        systemPrompt: settingForm.value.systemPrompt || '',
-        userPrompt: settingForm.value.userPrompt || ''
-      }
-    ]
-    savePromptsToStorage()
+    try {
+      savedPrompts.value = JSON.parse(stored)
+      return
+    } catch {
+      localStorage.removeItem('savedPrompts')
+    }
   }
+  savedPrompts.value = [
+    {
+      id: 'default',
+      name: 'Default',
+      systemPrompt: settingForm.value.systemPrompt || '',
+      userPrompt: settingForm.value.userPrompt || ''
+    }
+  ]
+  savePromptsToStorage()
 }
 
 const savePromptsToStorage = () => {
