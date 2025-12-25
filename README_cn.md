@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/Kuingsmile/word-GPT-Plus">
-    <img src="./public/logo.svg" alt="Logo" height="100">
+    <img src="./public/logo.svg" alt="Logo" height="100" >
   </a>
 
   <h2 align="center">Word GPT Plus</h2>
@@ -34,7 +34,7 @@ Word GPT Plus 是一款将 AI 和 Agent 无缝集成到 Microsoft Word 中的插
 
 ## ✨ 功能特点
 
-- **多种 AI 模型支持**：
+- **多平台支持**：
   - **OpenAI**：最新GPT系列（兼容 DeepSeek 和其他 OpenAI 兼容接口）
   - **Azure OpenAI**：完整的 Azure 集成，支持自定义部署名称
   - **Google Gemini**：Gemini 3 Pro/Flash、Gemini 2.5 Pro/Flash、AQA
@@ -44,7 +44,7 @@ Word GPT Plus 是一款将 AI 和 Agent 无缝集成到 Microsoft Word 中的插
 
 - **智能 Agent 模式**：
   - **直接操作 Word 文档**：Agent 可以读取、写入和修改您的 Word 文档
-  - **25+ 内置工具**：网络查询和访问、插入文本、格式化内容、创建表格、管理书签、搜索替换等
+  - **多种内置工具**：网络查询和访问、插入文本、格式化内容、创建表格、管理书签、搜索替换等
   - 多步骤推理，支持对话记忆
   - 实时流式响应
   - 思考过程可视化（可折叠显示）

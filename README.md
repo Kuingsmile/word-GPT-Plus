@@ -34,7 +34,7 @@ Word GPT Plus seamlessly integrates AI and Agent directly into Microsoft Word, a
 
 ## ✨ Features
 
-- **Multiple AI Models Support** with Latest Models:
+- **Multiple Platform Support** with Latest Models:
   - **OpenAI**: Latest GPT series (compatible with DeepSeek and other OpenAI-compatible interfaces)
   - **Azure OpenAI**: Full Azure integration with custom deployment names
   - **Google Gemini**: Gemini 3 Pro/Flash, Gemini 2.5 Pro/Flash, AQA
@@ -44,7 +44,7 @@ Word GPT Plus seamlessly integrates AI and Agent directly into Microsoft Word, a
 
 - **Intelligent Agent Mode** (Powered by LangChain):
   - **Direct Word Document Manipulation**: Agent can read, write, and modify your Word documents
-  - **25+ Built-in Word Tools**: Web search, Insert text, format content, create tables, manage bookmarks, search and replace, and more
+  - **Multiple Built-in Word Tools**: Web search, Insert text, format content, create tables, manage bookmarks, search and replace, and more
   - Multi-step reasoning with conversation memory
   - Streaming responses with real-time updates
   - Thought process visualization with collapsible details
