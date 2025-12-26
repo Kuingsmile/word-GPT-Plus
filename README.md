@@ -5,7 +5,7 @@
 
   <h2 align="center">Word GPT Plus</h2>
   <p align="center">
-    Integrate AI & Agentdirectly into Microsoft Word
+    Integrate AI & Agent directly into Microsoft Word
     <br />
     <a href="https://github.com/Kuingsmile/word-GPT-Plus/blob/master/LICENSE">
       <img src="https://img.shields.io/github/license/Kuingsmile/word-GPT-Plus?style=flat-square" alt="license" />
