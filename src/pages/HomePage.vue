@@ -555,10 +555,10 @@ async function sendMessage() {
     await processChat(fullMessage, undefined)
   } catch (error: any) {
     if (error.name === 'AbortError') {
-      messageUtil.info('Generation stopped')
+      messageUtil.info(t('generationStop'))
     } else {
       console.error(error)
-      messageUtil.error('Failed to get response')
+      messageUtil.error(t('failedToResponse'))
       history.value.pop()
     }
   } finally {
@@ -579,7 +579,7 @@ async function applyQuickAction(actionKey: keyof typeof buildInPrompt) {
   })
 
   if (!selectedText) {
-    messageUtil.error('Please select text first')
+    messageUtil.error(t('selectTextPrompt'))
     return
   }
 
@@ -600,10 +600,10 @@ async function applyQuickAction(actionKey: keyof typeof buildInPrompt) {
     await processChat(userMessage, systemMessage)
   } catch (error: any) {
     if (error.name === 'AbortError') {
-      messageUtil.info('Generation stopped')
+      messageUtil.info(t('generationStop'))
     } else {
       console.error(error)
-      messageUtil.error('Failed to process action')
+      messageUtil.error(t('failedToProcessAction'))
       // Remove failed message
       history.value.pop()
     }
@@ -700,7 +700,7 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
 
   const currentConfig = providerConfigs[provider]
   if (!currentConfig) {
-    messageUtil.error('Not supported provider')
+    messageUtil.error(t('notSupportedProvider'))
     return
   }
 
@@ -762,7 +762,7 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
 
   if (errorIssue.value) {
     errorIssue.value = false
-    messageUtil.error('Something went wrong')
+    messageUtil.error(t('somethingWentWrong'))
     return
   }
 
@@ -781,7 +781,7 @@ async function insertToDocument(content: string, type: insertTypes) {
 
 function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text)
-  messageUtil.success('Copied to clipboard')
+  messageUtil.success(t('copied'))
 }
 
 function checkApiKey() {
@@ -793,7 +793,7 @@ function checkApiKey() {
     groqAPIKey: settingForm.value.groqAPIKey
   }
   if (!checkAuth(auth)) {
-    messageUtil.error('Set API Key or Access Token first')
+    messageUtil.error(t('noAPIKey'))
     return false
   }
   return true

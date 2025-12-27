@@ -1,16 +1,20 @@
 <template>
   <Teleport to="body">
-    <Transition name="message-fade">
-      <div v-if="visible" class="message-container" :class="`message-${type}`">
-        <div class="message-content">
-          <div class="message-icon">
+    <Transition name="toast-slide">
+      <div v-if="visible" class="toast-container" :class="`toast-${type}`">
+        <div class="toast-content">
+          <div class="toast-icon">
             <AlertCircle v-if="type === 'error'" />
             <CheckCircle v-if="type === 'success'" />
             <Info v-if="type === 'info'" />
             <AlertTriangle v-if="type === 'warning'" />
           </div>
-          <span class="message-text">{{ message }}</span>
+          <span class="toast-text">{{ message }}</span>
         </div>
+        <div
+          class="toast-progress"
+          :style="{ animationDuration: `${duration}ms` }"
+        ></div>
       </div>
     </Transition>
   </Teleport>
@@ -32,110 +36,171 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const visible = ref(false)
-defineEmits(['close'])
+const emit = defineEmits(['close'])
+
 onMounted(() => {
   visible.value = true
   if (props.duration > 0) {
     setTimeout(() => {
       visible.value = false
+      setTimeout(() => emit('close'), 300)
     }, props.duration)
   }
 })
 </script>
 
 <style scoped>
-.message-container {
+.toast-container {
   position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 16px;
+  right: 16px;
   z-index: 9999;
-  padding: 12px 20px;
+  padding: 8px 10px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
-  align-items: center;
-  min-width: 80vw;
-  max-width: 100vw;
-  backdrop-filter: blur(10px);
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 20px;
+  max-width: 360px;
+  backdrop-filter: blur(12px);
+  overflow: hidden;
 }
 
-.message-content {
+.toast-content {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
 }
 
-.message-icon {
+.toast-icon {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  width: 18px;
+  height: 18px;
 }
 
-.message-icon svg {
-  width: 20px;
-  height: 20px;
+.toast-icon svg {
+  width: 18px;
+  height: 18px;
 }
 
-.message-text {
+.toast-text {
   font-size: 13px;
-  line-height: 1.3;
+  line-height: 1.4;
   flex: 1;
+  font-weight: 500;
+  word-break: break-word;
 }
 
-.message-error {
-  background: rgba(254, 226, 226, 0.95);
-  border: 1px solid #fca5a5;
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  transform-origin: left;
+  animation: toast-progress linear forwards;
+}
+
+@keyframes toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+.toast-error {
+  background: linear-gradient(
+    135deg,
+    rgba(254, 226, 226, 0.98) 0%,
+    rgba(254, 226, 226, 0.95) 100%
+  );
+  border: 1px solid rgba(252, 165, 165, 0.8);
   color: #991b1b;
 }
 
-.message-error .message-icon svg {
+.toast-error .toast-icon svg {
   color: #dc2626;
 }
 
-.message-success {
-  background: rgba(220, 252, 231, 0.95);
-  border: 1px solid #86efac;
+.toast-error .toast-progress {
+  background: linear-gradient(90deg, #dc2626, #ef4444);
+}
+
+.toast-success {
+  background: linear-gradient(
+    135deg,
+    rgba(220, 252, 231, 0.98) 0%,
+    rgba(220, 252, 231, 0.95) 100%
+  );
+  border: 1px solid rgba(134, 239, 172, 0.8);
   color: #14532d;
 }
 
-.message-success .message-icon svg {
+.toast-success .toast-icon svg {
   color: #16a34a;
 }
 
-.message-info {
-  background: rgba(224, 242, 254, 0.95);
-  border: 1px solid #93c5fd;
+.toast-success .toast-progress {
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+}
+
+.toast-info {
+  background: linear-gradient(
+    135deg,
+    rgba(224, 242, 254, 0.98) 0%,
+    rgba(224, 242, 254, 0.95) 100%
+  );
+  border: 1px solid rgba(147, 197, 253, 0.8);
   color: #1e3a8a;
 }
 
-.message-info .message-icon svg {
+.toast-info .toast-icon svg {
   color: #2563eb;
 }
 
-.message-warning {
-  background: rgba(254, 243, 199, 0.95);
-  border: 1px solid #fcd34d;
+.toast-info .toast-progress {
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+}
+
+.toast-warning {
+  background: linear-gradient(
+    135deg,
+    rgba(254, 243, 199, 0.98) 0%,
+    rgba(254, 243, 199, 0.95) 100%
+  );
+  border: 1px solid rgba(252, 211, 77, 0.8);
   color: #78350f;
 }
 
-.message-warning .message-icon svg {
+.toast-warning .toast-icon svg {
   color: #f59e0b;
 }
 
-.message-fade-enter-active,
-.message-fade-leave-active {
-  transition: all 0.3s ease;
+.toast-warning .toast-progress {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
 }
 
-.message-fade-enter-from {
-  opacity: 0;
-  transform: translateX(-50%) translateY(-20px);
+.toast-slide-enter-active,
+.toast-slide-leave-active {
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-.message-fade-leave-to {
+.toast-slide-enter-from {
   opacity: 0;
-  transform: translateX(-50%) translateY(-20px);
+  transform: translateX(100%) scale(0.8);
+}
+
+.toast-slide-leave-to {
+  opacity: 0;
+  transform: translateX(100%) scale(0.9);
 }
 </style>
