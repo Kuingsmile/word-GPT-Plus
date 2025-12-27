@@ -1,10 +1,10 @@
 import { Ref } from 'vue'
-import { WordFormatter } from '../utils/wordFormatter'
+import { WordFormatter } from '@/utils/wordFormatter'
 
 export function insertResult(result: string, insertType: Ref): void {
   const paragraph = result
+    .replace(/(\r\n|\n|\r)/g, '\n')
     .replace(/\n+/g, '\n')
-    .replace(/\r+/g, '\n')
     .split('\n')
   switch (insertType.value) {
     case 'replace':

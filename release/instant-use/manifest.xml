@@ -17,7 +17,7 @@
   <DefaultLocale>en-US</DefaultLocale>
   <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
   <DisplayName DefaultValue="GPT Plus" />
-  <Description DefaultValue="A chatGPT add in for Word, enables you to work with AI"/>
+  <Description DefaultValue="Integrate the Power of AI Directly into Word"/>
 
   <!-- Icon for your add-in. Used on installation screens and the add-ins dialog. -->
   <IconUrl DefaultValue="https://word.msq.pub/assets/icon-32.png" />
