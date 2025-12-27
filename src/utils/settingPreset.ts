@@ -82,6 +82,8 @@ export const Setting_Names = [
 
 export type SettingNames = (typeof Setting_Names)[number]
 
+type keyOfLocalStorageKey = keyof typeof localStorageKey
+
 // Helper functions
 const createStorageFuncs = (key: string, defaultValue: number) => ({
   getFunc: () => forceNumber(localStorage.getItem(key)) || defaultValue,
@@ -90,7 +92,7 @@ const createStorageFuncs = (key: string, defaultValue: number) => ({
 
 const inputSetting = (
   defaultValue: string,
-  saveKey?: keyof typeof localStorageKey
+  saveKey?: keyOfLocalStorageKey
 ): ISettingOption<string> => ({
   defaultValue,
   saveKey,
@@ -99,7 +101,7 @@ const inputSetting = (
 
 const inputNumSetting = (
   defaultValue: number,
-  saveKey: keyof typeof localStorageKey,
+  saveKey: keyOfLocalStorageKey,
   stepStyle: 'temperature' | 'maxTokens'
 ): ISettingOption<number> => ({
   defaultValue,
@@ -111,7 +113,7 @@ const inputNumSetting = (
 
 const selectSetting = (
   defaultValue: string,
-  saveKey: keyof typeof localStorageKey,
+  saveKey: keyOfLocalStorageKey,
   optionList: string[]
 ): ISettingOption<string> => ({
   defaultValue,
@@ -122,8 +124,8 @@ const selectSetting = (
 })
 
 const customModelsetting = (
-  saveKey: keyof typeof localStorageKey,
-  oldKey: keyof typeof localStorageKey
+  saveKey: keyOfLocalStorageKey,
+  oldKey: keyOfLocalStorageKey
 ): ISettingOption<string[]> => ({
   defaultValue: [],
   saveKey,

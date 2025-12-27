@@ -1,5 +1,6 @@
 import { ref, Ref } from 'vue'
 import { Setting_Names, SettingNames, settingPreset } from './settingPreset'
+import { localStorageKey } from './enum'
 
 type SettingForm = {
   [K in SettingNames]: (typeof settingPreset)[K]['defaultValue']
@@ -25,7 +26,7 @@ function initializeSettings(): Record<string, SettingValue> {
   // Special case for legacy support
   if (settings.api === 'palm') {
     settings.api = 'gemini'
-    localStorage.setItem('api', 'gemini')
+    localStorage.setItem(localStorageKey.api, 'gemini')
   }
 
   return settings
