@@ -1,7 +1,8 @@
 import { Ref } from 'vue'
+import { Messages } from '@langchain/langgraph'
 
 export interface BaseChatCompletionOptions {
-  messages: any
+  messages: Messages
   result: Ref<string>
   errorIssue: Ref<boolean>
   loading: Ref<boolean>
@@ -10,11 +11,6 @@ export interface BaseChatCompletionOptions {
   abortSignal?: AbortSignal
   threadId: string
   onStream: (text: string) => void
-}
-
-export interface CompletionResponse {
-  content: string
-  role?: string
 }
 
 export interface OpenAIOptions extends BaseChatCompletionOptions {
@@ -60,9 +56,10 @@ export type ProviderOptions =
   | GeminiOptions
   | AzureOptions
 
+type supportedProviders = 'official' | 'ollama' | 'groq' | 'gemini' | 'azure'
 // Agent options with tools support
 export interface AgentOptions extends BaseChatCompletionOptions {
-  provider: 'official' | 'ollama' | 'groq' | 'gemini' | 'azure'
+  provider: supportedProviders
   tools?: any[]
   onToolCall?: (toolName: string, args: any) => void
   onToolResult?: (toolName: string, result: string) => void

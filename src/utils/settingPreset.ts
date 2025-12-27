@@ -20,7 +20,7 @@ const getCustomModels = (key: string, oldKey: string): string[] => {
     }
   }
   const oldModel = localStorage.getItem(oldKey)
-  if (oldModel && oldModel.trim()) {
+  if (oldModel?.trim()) {
     const models = [oldModel]
     localStorage.setItem(key, JSON.stringify(models))
     return models
@@ -28,68 +28,70 @@ const getCustomModels = (key: string, oldKey: string): string[] => {
   return []
 }
 
-const saveCustomModels = (key: string, models: string[]) => {
+const saveCustomModels = (key: string, models: string[]) =>
   localStorage.setItem(key, JSON.stringify(models))
-}
 
-interface ISettingOption {
-  defaultValue: string | number | string[]
+interface ISettingOption<T> {
+  defaultValue: T
   saveKey?: string
   type?: componentType
   stepStyle?: 'temperature' | 'maxTokens'
   optionObj?: { label: string; value: string }[]
   optionList?: string[]
-  saveFunc?: (value: any) => void
-  getFunc?: () => any
+  saveFunc?: (value: T) => void
+  getFunc?: () => T
 }
 
-export type SettingNames =
-  | 'api'
-  | 'localLanguage'
-  | 'replyLanguage'
-  | 'officialAPIKey'
-  | 'officialBasePath'
-  | 'officialCustomModel'
-  | 'officialCustomModels'
-  | 'officialTemperature'
-  | 'officialMaxTokens'
-  | 'officialModelSelect'
-  | 'azureAPIKey'
-  | 'azureAPIEndpoint'
-  | 'azureDeploymentName'
-  | 'azureTemperature'
-  | 'azureMaxTokens'
-  | 'azureAPIVersion'
-  | 'geminiAPIKey'
-  | 'geminiCustomModel'
-  | 'geminiCustomModels'
-  | 'geminiModelSelect'
-  | 'geminiTemperature'
-  | 'geminiMaxTokens'
-  | 'ollamaEndpoint'
-  | 'ollamaCustomModel'
-  | 'ollamaCustomModels'
-  | 'ollamaModelSelect'
-  | 'ollamaTemperature'
-  | 'groqAPIKey'
-  | 'groqTemperature'
-  | 'groqMaxTokens'
-  | 'groqModelSelect'
-  | 'groqCustomModel'
-  | 'groqCustomModels'
-  | 'systemPrompt'
-  | 'userPrompt'
+export const Setting_Names = [
+  'api',
+  'localLanguage',
+  'replyLanguage',
+  'officialAPIKey',
+  'officialBasePath',
+  'officialCustomModel',
+  'officialCustomModels',
+  'officialTemperature',
+  'officialMaxTokens',
+  'officialModelSelect',
+  'azureAPIKey',
+  'azureAPIEndpoint',
+  'azureDeploymentName',
+  'azureTemperature',
+  'azureMaxTokens',
+  'azureAPIVersion',
+  'geminiAPIKey',
+  'geminiCustomModel',
+  'geminiCustomModels',
+  'geminiModelSelect',
+  'geminiTemperature',
+  'geminiMaxTokens',
+  'ollamaEndpoint',
+  'ollamaCustomModel',
+  'ollamaCustomModels',
+  'ollamaModelSelect',
+  'ollamaTemperature',
+  'groqAPIKey',
+  'groqTemperature',
+  'groqMaxTokens',
+  'groqModelSelect',
+  'groqCustomModel',
+  'groqCustomModels',
+  'systemPrompt',
+  'userPrompt'
+] as const
+
+export type SettingNames = (typeof Setting_Names)[number]
 
 // Helper functions
-const createStorageFuncs = (key: string, defaultValue: any) => ({
+const createStorageFuncs = (key: string, defaultValue: number) => ({
   getFunc: () => forceNumber(localStorage.getItem(key)) || defaultValue,
-  saveFunc: (value: any) => localStorage.setItem(key, value.toString())
+  saveFunc: (value: number) => localStorage.setItem(key, value.toString())
 })
 
 const inputSetting = (
   defaultValue: string,
   saveKey?: keyof typeof localStorageKey
-): ISettingOption => ({
+): ISettingOption<string> => ({
   defaultValue,
   saveKey,
   type: 'input'
@@ -99,10 +101,10 @@ const inputNumSetting = (
   defaultValue: number,
   saveKey: keyof typeof localStorageKey,
   stepStyle: 'temperature' | 'maxTokens'
-) => ({
+): ISettingOption<number> => ({
   defaultValue,
   saveKey,
-  type: 'inputNum' as componentType,
+  type: 'inputNum',
   stepStyle,
   ...createStorageFuncs(localStorageKey[saveKey], defaultValue)
 })
@@ -111,19 +113,27 @@ const selectSetting = (
   defaultValue: string,
   saveKey: keyof typeof localStorageKey,
   optionList: string[]
-) => ({
+): ISettingOption<string> => ({
   defaultValue,
   saveKey,
-  type: 'select' as componentType,
+  type: 'select',
   optionList,
-  getFunc: () => {
-    return localStorage.getItem(localStorageKey[saveKey]) || defaultValue
-  }
+  getFunc: () => localStorage.getItem(localStorageKey[saveKey]) || defaultValue
 })
 
-const defaultInputSetting = inputSetting('')
+const customModelsetting = (
+  saveKey: keyof typeof localStorageKey,
+  oldKey: keyof typeof localStorageKey
+): ISettingOption<string[]> => ({
+  defaultValue: [],
+  saveKey,
+  getFunc: () =>
+    getCustomModels(localStorageKey[saveKey], localStorageKey[oldKey]),
+  saveFunc: (value: string[]) =>
+    saveCustomModels(localStorageKey[saveKey], value)
+})
 
-export const settingPreset: Record<SettingNames, ISettingOption> = {
+export const settingPreset = {
   api: {
     ...inputSetting('official'),
     type: 'select',
@@ -146,39 +156,22 @@ export const settingPreset: Record<SettingNames, ISettingOption> = {
   officialAPIKey: inputSetting('', 'apiKey'),
   officialBasePath: inputSetting('', 'basePath'),
   officialCustomModel: inputSetting('', 'customModel'),
-  officialCustomModels: {
-    defaultValue: [],
-    saveKey: 'customModels',
-    getFunc: () =>
-      getCustomModels(
-        localStorageKey.customModels,
-        localStorageKey.customModel
-      ),
-    saveFunc: (value: string[]) =>
-      saveCustomModels(localStorageKey.customModels, value)
-  },
+  officialCustomModels: customModelsetting('customModels', 'customModel'),
   officialTemperature: inputNumSetting(0.7, 'temperature', 'temperature'),
   officialMaxTokens: inputNumSetting(800, 'maxTokens', 'maxTokens'),
   officialModelSelect: selectSetting('gpt-5', 'model', availableModels),
-  azureAPIKey: defaultInputSetting,
-  azureAPIEndpoint: defaultInputSetting,
-  azureDeploymentName: defaultInputSetting,
+  azureAPIKey: inputSetting(''),
+  azureAPIEndpoint: inputSetting(''),
+  azureDeploymentName: inputSetting(''),
   azureTemperature: inputNumSetting(0.7, 'azureTemperature', 'temperature'),
   azureMaxTokens: inputNumSetting(800, 'azureMaxTokens', 'maxTokens'),
-  azureAPIVersion: defaultInputSetting,
-  geminiAPIKey: defaultInputSetting,
-  geminiCustomModel: defaultInputSetting,
-  geminiCustomModels: {
-    defaultValue: [],
-    saveKey: 'geminiCustomModels',
-    getFunc: () =>
-      getCustomModels(
-        localStorageKey.geminiCustomModels,
-        localStorageKey.geminiCustomModel
-      ),
-    saveFunc: (value: string[]) =>
-      saveCustomModels(localStorageKey.geminiCustomModels, value)
-  },
+  azureAPIVersion: inputSetting(''),
+  geminiAPIKey: inputSetting(''),
+  geminiCustomModel: inputSetting(''),
+  geminiCustomModels: customModelsetting(
+    'geminiCustomModels',
+    'geminiCustomModel'
+  ),
   geminiModelSelect: selectSetting(
     'gemini-3-pro-preview',
     'geminiModel',
@@ -186,26 +179,19 @@ export const settingPreset: Record<SettingNames, ISettingOption> = {
   ),
   geminiTemperature: inputNumSetting(0.7, 'geminiTemperature', 'temperature'),
   geminiMaxTokens: inputNumSetting(800, 'geminiMaxTokens', 'maxTokens'),
-  ollamaEndpoint: defaultInputSetting,
-  ollamaCustomModel: defaultInputSetting,
-  ollamaCustomModels: {
-    defaultValue: [],
-    saveKey: 'ollamaCustomModels',
-    getFunc: () =>
-      getCustomModels(
-        localStorageKey.ollamaCustomModels,
-        localStorageKey.ollamaCustomModel
-      ),
-    saveFunc: (value: string[]) =>
-      saveCustomModels(localStorageKey.ollamaCustomModels, value)
-  },
+  ollamaEndpoint: inputSetting(''),
+  ollamaCustomModel: inputSetting(''),
+  ollamaCustomModels: customModelsetting(
+    'ollamaCustomModels',
+    'ollamaCustomModel'
+  ),
   ollamaModelSelect: selectSetting(
     'qwen3:latest',
     'ollamaModel',
     availableModelsForOllama
   ),
   ollamaTemperature: inputNumSetting(0.7, 'ollamaTemperature', 'temperature'),
-  groqAPIKey: defaultInputSetting,
+  groqAPIKey: inputSetting(''),
   groqTemperature: inputNumSetting(0.5, 'groqTemperature', 'temperature'),
   groqMaxTokens: inputNumSetting(1024, 'groqMaxTokens', 'maxTokens'),
   groqModelSelect: selectSetting(
@@ -213,24 +199,8 @@ export const settingPreset: Record<SettingNames, ISettingOption> = {
     'groqModel',
     availableModelsForGroq
   ),
-  groqCustomModel: defaultInputSetting,
-  groqCustomModels: {
-    defaultValue: [],
-    saveKey: 'groqCustomModels',
-    getFunc: () =>
-      getCustomModels(
-        localStorageKey.groqCustomModels,
-        localStorageKey.groqCustomModel
-      ),
-    saveFunc: (value: string[]) =>
-      saveCustomModels(localStorageKey.groqCustomModels, value)
-  },
-  systemPrompt: {
-    ...inputSetting('', 'defaultSystemPrompt'),
-    type: 'input'
-  },
-  userPrompt: {
-    ...inputSetting('', 'defaultPrompt'),
-    type: 'input'
-  }
-}
+  groqCustomModel: inputSetting(''),
+  groqCustomModels: customModelsetting('groqCustomModels', 'groqCustomModel'),
+  systemPrompt: inputSetting('', 'defaultSystemPrompt'),
+  userPrompt: inputSetting('', 'defaultPrompt')
+} as const satisfies Record<SettingNames, ISettingOption<any>>

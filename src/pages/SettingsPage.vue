@@ -484,13 +484,17 @@ import {
 
 import { getLabel, getPlaceholder } from '@/utils/common'
 import { availableAPIs, buildInPrompt } from '@/utils/constant'
-import { SettingNames, settingPreset } from '@/utils/settingPreset'
+import {
+  Setting_Names,
+  SettingNames,
+  settingPreset
+} from '@/utils/settingPreset'
 import useSettingForm from '@/utils/settingForm'
 import { getWordToolDefinitions } from '@/utils/wordTools'
 import { getGeneralToolDefinitions } from '@/utils/generalTools'
 
 const router = useRouter()
-const { settingForm, settingFormKeys } = useSettingForm()
+const settingForm = useSettingForm()
 
 const currentTab = ref('provider')
 
@@ -619,7 +623,7 @@ const loadCustomModels = () => {
   platforms.forEach(platform => {
     const key = getCustomModelsKey(platform)
     if (key && settingPreset[key].getFunc) {
-      customModelsMap.value[platform] = settingPreset[key].getFunc!()
+      customModelsMap.value[platform] = settingPreset[key].getFunc() as string[]
     }
   })
 }
@@ -637,7 +641,7 @@ const addCustomModel = (platform: string) => {
 
   if (!customModelsMap.value[platform].includes(model)) {
     customModelsMap.value[platform].push(model)
-    settingPreset[key].saveFunc!(customModelsMap.value[platform])
+    ;(settingPreset[key] as any).saveFunc(customModelsMap.value[platform])
     newCustomModel.value[platform] = ''
   }
 }
@@ -649,14 +653,14 @@ const removeCustomModel = (platform: string, model: string) => {
   customModelsMap.value[platform] = customModelsMap.value[platform].filter(
     m => m !== model
   )
-  settingPreset[key].saveFunc!(customModelsMap.value[platform])
+  ;(settingPreset[key] as any).saveFunc(customModelsMap.value[platform])
 
   // If the removed model was selected, switch to first available
   const selectKey = `${platform}ModelSelect` as SettingNames
   if (settingForm.value[selectKey] === model) {
     const options = getMergedModelOptions(platform)
     if (options.length > 0) {
-      settingForm.value[selectKey] = options[0]
+      ;(settingForm.value as any)[selectKey] = options[0]
     }
   }
 }
@@ -674,17 +678,27 @@ const hasCustomModelsSupport = (platform: string) => {
 }
 
 const addWatch = () => {
-  settingFormKeys.forEach(key => {
+  Setting_Names.forEach(key => {
     watch(
       () => settingForm.value[key],
       () => {
         if (settingPreset[key].saveFunc) {
-          settingPreset[key].saveFunc!(settingForm.value[key])
+          ;(settingPreset[key] as any).saveFunc(settingForm.value[key])
+          console.log(
+            `Saved setting ${key} via custom saveFunc with value: ${
+              settingForm.value[key]
+            }`
+          )
           return
         }
         localStorage.setItem(
           settingPreset[key].saveKey || key,
-          settingForm.value[key]
+          settingForm.value[key] as string
+        )
+        console.log(
+          `Saved setting ${key} to localStorage with value: ${
+            settingForm.value[key]
+          }`
         )
       },
       { deep: true }

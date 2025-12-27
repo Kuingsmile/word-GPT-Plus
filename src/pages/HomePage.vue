@@ -242,7 +242,7 @@ import { createGeneralTools, GeneralToolName } from '@/utils/generalTools'
 const router = useRouter()
 const { t } = useI18n()
 
-const { settingForm } = useSettingForm()
+const settingForm = useSettingForm()
 
 interface SavedPrompt {
   id: string
@@ -786,7 +786,7 @@ function copyToClipboard(text: string) {
 
 function checkApiKey() {
   const auth = {
-    type: settingForm.value.api,
+    type: settingForm.value.api as supportedPlatforms,
     apiKey: settingForm.value.officialAPIKey,
     azureAPIKey: settingForm.value.azureAPIKey,
     geminiAPIKey: settingForm.value.geminiAPIKey,
