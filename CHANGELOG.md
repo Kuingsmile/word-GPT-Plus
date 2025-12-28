@@ -1,3 +1,35 @@
+##  (2025-12-28)
+
+* :arrow_up: Upgrade(custom): upgrade deps 659831b
+* :bug: Fix(custom): fix an issue that custom models can't be used d290374
+* :bug: Fix(custom): fix css error in setting page 6c2223f
+* :bug: Fix(custom): handle JSON parsing error for saved prompts e035f1a
+* :construction: WIP(custom): re-write with langchain 1982842
+* :construction: WIP(custom): remove mcp related code, due to cors issue 90a0175
+* :hammer: Refactor(custom): use langchain to refactor, remove agent mode for completely rewrite af0d083
+* :pencil: Docs(custom): fix typo in readme 9a522a1
+* :pencil: Docs(custom): update readme 8f6508b
+* :sparkles: Feature(custom): add gpt-5.2 into model list 8ac70b0
+* :sparkles: Feature(custom): add prompt selection functionality 395d574
+* :sparkles: Feature(custom): add web fetch and search tool c9ca3c0
+* :sparkles: Feature(custom): add word tools and mcp support, a rewritten agent mode 36e28d8
+* :sparkles: Feature(custom): allow user to enable/disable tools 7a090d0
+* :sparkles: Feature(custom): allow user to modify built-in prompts c606042
+* :sparkles: Feature(custom): hide system prompt in chat 2e0f905
+* :sparkles: Feature(custom): imporve type for setting preset list 90cf9cd
+* :sparkles: Feature(custom): optimize i18n fields ecc9893
+* :sparkles: Feature(custom): optimize message and add new i18n fields f9b5f02
+* :sparkles: Feature(custom): rename the baseurl label a3a5849
+* :sparkles: Feature(custom): support add multiple custom models a18116d, closes #111
+* :sparkles: Feature(custom): support remove contents in think tag 8f6fd9e
+* :sparkles: Feature(custom): update actions/checkout version and correct icon path in HTML and manife 50ad8db
+* :sparkles: Feature(custom): update built-in prompts for better performance faa79e0
+* :sparkles: Feature(custom): update deps, model list and lint rules c06d1a2
+* :zap: Perf(custom): replace enum with object for localStorage keys and update related references bdaef28
+* Merge pull request #118 from Kuingsmile/renovate/node-22.x f60d084, closes #118
+
+
+
 ##  (2025-11-13)
 
 * :arrow_up: Upgrade(custom): upgrade google sdk fc6c8e3
