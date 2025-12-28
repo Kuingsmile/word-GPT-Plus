@@ -49,14 +49,21 @@ export interface AzureOptions extends BaseChatCompletionOptions {
   azureAPIVersion?: string
 }
 
+export interface MistralOptions extends BaseChatCompletionOptions {
+  provider: 'mistral'
+  mistralModel: string
+  mistralAPIKey: string
+}
+
 export type ProviderOptions =
   | OpenAIOptions
   | OllamaOptions
   | GroqOptions
   | GeminiOptions
   | AzureOptions
+  | MistralOptions
 
-type supportedProviders = 'official' | 'ollama' | 'groq' | 'gemini' | 'azure'
+type supportedProviders = 'official' | 'ollama' | 'groq' | 'gemini' | 'azure' | 'mistral'
 // Agent options with tools support
 export interface AgentOptions extends BaseChatCompletionOptions {
   provider: supportedProviders
@@ -80,4 +87,6 @@ export interface AgentOptions extends BaseChatCompletionOptions {
   azureAPIEndpoint?: string
   azureDeploymentName?: string
   azureAPIVersion?: string
+  mistralModel?: string
+  mistralAPIKey?: string
 }

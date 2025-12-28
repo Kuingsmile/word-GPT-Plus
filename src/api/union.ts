@@ -4,6 +4,7 @@ import {
   GroqOptions,
   OllamaOptions,
   OpenAIOptions,
+  MistralOptions,
   ProviderOptions,
   AgentOptions
 } from './types'
@@ -65,6 +66,18 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
       azureOpenAIEndpoint: opts.azureAPIEndpoint,
       azureOpenAIApiDeploymentName: opts.azureDeploymentName,
       azureOpenAIApiVersion: opts.azureAPIVersion ?? '2024-10-01'
+    })
+  },
+
+  mistral: (opts: MistralOptions) => {
+    return new ChatOpenAI({
+      modelName: opts.mistralModel || 'mistral-large-latest',
+      configuration: {
+        apiKey: opts.mistralAPIKey,
+        baseURL: 'https://api.mistral.ai/v1'
+      },
+      temperature: opts.temperature ?? 0.7,
+      maxTokens: opts.maxTokens ?? 1024
     })
   }
 }

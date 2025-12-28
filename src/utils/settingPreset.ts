@@ -4,7 +4,8 @@ import {
   availableModels,
   availableModelsForGemini,
   availableModelsForGroq,
-  availableModelsForOllama
+  availableModelsForOllama,
+  availableModelsForMistral
 } from './constant'
 import { localStorageKey } from './enum'
 
@@ -76,6 +77,12 @@ export const Setting_Names = [
   'groqModelSelect',
   'groqCustomModel',
   'groqCustomModels',
+  'mistralAPIKey',
+  'mistralTemperature',
+  'mistralMaxTokens',
+  'mistralModelSelect',
+  'mistralCustomModel',
+  'mistralCustomModels',
   'systemPrompt',
   'userPrompt'
 ] as const
@@ -203,6 +210,16 @@ export const settingPreset = {
   ),
   groqCustomModel: inputSetting(''),
   groqCustomModels: customModelsetting('groqCustomModels', 'groqCustomModel'),
+  mistralAPIKey: inputSetting(''),
+  mistralTemperature: inputNumSetting(0.7, 'mistralTemperature', 'temperature'),
+  mistralMaxTokens: inputNumSetting(1024, 'mistralMaxTokens', 'maxTokens'),
+  mistralModelSelect: selectSetting(
+    'mistral-large-latest',
+    'mistralModel',
+    availableModelsForMistral
+  ),
+  mistralCustomModel: inputSetting(''),
+  mistralCustomModels: customModelsetting('mistralCustomModels', 'mistralCustomModel'),
   systemPrompt: inputSetting('', 'defaultSystemPrompt'),
   userPrompt: inputSetting('', 'defaultPrompt')
 } as const satisfies Record<SettingNames, ISettingOption<any>>

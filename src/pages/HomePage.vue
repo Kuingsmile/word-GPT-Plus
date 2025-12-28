@@ -429,6 +429,10 @@ const currentModelOptions = computed(() => {
       presetOptions = settingPreset.groqModelSelect.optionList || []
       customModels = getCustomModels('groqCustomModels', 'groqCustomModel')
       break
+    case 'mistral':
+      presetOptions = settingPreset.mistralModelSelect.optionList || []
+      customModels = getCustomModels('mistralCustomModels', 'mistralCustomModel')
+      break
     case 'azure':
       return []
     default:
@@ -449,6 +453,8 @@ const currentModelSelect = computed({
         return settingForm.value.ollamaModelSelect
       case 'groq':
         return settingForm.value.groqModelSelect
+      case 'mistral':
+        return settingForm.value.mistralModelSelect
       case 'azure':
         return settingForm.value.azureDeploymentName
       default:
@@ -472,6 +478,10 @@ const currentModelSelect = computed({
       case 'groq':
         settingForm.value.groqModelSelect = value
         localStorage.setItem(localStorageKey.groqModel, value)
+        break
+      case 'mistral':
+        settingForm.value.mistralModelSelect = value
+        localStorage.setItem(localStorageKey.mistralModel, value)
         break
       case 'azure':
         settingForm.value.azureDeploymentName = value
@@ -695,6 +705,13 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
       ollamaEndpoint: settings.ollamaEndpoint,
       ollamaModel: settings.ollamaModelSelect,
       temperature: settings.ollamaTemperature
+    },
+    mistral: {
+      provider: 'mistral',
+      mistralAPIKey: settings.mistralAPIKey,
+      mistralModel: settings.mistralModelSelect,
+      maxTokens: settings.mistralMaxTokens,
+      temperature: settings.mistralTemperature
     }
   }
 

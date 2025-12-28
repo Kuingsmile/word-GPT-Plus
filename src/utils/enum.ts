@@ -42,6 +42,13 @@ export const localStorageKey = {
   groqModel: 'groqModel',
   groqCustomModel: 'groqCustomModel',
   groqCustomModels: 'groqCustomModels',
+  // mistral api
+  mistralAPIKey: 'mistralAPIKey',
+  mistralTemperature: 'mistralTemperature',
+  mistralMaxTokens: 'mistralMaxTokens',
+  mistralModel: 'mistralModel',
+  mistralCustomModel: 'mistralCustomModel',
+  mistralCustomModels: 'mistralCustomModels',
   // proxy
   enableProxy: 'enableProxy',
   proxy: 'proxy',
