@@ -74,7 +74,10 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
       modelName: opts.mistralModel || 'mistral-large-latest',
       configuration: {
         apiKey: opts.mistralAPIKey,
-        baseURL: 'https://api.mistral.ai/v1'
+        baseURL: 'https://api.mistral.ai/v1',
+        dangerouslyAllowBrowser: true,
+        defaultHeaders: {},
+        defaultQuery: undefined
       },
       temperature: opts.temperature ?? 0.7,
       maxTokens: opts.maxTokens ?? 1024
