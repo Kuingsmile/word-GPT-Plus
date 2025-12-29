@@ -813,8 +813,12 @@ function checkApiKey() {
     apiKey: settingForm.value.officialAPIKey,
     azureAPIKey: settingForm.value.azureAPIKey,
     geminiAPIKey: settingForm.value.geminiAPIKey,
-    groqAPIKey: settingForm.value.groqAPIKey
+    groqAPIKey: settingForm.value.groqAPIKey,
+    mistralAPIKey: settingForm.value.mistralAPIKey
   }
+
+  console.log('DEBUG checkApiKey:', auth)
+
   if (!checkAuth(auth)) {
     messageUtil.error(t('noAPIKey'))
     return false

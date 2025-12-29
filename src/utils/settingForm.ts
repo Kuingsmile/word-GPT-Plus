@@ -11,6 +11,8 @@ type SettingValue = string | number | string[]
 function initializeSettings(): Record<string, SettingValue> {
   const settings: Record<string, SettingValue> = {}
 
+  console.log('DEBUG initializeSettings: Starting initialization')
+
   for (const key of Setting_Names) {
     const preset = settingPreset[key]
 
@@ -20,6 +22,16 @@ function initializeSettings(): Record<string, SettingValue> {
       const storageKey = preset.saveKey || key
       const storedValue = localStorage.getItem(storageKey)
       settings[key] = storedValue ?? preset.defaultValue
+
+      // Debug Mistral settings
+      if (key.startsWith('mistral')) {
+        console.log(`DEBUG initializeSettings: ${key}`, {
+          storageKey,
+          storedValue,
+          defaultValue: preset.defaultValue,
+          finalValue: settings[key]
+        })
+      }
     }
   }
 
@@ -28,6 +40,13 @@ function initializeSettings(): Record<string, SettingValue> {
     settings.api = 'gemini'
     localStorage.setItem(localStorageKey.api, 'gemini')
   }
+
+  console.log('DEBUG initializeSettings: Mistral settings loaded:', {
+    mistralAPIKey: settings.mistralAPIKey,
+    mistralModelSelect: settings.mistralModelSelect,
+    mistralTemperature: settings.mistralTemperature,
+    mistralMaxTokens: settings.mistralMaxTokens
+  })
 
   return settings
 }
