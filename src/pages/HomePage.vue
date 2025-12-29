@@ -715,11 +715,17 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
     }
   }
 
+  console.log('DEBUG: Provider:', provider)
+  console.log('DEBUG: Settings mistralAPIKey:', settings.mistralAPIKey)
+  console.log('DEBUG: All settings:', settings)
+
   const currentConfig = providerConfigs[provider]
   if (!currentConfig) {
     messageUtil.error(t('notSupportedProvider'))
     return
   }
+
+  console.log('DEBUG: Current config for', provider, ':', currentConfig)
 
   history.value.push(new AIMessage(''))
 
