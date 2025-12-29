@@ -51,8 +51,17 @@ function initializeSettings(): Record<string, SettingValue> {
   return settings
 }
 
+// Singleton instance - shared across all components
+let settingFormInstance: Ref<SettingForm> | null = null
+
 function useSettingForm() {
-  return ref(initializeSettings()) as Ref<SettingForm>
+  if (!settingFormInstance) {
+    console.log('DEBUG: Creating NEW settingForm instance')
+    settingFormInstance = ref(initializeSettings()) as Ref<SettingForm>
+  } else {
+    console.log('DEBUG: Reusing EXISTING settingForm instance')
+  }
+  return settingFormInstance
 }
 
 export default useSettingForm
