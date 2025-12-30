@@ -24,15 +24,13 @@ class WordFormatter {
     let inCodeBlock = false
     let codeBlockContent = ''
 
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i]
-
+    for (const line of lines) {
       if (line.trim().startsWith('```')) {
         if (inCodeBlock) {
           if (codeBlockContent.trim()) {
             parts.push({
               text: codeBlockContent.trim(),
-              style: 'code'
+              style: 'code',
             })
           }
           codeBlockContent = ''
@@ -53,8 +51,8 @@ class WordFormatter {
         const level = headingMatch[1].length
         const text = headingMatch[2]
         parts.push({
-          text: text,
-          style: `heading${level}` as any
+          text,
+          style: `heading${level}` as any,
         })
         continue
       }
@@ -62,8 +60,8 @@ class WordFormatter {
       if (line.trim().startsWith('>')) {
         const text = line.replace(/^\s*>\s*/, '')
         parts.push({
-          text: text,
-          style: 'quote'
+          text,
+          style: 'quote',
         })
         continue
       }
@@ -74,9 +72,9 @@ class WordFormatter {
         const indent = line.search(/\d/)
         const level = Math.floor(indent / 2) + 1
         parts.push({
-          text: text,
+          text,
           listType: 'number',
-          listLevel: level
+          listLevel: level,
         })
         continue
       }
@@ -87,9 +85,9 @@ class WordFormatter {
         const indent = line.search(/[-*+]/)
         const level = Math.floor(indent / 2) + 1
         parts.push({
-          text: text,
+          text,
           listType: 'bullet',
-          listLevel: level
+          listLevel: level,
         })
         continue
       }
@@ -110,7 +108,7 @@ class WordFormatter {
 
           lineParts.push({
             text: match[1],
-            style: 'code'
+            style: 'code',
           })
 
           processedLastIndex = match.index + match[0].length
@@ -140,8 +138,7 @@ class WordFormatter {
   private static parseInlineFormatting(text: string): FormatPart[] {
     const parts: FormatPart[] = []
 
-    const regex =
-      /(\*\*\*(.+?)\*\*\*|\*\*(.+?)\*\*|\*(.+?)\*|(.+?)(?=\*\*\*|\*\*|\*|$))/g
+    const regex = /(\*\*\*(.+?)\*\*\*|\*\*(.+?)\*\*|\*(.+?)\*|(.+?)(?=\*\*\*|\*\*|\*|$))/g
     let match
 
     while ((match = regex.exec(text)) !== null) {
@@ -159,16 +156,13 @@ class WordFormatter {
     }
 
     if (parts.length === 0 && text.trim()) {
-      parts.push({ text: text })
+      parts.push({ text })
     }
 
     return parts
   }
 
-  static async insertFormattedResult(
-    result: string,
-    insertType: Ref
-  ): Promise<void> {
+  static async insertFormattedResult(result: string, insertType: Ref): Promise<void> {
     const content = result
     if (!content || typeof content !== 'string') return
 
@@ -190,29 +184,21 @@ class WordFormatter {
         insertionPoint.insertParagraph('', 'Before')
       }
 
-      for (let i = 0; i < formatParts.length; i++) {
-        const part = formatParts[i]
+      for (const formatPart of formatParts) {
+        if (formatPart.listType) {
+          const listParagraph = insertionPoint.insertParagraph(formatPart.text, 'After')
 
-        if (part.listType) {
-          const listParagraph = insertionPoint.insertParagraph(
-            part.text,
-            'After'
-          )
-
-          if (part.listType === 'bullet') {
-            listParagraph.listItem.level = (part.listLevel || 1) - 1
-          } else if (part.listType === 'number') {
-            listParagraph.listItem.level = (part.listLevel || 1) - 1
+          if (formatPart.listType === 'bullet') {
+            listParagraph.listItem.level = (formatPart.listLevel || 1) - 1
+          } else if (formatPart.listType === 'number') {
+            listParagraph.listItem.level = (formatPart.listLevel || 1) - 1
           }
 
           insertionPoint = listParagraph.getRange('End')
         } else {
-          const paragraph = insertionPoint.insertParagraph(
-            part.text || '',
-            'After'
-          )
+          const paragraph = insertionPoint.insertParagraph(formatPart.text || '', 'After')
 
-          switch (part.style) {
+          switch (formatPart.style) {
             case 'heading1':
               paragraph.styleBuiltIn = 'Heading1'
               break
@@ -256,14 +242,8 @@ class WordFormatter {
     })
   }
 
-  static async insertPlainResult(
-    result: string,
-    insertType: Ref
-  ): Promise<void> {
-    const paragraph = result
-      .replace(/\n+/g, '\n')
-      .replace(/\r+/g, '\n')
-      .split('\n')
+  static async insertPlainResult(result: string, insertType: Ref): Promise<void> {
+    const paragraph = result.replace(/\n+/g, '\n').replace(/\r+/g, '\n').split('\n')
 
     switch (insertType.value) {
       case 'replace':

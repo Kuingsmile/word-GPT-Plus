@@ -11,18 +11,15 @@
           </div>
           <span class="toast-text">{{ message }}</span>
         </div>
-        <div
-          class="toast-progress"
-          :style="{ animationDuration: `${duration}ms` }"
-        ></div>
+        <div class="toast-progress" :style="{ animationDuration: `${duration}ms` }"></div>
       </div>
     </Transition>
   </Teleport>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
-import { AlertCircle, CheckCircle, Info, AlertTriangle } from 'lucide-vue-next'
+import { AlertCircle, AlertTriangle, CheckCircle, Info } from 'lucide-vue-next'
+import { onMounted, ref } from 'vue'
 
 interface Props {
   message: string
@@ -32,7 +29,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'info',
-  duration: 3000
+  duration: 3000,
 })
 
 const visible = ref(false)
@@ -118,11 +115,7 @@ onMounted(() => {
 }
 
 .toast-error {
-  background: linear-gradient(
-    135deg,
-    rgba(254, 226, 226, 0.98) 0%,
-    rgba(254, 226, 226, 0.95) 100%
-  );
+  background: linear-gradient(135deg, rgba(254, 226, 226, 0.98) 0%, rgba(254, 226, 226, 0.95) 100%);
   border: 1px solid rgba(252, 165, 165, 0.8);
   color: #991b1b;
 }
@@ -136,11 +129,7 @@ onMounted(() => {
 }
 
 .toast-success {
-  background: linear-gradient(
-    135deg,
-    rgba(220, 252, 231, 0.98) 0%,
-    rgba(220, 252, 231, 0.95) 100%
-  );
+  background: linear-gradient(135deg, rgba(220, 252, 231, 0.98) 0%, rgba(220, 252, 231, 0.95) 100%);
   border: 1px solid rgba(134, 239, 172, 0.8);
   color: #14532d;
 }
@@ -154,11 +143,7 @@ onMounted(() => {
 }
 
 .toast-info {
-  background: linear-gradient(
-    135deg,
-    rgba(224, 242, 254, 0.98) 0%,
-    rgba(224, 242, 254, 0.95) 100%
-  );
+  background: linear-gradient(135deg, rgba(224, 242, 254, 0.98) 0%, rgba(224, 242, 254, 0.95) 100%);
   border: 1px solid rgba(147, 197, 253, 0.8);
   color: #1e3a8a;
 }
@@ -172,11 +157,7 @@ onMounted(() => {
 }
 
 .toast-warning {
-  background: linear-gradient(
-    135deg,
-    rgba(254, 243, 199, 0.98) 0%,
-    rgba(254, 243, 199, 0.95) 100%
-  );
+  background: linear-gradient(135deg, rgba(254, 243, 199, 0.98) 0%, rgba(254, 243, 199, 0.95) 100%);
   border: 1px solid rgba(252, 211, 77, 0.8);
   color: #78350f;
 }

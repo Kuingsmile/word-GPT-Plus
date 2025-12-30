@@ -1,6 +1,7 @@
-import { ref, Ref } from 'vue'
-import { Setting_Names, SettingNames, settingPreset } from './settingPreset'
+import { Ref, ref } from 'vue'
+
 import { localStorageKey } from './enum'
+import { Setting_Names, SettingNames, settingPreset } from './settingPreset'
 
 type SettingForm = {
   [K in SettingNames]: (typeof settingPreset)[K]['defaultValue']

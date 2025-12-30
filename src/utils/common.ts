@@ -28,28 +28,25 @@ export function forceNumber(val: any): number {
   return Number(val) || 0
 }
 
-export function getOptionList(
-  map: Record<string, string>,
-  from: 'key' | 'value' = 'key'
-) {
+export function getOptionList(map: Record<string, string>, from: 'key' | 'value' = 'key') {
   return from === 'key'
     ? Object.keys(map).map(key => ({
         label: key,
-        value: map[key]
+        value: map[key],
       }))
     : Object.values(map).map(key => ({
         label: key,
-        value: key
+        value: key,
       }))
 }
 
 export const optionLists = {
   localLanguageList: [
     { label: 'English', value: 'en' },
-    { label: '简体中文', value: 'zh-cn' }
+    { label: '简体中文', value: 'zh-cn' },
   ],
   apiList: getOptionList(availableAPIs),
-  replyLanguageList: getOptionList(languageMap, 'value')
+  replyLanguageList: getOptionList(languageMap, 'value'),
 }
 
 export const getLabel = (key: string) => `${key}Label`

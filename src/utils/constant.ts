@@ -40,7 +40,7 @@ export const languageMap: IStringKeyMap = {
   mr: 'मराठी',
   ta: 'தமிழ்',
   te: 'తెలుగు',
-  ur: 'اردو'
+  ur: 'اردو',
 }
 
 export const availableAPIs: IStringKeyMap = {
@@ -48,7 +48,7 @@ export const availableAPIs: IStringKeyMap = {
   azure: 'azure',
   gemini: 'gemini',
   ollama: 'ollama',
-  groq: 'groq'
+  groq: 'groq',
 }
 
 // official API 可用的模型
@@ -64,7 +64,7 @@ export const availableModels: string[] = [
   'gpt-4.1-nano',
   'gpt-4o',
   'o1',
-  'o3'
+  'o3',
 ]
 
 // Gemini API 可用的模型
@@ -76,7 +76,7 @@ export const availableModelsForGemini: string[] = [
   'gemini-2.5-flash-lite',
   'gemini-2.0-flash',
   'gemini-2.0-flash-lite',
-  'aqa'
+  'aqa',
 ]
 
 // Ollama API 可用的模型
@@ -87,7 +87,7 @@ export const availableModelsForOllama: string[] = [
   'gpt-oss:latest',
   'kimi-k2:1t-cloud',
   'gemini-3-flash-preview:latest',
-  'ministral-3:latest'
+  'ministral-3:latest',
 ]
 
 export const availableModelsForGroq: string[] = [
@@ -103,7 +103,7 @@ export const availableModelsForGroq: string[] = [
   'meta-llama/llama-prompt-guard-2-22m',
   'meta-llama/llama-prompt-guard-2-86m',
   'moonshotai/kimi-k2-instruct-0905',
-  'qwen/qwen3-32b'
+  'qwen/qwen3-32b',
 ]
 export const buildInPrompt = {
   translate: {
@@ -117,7 +117,7 @@ export const buildInPrompt = {
       2. If the text is technical, use appropriate terminology.
       3. OUTPUT ONLY the translated text. Do not include "Here is the translation" or any explanations.
       
-      Text: ${text}`
+      Text: ${text}`,
   },
 
   polish: {
@@ -134,7 +134,7 @@ export const buildInPrompt = {
       1. Respond in ${language}.
       2. OUTPUT ONLY the polished text without any commentary.
       
-      Text: ${text}`
+      Text: ${text}`,
   },
 
   academic: {
@@ -151,7 +151,7 @@ export const buildInPrompt = {
       1. Respond in ${language}.
       2. OUTPUT ONLY the revised text. No pre-amble or meta-talk.
       
-      Text: ${text}`
+      Text: ${text}`,
   },
 
   summary: {
@@ -167,7 +167,7 @@ export const buildInPrompt = {
       1. Respond in ${language}.
       2. OUTPUT ONLY the summary.
       
-      Text: ${text}`
+      Text: ${text}`,
   },
 
   grammar: {
@@ -184,8 +184,8 @@ export const buildInPrompt = {
       2. Otherwise, provide ONLY the corrected text without explaining the changes.
       3. Respond in ${language}.
       
-      Text: ${text}`
-  }
+      Text: ${text}`,
+  },
 }
 
 export const getBuiltInPrompt = () => {
@@ -202,12 +202,9 @@ export const getBuiltInPrompt = () => {
       const typedKey = key as keyof typeof buildInPrompt
       if (result[typedKey]) {
         result[typedKey] = {
-          system: (language: string) =>
-            customPrompts[key].system.replace(/\$\{language\}/g, language),
+          system: (language: string) => customPrompts[key].system.replace(/\$\{language\}/g, language),
           user: (text: string, language: string) =>
-            customPrompts[key].user
-              .replace(/\$\{text\}/g, text)
-              .replace(/\$\{language\}/g, language)
+            customPrompts[key].user.replace(/\$\{text\}/g, text).replace(/\$\{language\}/g, language),
         }
       }
     })

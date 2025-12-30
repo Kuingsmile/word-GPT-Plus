@@ -1,72 +1,116 @@
 import js from '@eslint/js'
-import globals from 'globals'
-import pluginVue from 'eslint-plugin-vue'
-import tseslint from '@typescript-eslint/eslint-plugin'
-import tsparser from '@typescript-eslint/parser'
-import vueParser from 'vue-eslint-parser'
-import pluginUnicorn from 'eslint-plugin-unicorn'
-import pluginPrettier from 'eslint-plugin-prettier/recommended'
+import { defineConfig } from 'eslint/config'
 import configPrettier from 'eslint-config-prettier'
+import pluginPrettier from 'eslint-plugin-prettier/recommended'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import pluginUnicorn from 'eslint-plugin-unicorn'
+import pluginVue from 'eslint-plugin-vue'
+import globals from 'globals'
+import tseslint from 'typescript-eslint'
+import vueParser from 'vue-eslint-parser'
 
-export default [
+export default defineConfig(
   {
-    ignores: [
-      '**/dist/**',
-      '**/node_modules/**',
-      'src/**/*.d.ts',
-      'src/**/*.js',
-      'release/**'
-    ]
+    ignores: ['**/dist/**', '**/node_modules/**', 'release/**'],
   },
   js.configs.recommended,
   ...pluginVue.configs['flat/recommended'],
+  ...tseslint.configs.recommended,
+  ...tseslint.configs.stylistic,
   {
-    files: ['**/*.ts', '**/*.vue'],
+    files: ['**/*.ts', '**/*.d.ts'],
+    languageOptions: {
+      parser: tseslint.parser,
+      sourceType: 'module',
+      ecmaVersion: 'latest',
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        Office: 'readonly',
+      },
+    },
+  },
+  {
+    files: ['**/*.vue'],
     languageOptions: {
       parser: vueParser,
       parserOptions: {
-        parser: tsparser,
+        parser: tseslint.parser, // Vue 脚本部分使用 TS 解析器
         extraFileExtensions: ['.vue'],
         sourceType: 'module',
-        ecmaVersion: 'latest'
+        ecmaVersion: 'latest',
       },
       globals: {
         ...globals.browser,
         ...globals.node,
-        Office: 'readonly'
-      }
+        Office: 'readonly',
+      },
     },
+  },
+  {
+    files: ['**/*.ts', '**/*.d.ts', '**/*.vue', 'eslint.config.js', 'vite.config.js', 'async_hook.js'],
     plugins: {
-      '@typescript-eslint': tseslint,
-      unicorn: pluginUnicorn
+      'simple-import-sort': simpleImportSort,
+      unicorn: pluginUnicorn,
     },
     rules: {
-      ...tseslint.configs.recommended.rules,
       'unicorn/prefer-node-protocol': 'error',
       'unicorn/prefer-module': 'error',
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      eqeqeq: 'error',
+      'no-caller': 'error',
+      'no-constant-condition': ['error', { checkLoops: false }],
+      'no-eval': 'error',
+      'no-extra-bind': 'error',
+      'no-new-func': 'error',
+      'no-new-wrappers': 'error',
+      'no-throw-literal': 'error',
+      'no-undef-init': 'error',
+      'no-var': 'error',
+      'object-shorthand': 'error',
+      'prefer-const': 'error',
+      'prefer-object-spread': 'error',
+      'unicode-bom': ['error', 'never'],
       'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        { argsIgnorePattern: '^_' }
-      ],
+      'no-extra-boolean-cast': 'off',
+      'no-case-declarations': 'off',
+      'no-cond-assign': 'off',
+      'no-control-regex': 'off',
+      'no-inner-declarations': 'off',
+      'no-empty': 'off',
+      // @typescript-eslint/eslint-plugin
+      '@typescript-eslint/no-unused-expressions': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off',
+      '@typescript-eslint/no-empty-function': 'off',
+      '@typescript-eslint/no-namespace': 'off',
+      '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
+      '@typescript-eslint/no-var-requires': 'off',
+      '@typescript-eslint/no-empty-interface': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off', // {} is a totally useful and valid type.
+      '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/no-inferrable-types': 'off',
       '@typescript-eslint/no-this-alias': 'off',
+      // Pending https://github.com/typescript-eslint/typescript-eslint/issues/4820
+      '@typescript-eslint/prefer-optional-chain': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'vue/no-v-html': 'off',
       'vue/multi-word-component-names': 'off',
       'no-undef': 'off', // TypeScript handles this
-      'no-async-promise-executor': 'off'
-    }
+      'no-async-promise-executor': 'off',
+    },
   },
-  configPrettier,
-  pluginPrettier,
   {
     files: ['*.config.js'],
     languageOptions: {
       globals: {
-        ...globals.node
-      }
-    }
-  }
-]
+        ...globals.node,
+      },
+    },
+  },
+  configPrettier,
+  pluginPrettier,
+)

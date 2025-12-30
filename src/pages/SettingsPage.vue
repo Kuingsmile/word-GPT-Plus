@@ -32,20 +32,11 @@
           <div class="setting-card">
             <div class="setting-item">
               <div class="setting-info">
-                <label class="setting-label">{{
-                  $t('localLanguageLabel')
-                }}</label>
+                <label class="setting-label">{{ $t('localLanguageLabel') }}</label>
               </div>
               <div class="setting-control">
-                <select
-                  v-model="settingForm.localLanguage"
-                  class="select-input"
-                >
-                  <option
-                    v-for="item in settingPreset.localLanguage.optionObj"
-                    :key="item.value"
-                    :value="item.value"
-                  >
+                <select v-model="settingForm.localLanguage" class="select-input">
+                  <option v-for="item in settingPreset.localLanguage.optionObj" :key="item.value" :value="item.value">
                     {{ item.label }}
                   </option>
                 </select>
@@ -56,20 +47,11 @@
 
             <div class="setting-item">
               <div class="setting-info">
-                <label class="setting-label">{{
-                  $t('replyLanguageLabel')
-                }}</label>
+                <label class="setting-label">{{ $t('replyLanguageLabel') }}</label>
               </div>
               <div class="setting-control">
-                <select
-                  v-model="settingForm.replyLanguage"
-                  class="select-input"
-                >
-                  <option
-                    v-for="item in settingPreset.replyLanguage.optionObj"
-                    :key="item.value"
-                    :value="item.value"
-                  >
+                <select v-model="settingForm.replyLanguage" class="select-input">
+                  <option v-for="item in settingPreset.replyLanguage.optionObj" :key="item.value" :value="item.value">
                     {{ item.label }}
                   </option>
                 </select>
@@ -87,11 +69,7 @@
               </div>
               <div style="width: 100%">
                 <select v-model="settingForm.api" class="select-input">
-                  <option
-                    v-for="item in settingPreset.api.optionObj"
-                    :key="item.value"
-                    :value="item.value"
-                  >
+                  <option v-for="item in settingPreset.api.optionObj" :key="item.value" :value="item.value">
                     {{ item.label.replace('official', 'OpenAI') }}
                   </option>
                 </select>
@@ -113,15 +91,10 @@
 
             <div class="setting-card">
               <!-- Input Settings -->
-              <div
-                v-for="(item, index) in getApiInputSettings(platform)"
-                :key="item"
-              >
+              <div v-for="(item, index) in getApiInputSettings(platform)" :key="item">
                 <div class="setting-item">
                   <div class="setting-info">
-                    <label class="setting-label">{{
-                      $t(getLabel(item))
-                    }}</label>
+                    <label class="setting-label">{{ $t(getLabel(item)) }}</label>
                   </div>
                   <div class="setting-control full-width">
                     <input
@@ -132,23 +105,15 @@
                     />
                   </div>
                 </div>
-                <div
-                  v-if="index < getApiInputSettings(platform).length - 1"
-                  class="setting-divider"
-                />
+                <div v-if="index < getApiInputSettings(platform).length - 1" class="setting-divider" />
               </div>
 
               <!-- Custom Models Management -->
               <div v-if="hasCustomModelsSupport(platform)">
-                <div
-                  v-if="getApiInputSettings(platform).length > 0"
-                  class="setting-divider"
-                />
+                <div v-if="getApiInputSettings(platform).length > 0" class="setting-divider" />
                 <div class="setting-item">
                   <div class="setting-info">
-                    <label class="setting-label">{{
-                      $t('customModelsLabel')
-                    }}</label>
+                    <label class="setting-label">{{ $t('customModelsLabel') }}</label>
                   </div>
                   <div class="setting-control left-gap">
                     <div style="display: flex; gap: 8px; margin-bottom: 8px">
@@ -159,31 +124,17 @@
                         :placeholder="$t('customModelPlaceholder')"
                         @keyup.enter="addCustomModel(platform)"
                       />
-                      <button
-                        class="add-button"
-                        style="white-space: nowrap"
-                        @click="addCustomModel(platform)"
-                      >
+                      <button class="add-button" style="white-space: nowrap" @click="addCustomModel(platform)">
                         <component :is="Plus" :size="16" />
                       </button>
                     </div>
                     <div
-                      v-if="
-                        customModelsMap[platform] &&
-                        customModelsMap[platform].length > 0
-                      "
+                      v-if="customModelsMap[platform] && customModelsMap[platform].length > 0"
                       style="display: flex; flex-wrap: wrap; gap: 6px"
                     >
-                      <span
-                        v-for="model in customModelsMap[platform]"
-                        :key="model"
-                        class="custom-model-tag"
-                      >
+                      <span v-for="model in customModelsMap[platform]" :key="model" class="custom-model-tag">
                         {{ model }}
-                        <button
-                          class="remove-tag-btn"
-                          @click="removeCustomModel(platform, model)"
-                        >
+                        <button class="remove-tag-btn" @click="removeCustomModel(platform, model)">
                           <component :is="X" :size="12" />
                         </button>
                       </span>
@@ -195,28 +146,16 @@
               <!-- Select Settings -->
               <div v-for="item in getApiSelectSettings(platform)" :key="item">
                 <div
-                  v-if="
-                    getApiInputSettings(platform).length > 0 ||
-                    hasCustomModelsSupport(platform)
-                  "
+                  v-if="getApiInputSettings(platform).length > 0 || hasCustomModelsSupport(platform)"
                   class="setting-divider"
                 />
                 <div class="setting-item">
                   <div class="setting-info">
-                    <label class="setting-label">{{
-                      $t(getLabel(item))
-                    }}</label>
+                    <label class="setting-label">{{ $t(getLabel(item)) }}</label>
                   </div>
                   <div style="width: 100%">
-                    <select
-                      v-model="settingForm[item as SettingNames]"
-                      class="select-input"
-                    >
-                      <option
-                        v-for="option in getMergedModelOptions(platform)"
-                        :key="option"
-                        :value="option"
-                      >
+                    <select v-model="settingForm[item as SettingNames]" class="select-input">
+                      <option v-for="option in getMergedModelOptions(platform)" :key="option" :value="option">
                         {{ option }}
                       </option>
                     </select>
@@ -229,9 +168,7 @@
                 <div class="setting-divider" />
                 <div class="setting-item">
                   <div class="setting-info">
-                    <label class="setting-label">{{
-                      $t(getLabel(item))
-                    }}</label>
+                    <label class="setting-label">{{ $t(getLabel(item)) }}</label>
                   </div>
                   <div class="setting-control">
                     <input
@@ -264,11 +201,7 @@
               </button>
             </div>
 
-            <div
-              v-for="prompt in savedPrompts"
-              :key="prompt.id"
-              class="prompt-item"
-            >
+            <div v-for="prompt in savedPrompts" :key="prompt.id" class="prompt-item">
               <div class="prompt-header">
                 <div class="prompt-title-row">
                   <input
@@ -281,11 +214,7 @@
                   <span v-else class="prompt-name">{{ prompt.name }}</span>
                 </div>
                 <div class="prompt-actions">
-                  <button
-                    class="icon-button"
-                    :title="$t('edit') || 'Edit'"
-                    @click="startEditPrompt(prompt)"
-                  >
+                  <button class="icon-button" :title="$t('edit') || 'Edit'" @click="startEditPrompt(prompt)">
                     <component :is="Edit2" :size="14" />
                   </button>
                   <button
@@ -328,8 +257,7 @@
 
               <div v-else class="prompt-preview">
                 <p class="preview-text">
-                  {{ prompt.systemPrompt.substring(0, 100)
-                  }}{{ prompt.systemPrompt.length > 100 ? '...' : '' }}
+                  {{ prompt.systemPrompt.substring(0, 100) }}{{ prompt.systemPrompt.length > 100 ? '...' : '' }}
                 </p>
               </div>
             </div>
@@ -350,11 +278,7 @@
             </p>
 
             <div class="word-tools-list compact">
-              <div
-                v-for="tool in wordToolsList"
-                :key="tool.name"
-                class="word-tool-item compact"
-              >
+              <div v-for="tool in wordToolsList" :key="tool.name" class="word-tool-item compact">
                 <input
                   :id="'tool-' + tool.name"
                   type="checkbox"
@@ -363,13 +287,8 @@
                   @change="toggleTool(tool.name, !isGeneralTool(tool.name))"
                 />
                 <component :is="Wrench" :size="14" class="tool-icon-inline" />
-                <div
-                  class="tool-info-compact"
-                  @click="toggleTool(tool.name, !isGeneralTool(tool.name))"
-                >
-                  <label :for="'tool-' + tool.name" class="tool-name-compact">{{
-                    $t(`wordTool_${tool.name}`)
-                  }}</label>
+                <div class="tool-info-compact" @click="toggleTool(tool.name, !isGeneralTool(tool.name))">
+                  <label :for="'tool-' + tool.name" class="tool-name-compact">{{ $t(`wordTool_${tool.name}`) }}</label>
                   <span class="tool-description-compact">
                     {{ $t(`wordTool_${tool.name}_desc`) }}
                   </span>
@@ -391,17 +310,13 @@
               {{
                 $t('builtinPromptsDescription', {
                   language: '${language}',
-                  text: '${text}'
+                  text: '${text}',
                 }) ||
                 'Customize the system and user prompts for built-in tools like Translate, Polish, Academic, Summary, and Grammar.'
               }}
             </p>
 
-            <div
-              v-for="(promptConfig, key) in builtInPromptsData"
-              :key="key"
-              class="builtin-prompt-item"
-            >
+            <div v-for="(promptConfig, key) in builtInPromptsData" :key="key" class="builtin-prompt-item">
               <div class="prompt-header">
                 <div class="prompt-title-row">
                   <span class="builtin-prompt-name">{{ $t(key) || key }}</span>
@@ -409,15 +324,10 @@
                 <div class="prompt-actions">
                   <button
                     class="icon-button"
-                    :title="
-                      editingBuiltinPromptKey === key ? $t('save') : $t('edit')
-                    "
+                    :title="editingBuiltinPromptKey === key ? $t('save') : $t('edit')"
                     @click="toggleEditBuiltinPrompt(key)"
                   >
-                    <component
-                      :is="editingBuiltinPromptKey === key ? Plus : Edit2"
-                      :size="14"
-                    />
+                    <component :is="editingBuiltinPromptKey === key ? Plus : Edit2" :size="14" />
                   </button>
                   <button
                     v-if="isBuiltinPromptModified(key)"
@@ -467,31 +377,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onBeforeMount, watch } from 'vue'
+import { ArrowLeft, Cpu, Edit2, Globe, MessageSquare, Plus, Settings, Trash2, Wrench, X } from 'lucide-vue-next'
+import { onBeforeMount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import {
-  ArrowLeft,
-  Globe,
-  Cpu,
-  MessageSquare,
-  Plus,
-  Edit2,
-  Trash2,
-  X,
-  Wrench,
-  Settings
-} from 'lucide-vue-next'
 
 import { getLabel, getPlaceholder } from '@/utils/common'
 import { availableAPIs, buildInPrompt } from '@/utils/constant'
-import {
-  Setting_Names,
-  SettingNames,
-  settingPreset
-} from '@/utils/settingPreset'
-import useSettingForm from '@/utils/settingForm'
-import { getWordToolDefinitions } from '@/utils/wordTools'
 import { getGeneralToolDefinitions } from '@/utils/generalTools'
+import useSettingForm from '@/utils/settingForm'
+import { Setting_Names, SettingNames, settingPreset } from '@/utils/settingPreset'
+import { getWordToolDefinitions } from '@/utils/wordTools'
 
 const router = useRouter()
 const settingForm = useSettingForm()
@@ -499,10 +394,7 @@ const settingForm = useSettingForm()
 const currentTab = ref('provider')
 
 // Word tools list
-const wordToolsList = [
-  ...getGeneralToolDefinitions(),
-  ...getWordToolDefinitions()
-]
+const wordToolsList = [...getGeneralToolDefinitions(), ...getWordToolDefinitions()]
 
 const newCustomModel = ref<Record<string, string>>({})
 const customModelsMap = ref<Record<string, string[]>>({})
@@ -521,7 +413,7 @@ const editingPrompt = ref<Prompt>({
   id: '',
   name: '',
   systemPrompt: '',
-  userPrompt: ''
+  userPrompt: '',
 })
 
 // Built-in prompts management
@@ -530,19 +422,14 @@ interface BuiltinPromptConfig {
   user: (text: string, language: string) => string
 }
 
-type BuiltinPromptKey =
-  | 'translate'
-  | 'polish'
-  | 'academic'
-  | 'summary'
-  | 'grammar'
+type BuiltinPromptKey = 'translate' | 'polish' | 'academic' | 'summary' | 'grammar'
 
 const builtInPromptsData = ref<Record<BuiltinPromptKey, BuiltinPromptConfig>>({
   translate: { ...buildInPrompt.translate },
   polish: { ...buildInPrompt.polish },
   academic: { ...buildInPrompt.academic },
   summary: { ...buildInPrompt.summary },
-  grammar: { ...buildInPrompt.grammar }
+  grammar: { ...buildInPrompt.grammar },
 })
 
 const editingBuiltinPromptKey = ref<BuiltinPromptKey | ''>('')
@@ -551,7 +438,7 @@ const editingBuiltinPrompt = ref<{
   user: string
 }>({
   system: '',
-  user: ''
+  user: '',
 })
 
 const originalBuiltInPrompts = { ...buildInPrompt }
@@ -566,50 +453,44 @@ const tabs = [
     id: 'provider',
     label: 'apiProvider',
     defaultLabel: 'API Provider',
-    icon: Cpu
+    icon: Cpu,
   },
   {
     id: 'prompts',
     label: 'prompts',
     defaultLabel: 'Prompts',
-    icon: MessageSquare
+    icon: MessageSquare,
   },
   {
     id: 'builtinPrompts',
     label: 'builtinPrompts',
     defaultLabel: 'Built-in Prompts',
-    icon: Settings
+    icon: Settings,
   },
   {
     id: 'tools',
     label: 'tools',
     defaultLabel: 'Tools',
-    icon: Wrench
-  }
+    icon: Wrench,
+  },
 ]
 
 const getApiInputSettings = (platform: string) => {
   return Object.keys(settingForm.value).filter(
     key =>
-      key.startsWith(platform) &&
-      settingPreset[key as SettingNames].type === 'input' &&
-      !key.endsWith('CustomModel')
+      key.startsWith(platform) && settingPreset[key as SettingNames].type === 'input' && !key.endsWith('CustomModel'),
   )
 }
 
 const getApiNumSettings = (platform: string) => {
   return Object.keys(settingForm.value).filter(
-    key =>
-      key.startsWith(platform) &&
-      settingPreset[key as SettingNames].type === 'inputNum'
+    key => key.startsWith(platform) && settingPreset[key as SettingNames].type === 'inputNum',
   )
 }
 
 const getApiSelectSettings = (platform: string) => {
   return Object.keys(settingForm.value).filter(
-    key =>
-      key.startsWith(platform) &&
-      settingPreset[key as SettingNames].type === 'select'
+    key => key.startsWith(platform) && settingPreset[key as SettingNames].type === 'select',
   )
 }
 
@@ -650,9 +531,7 @@ const removeCustomModel = (platform: string, model: string) => {
   const key = getCustomModelsKey(platform)
   if (!key) return
 
-  customModelsMap.value[platform] = customModelsMap.value[platform].filter(
-    m => m !== model
-  )
+  customModelsMap.value[platform] = customModelsMap.value[platform].filter(m => m !== model)
   ;(settingPreset[key] as any).saveFunc(customModelsMap.value[platform])
 
   // If the removed model was selected, switch to first available
@@ -684,24 +563,13 @@ const addWatch = () => {
       () => {
         if (settingPreset[key].saveFunc) {
           ;(settingPreset[key] as any).saveFunc(settingForm.value[key])
-          console.log(
-            `Saved setting ${key} via custom saveFunc with value: ${
-              settingForm.value[key]
-            }`
-          )
+          console.log(`Saved setting ${key} via custom saveFunc with value: ${settingForm.value[key]}`)
           return
         }
-        localStorage.setItem(
-          settingPreset[key].saveKey || key,
-          settingForm.value[key] as string
-        )
-        console.log(
-          `Saved setting ${key} to localStorage with value: ${
-            settingForm.value[key]
-          }`
-        )
+        localStorage.setItem(settingPreset[key].saveKey || key, settingForm.value[key] as string)
+        console.log(`Saved setting ${key} to localStorage with value: ${settingForm.value[key]}`)
       },
-      { deep: true }
+      { deep: true },
     )
   })
 }
@@ -721,8 +589,8 @@ const loadPrompts = () => {
       id: 'default',
       name: 'Default',
       systemPrompt: settingForm.value.systemPrompt || '',
-      userPrompt: settingForm.value.userPrompt || ''
-    }
+      userPrompt: settingForm.value.userPrompt || '',
+    },
   ]
   savePromptsToStorage()
 }
@@ -736,7 +604,7 @@ const addNewPrompt = () => {
     id: `prompt_${Date.now()}`,
     name: `Prompt ${savedPrompts.value.length + 1}`,
     systemPrompt: '',
-    userPrompt: ''
+    userPrompt: '',
   }
   savedPrompts.value.push(newPrompt)
   savePromptsToStorage()
@@ -749,9 +617,7 @@ const startEditPrompt = (prompt: Prompt) => {
 }
 
 const savePromptEdit = () => {
-  const index = savedPrompts.value.findIndex(
-    p => p.id === editingPromptId.value
-  )
+  const index = savedPrompts.value.findIndex(p => p.id === editingPromptId.value)
   if (index !== -1) {
     savedPrompts.value[index] = { ...editingPrompt.value }
     savePromptsToStorage()
@@ -783,12 +649,9 @@ const loadBuiltInPrompts = () => {
         const typedKey = key as BuiltinPromptKey
         if (builtInPromptsData.value[typedKey]) {
           builtInPromptsData.value[typedKey] = {
-            system: (language: string) =>
-              customPrompts[key].system.replace('${language}', language),
+            system: (language: string) => customPrompts[key].system.replace('${language}', language),
             user: (text: string, language: string) =>
-              customPrompts[key].user
-                .replace('${text}', text)
-                .replace('${language}', language)
+              customPrompts[key].user.replace('${text}', text).replace('${language}', language),
           }
         }
       })
@@ -804,7 +667,7 @@ const saveBuiltInPrompts = () => {
     const typedKey = key as BuiltinPromptKey
     customPrompts[key] = {
       system: builtInPromptsData.value[typedKey].system('${language}'),
-      user: builtInPromptsData.value[typedKey].user('${text}', '${language}')
+      user: builtInPromptsData.value[typedKey].user('${text}', '${language}'),
     }
   })
   localStorage.setItem('customBuiltInPrompts', JSON.stringify(customPrompts))
@@ -813,12 +676,9 @@ const saveBuiltInPrompts = () => {
 const toggleEditBuiltinPrompt = (key: BuiltinPromptKey) => {
   if (editingBuiltinPromptKey.value === key) {
     builtInPromptsData.value[key] = {
-      system: (language: string) =>
-        editingBuiltinPrompt.value.system.replace(/\$\{language\}/g, language),
+      system: (language: string) => editingBuiltinPrompt.value.system.replace(/\$\{language\}/g, language),
       user: (text: string, language: string) =>
-        editingBuiltinPrompt.value.user
-          .replace(/\$\{text\}/g, text)
-          .replace(/\$\{language\}/g, language)
+        editingBuiltinPrompt.value.user.replace(/\$\{text\}/g, text).replace(/\$\{language\}/g, language),
     }
     saveBuiltInPrompts()
     editingBuiltinPromptKey.value = ''
@@ -826,7 +686,7 @@ const toggleEditBuiltinPrompt = (key: BuiltinPromptKey) => {
     editingBuiltinPromptKey.value = key
     editingBuiltinPrompt.value = {
       system: builtInPromptsData.value[key].system('${language}'),
-      user: builtInPromptsData.value[key].user('${text}', '${language}')
+      user: builtInPromptsData.value[key].user('${text}', '${language}'),
     }
   }
 }
@@ -834,11 +694,11 @@ const toggleEditBuiltinPrompt = (key: BuiltinPromptKey) => {
 const isBuiltinPromptModified = (key: BuiltinPromptKey): boolean => {
   const current = {
     system: builtInPromptsData.value[key].system('English'),
-    user: builtInPromptsData.value[key].user('sample text', 'English')
+    user: builtInPromptsData.value[key].user('sample text', 'English'),
   }
   const original = {
     system: originalBuiltInPrompts[key].system('English'),
-    user: originalBuiltInPrompts[key].user('sample text', 'English')
+    user: originalBuiltInPrompts[key].user('sample text', 'English'),
   }
   return current.system !== original.system || current.user !== original.user
 }
@@ -851,16 +711,12 @@ const resetBuiltinPrompt = (key: BuiltinPromptKey) => {
   }
 }
 
-const getSystemPromptPreview = (
-  systemFunc: (language: string) => string
-): string => {
+const getSystemPromptPreview = (systemFunc: (language: string) => string): string => {
   const full = systemFunc('English')
   return full.length > 100 ? full.substring(0, 100) + '...' : full
 }
 
-const getUserPromptPreview = (
-  userFunc: (text: string, language: string) => string
-): string => {
+const getUserPromptPreview = (userFunc: (text: string, language: string) => string): string => {
   const full = userFunc('[selected text]', 'English')
   return full.length > 100 ? full.substring(0, 100) + '...' : full
 }
@@ -873,9 +729,7 @@ const loadToolPreferences = () => {
     try {
       enabledWordTools.value = new Set(JSON.parse(wordTools))
     } catch {
-      enabledWordTools.value = new Set(
-        getWordToolDefinitions().map(t => t.name)
-      )
+      enabledWordTools.value = new Set(getWordToolDefinitions().map(t => t.name))
     }
   } else {
     enabledWordTools.value = new Set(getWordToolDefinitions().map(t => t.name))
@@ -895,14 +749,8 @@ const loadToolPreferences = () => {
 }
 
 const saveToolPreferences = () => {
-  localStorage.setItem(
-    'enabledWordTools',
-    JSON.stringify([...enabledWordTools.value])
-  )
-  localStorage.setItem(
-    'enabledGeneralTools',
-    JSON.stringify([...enabledGeneralTools.value])
-  )
+  localStorage.setItem('enabledWordTools', JSON.stringify([...enabledWordTools.value]))
+  localStorage.setItem('enabledGeneralTools', JSON.stringify([...enabledGeneralTools.value]))
 }
 
 const toggleTool = (toolName: string, isWordTool: boolean) => {
@@ -923,9 +771,7 @@ const toggleTool = (toolName: string, isWordTool: boolean) => {
 }
 
 const isToolEnabled = (toolName: string, isWordTool: boolean): boolean => {
-  return isWordTool
-    ? enabledWordTools.value.has(toolName)
-    : enabledGeneralTools.value.has(toolName)
+  return isWordTool ? enabledWordTools.value.has(toolName) : enabledGeneralTools.value.has(toolName)
 }
 
 const isGeneralTool = (toolName: string): boolean => {

@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+
 import Message from '@/components/Message.vue'
 
 interface MessageOptions {
@@ -35,7 +36,7 @@ function showMessage(options: MessageOptions) {
           messageInstance = null
         }
       }, 300)
-    }
+    },
   })
 
   messageInstance.mount(container)
@@ -53,5 +54,5 @@ export const message = {
   },
   warning: (msg: string, duration = 3000) => {
     showMessage({ message: msg, type: 'warning', duration })
-  }
+  },
 }

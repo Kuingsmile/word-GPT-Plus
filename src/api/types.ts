@@ -1,5 +1,5 @@
-import { Ref } from 'vue'
 import { Messages } from '@langchain/langgraph'
+import { Ref } from 'vue'
 
 export interface BaseChatCompletionOptions {
   messages: Messages
@@ -49,12 +49,7 @@ export interface AzureOptions extends BaseChatCompletionOptions {
   azureAPIVersion?: string
 }
 
-export type ProviderOptions =
-  | OpenAIOptions
-  | OllamaOptions
-  | GroqOptions
-  | GeminiOptions
-  | AzureOptions
+export type ProviderOptions = OpenAIOptions | OllamaOptions | GroqOptions | GeminiOptions | AzureOptions
 
 type supportedProviders = 'official' | 'ollama' | 'groq' | 'gemini' | 'azure'
 // Agent options with tools support
