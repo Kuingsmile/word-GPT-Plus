@@ -52,18 +52,18 @@ onMounted(() => {
   top: 16px;
   right: 16px;
   z-index: 9999;
-  padding: 8px 10px;
-  border-radius: 8px;
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.12),
-    0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
-  flex-direction: column;
   align-items: stretch;
+  overflow: hidden;
+  border-radius: 8px;
+  padding: 8px 10px;
   min-width: 20px;
   max-width: 360px;
+  box-shadow:
+    0 8px 24px rgb(0 0 0 / 12%),
+    0 2px 8px rgb(0 0 0 / 8%);
+  flex-direction: column;
   backdrop-filter: blur(12px);
-  overflow: hidden;
 }
 
 .toast-content {
@@ -75,11 +75,11 @@ onMounted(() => {
 
 .toast-icon {
   display: flex;
-  align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  align-items: center;
   width: 18px;
   height: 18px;
+  flex-shrink: 0;
 }
 
 .toast-icon svg {
@@ -99,8 +99,8 @@ onMounted(() => {
   position: absolute;
   bottom: 0;
   left: 0;
-  height: 3px;
   width: 100%;
+  height: 3px;
   transform-origin: left;
   animation: toast-progress linear forwards;
 }
@@ -109,15 +109,16 @@ onMounted(() => {
   from {
     transform: scaleX(1);
   }
+
   to {
     transform: scaleX(0);
   }
 }
 
 .toast-error {
-  background: linear-gradient(135deg, rgba(254, 226, 226, 0.98) 0%, rgba(254, 226, 226, 0.95) 100%);
-  border: 1px solid rgba(252, 165, 165, 0.8);
+  border: 1px solid rgb(252 165 165 / 80%);
   color: #991b1b;
+  background: linear-gradient(135deg, rgb(254 226 226 / 98%) 0%, rgb(254 226 226 / 95%) 100%);
 }
 
 .toast-error .toast-icon svg {
@@ -129,9 +130,9 @@ onMounted(() => {
 }
 
 .toast-success {
-  background: linear-gradient(135deg, rgba(220, 252, 231, 0.98) 0%, rgba(220, 252, 231, 0.95) 100%);
-  border: 1px solid rgba(134, 239, 172, 0.8);
+  border: 1px solid rgb(134 239 172 / 80%);
   color: #14532d;
+  background: linear-gradient(135deg, rgb(220 252 231 / 98%) 0%, rgb(220 252 231 / 95%) 100%);
 }
 
 .toast-success .toast-icon svg {
@@ -143,9 +144,9 @@ onMounted(() => {
 }
 
 .toast-info {
-  background: linear-gradient(135deg, rgba(224, 242, 254, 0.98) 0%, rgba(224, 242, 254, 0.95) 100%);
-  border: 1px solid rgba(147, 197, 253, 0.8);
+  border: 1px solid rgb(147 197 253 / 80%);
   color: #1e3a8a;
+  background: linear-gradient(135deg, rgb(224 242 254 / 98%) 0%, rgb(224 242 254 / 95%) 100%);
 }
 
 .toast-info .toast-icon svg {
@@ -157,9 +158,9 @@ onMounted(() => {
 }
 
 .toast-warning {
-  background: linear-gradient(135deg, rgba(254, 243, 199, 0.98) 0%, rgba(254, 243, 199, 0.95) 100%);
-  border: 1px solid rgba(252, 211, 77, 0.8);
+  border: 1px solid rgb(252 211 77 / 80%);
   color: #78350f;
+  background: linear-gradient(135deg, rgb(254 243 199 / 98%) 0%, rgb(254 243 199 / 95%) 100%);
 }
 
 .toast-warning .toast-icon svg {

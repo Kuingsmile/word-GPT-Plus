@@ -1,11 +1,13 @@
 import js from '@eslint/js'
 import { defineConfig } from 'eslint/config'
 import configPrettier from 'eslint-config-prettier'
+import jsonc from 'eslint-plugin-jsonc'
 import pluginPrettier from 'eslint-plugin-prettier/recommended'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import pluginUnicorn from 'eslint-plugin-unicorn'
 import pluginVue from 'eslint-plugin-vue'
 import globals from 'globals'
+import jsoncParser from 'jsonc-eslint-parser'
 import tseslint from 'typescript-eslint'
 import vueParser from 'vue-eslint-parser'
 
@@ -35,7 +37,7 @@ export default defineConfig(
     languageOptions: {
       parser: vueParser,
       parserOptions: {
-        parser: tseslint.parser, // Vue 脚本部分使用 TS 解析器
+        parser: tseslint.parser,
         extraFileExtensions: ['.vue'],
         sourceType: 'module',
         ecmaVersion: 'latest',
@@ -96,15 +98,50 @@ export default defineConfig(
       '@typescript-eslint/no-this-alias': 'off',
       // Pending https://github.com/typescript-eslint/typescript-eslint/issues/4820
       '@typescript-eslint/prefer-optional-chain': 'off',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
       'vue/no-v-html': 'off',
       'vue/multi-word-component-names': 'off',
       'no-undef': 'off', // TypeScript handles this
       'no-async-promise-executor': 'off',
     },
   },
+  ...jsonc.configs['flat/recommended-with-jsonc'],
   {
-    files: ['*.config.js'],
+    files: ['**/*.json', '**/*.jsonc', '**/*.json5'],
+    languageOptions: {
+      parser: jsoncParser,
+    },
+    rules: {
+      'jsonc/array-bracket-spacing': ['error', 'never'],
+      'jsonc/comma-dangle': ['error', 'never'],
+      'jsonc/indent': ['error', 2],
+      'jsonc/no-comments': 'off',
+      'jsonc/quotes': ['error', 'double'],
+    },
+  },
+  {
+    files: ['src/i18n/**/*.json'],
+    rules: {
+      'jsonc/sort-keys': [
+        'error',
+        'asc', // 升序排列
+        {
+          caseSensitive: false,
+          natural: true,
+        },
+      ],
+    },
+  },
+  {
+    files: ['*.config.js', '.stylelintrc.cjs', '.*rc.js'],
     languageOptions: {
       globals: {
         ...globals.node,
