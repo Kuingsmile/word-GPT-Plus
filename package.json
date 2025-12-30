@@ -45,7 +45,7 @@
     "node-bump-version": "^2.0.0",
     "prettier": "^3.7.4",
     "stylus": "^0.64.0",
-    "typescript": "5.8.3",
+    "typescript": "5.9.3",
     "typescript-eslint": "^8.51.0",
     "vite": "^7.3.0",
     "vue-eslint-parser": "^10.2.0"
