@@ -574,14 +574,13 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
   const finalSystemMessage =
     customSystemPrompt.value || systemMessage || (isAgentMode ? agentPrompt(lang) : standardPrompt(lang))
 
-  const defaultSystemMessage = new SystemMessage(finalSystemMessage)
+    const defaultSystemMessage = new SystemMessage(finalSystemMessage)
 
-  const finalMessages = [defaultSystemMessage, userMessage]
-  if (history.value.length === 0) {
-    history.value.push(...finalMessages)
-  } else {
-    history.value.push(userMessage)
-  }
+  // Add user message to history
+  history.value.push(userMessage)
+
+  // Prepare messages for LLM (always include system message first, followed by all history)
+  const finalMessages = [defaultSystemMessage, ...history.value]
   // Build provider configuration
   const providerConfigs: Record<string, any> = {
     official: {
