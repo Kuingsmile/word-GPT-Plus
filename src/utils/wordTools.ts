@@ -153,8 +153,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         },
         location: {
           type: 'string',
-          description: 'Where to insert: "Start" or "End" of the document',
-          enum: ['Start', 'End'],
+          description:
+            'Where to insert: "After" (after cursor/selection), "Before" (before cursor), "Start" (start of doc), or "End" (end of doc). Default is "After".',
+          enum: ['After', 'Before', 'Start', 'End'],
         },
         style: {
           type: 'string',
@@ -175,10 +176,16 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
       required: ['text'],
     },
     execute: async args => {
-      const { text, location = 'End', style } = args
+      const { text, location = 'After', style } = args
       return Word.run(async context => {
-        const body = context.document.body
-        const paragraph = body.insertParagraph(text, location as 'Start' | 'End')
+        let paragraph
+        if (location === 'Start' || location === 'End') {
+          const body = context.document.body
+          paragraph = body.insertParagraph(text, location)
+        } else {
+          const range = context.document.getSelection()
+          paragraph = range.insertParagraph(text, location as 'After' | 'Before')
+        }
         if (style) {
           paragraph.styleBuiltIn = style as Word.BuiltInStyleName
         }
