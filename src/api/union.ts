@@ -15,6 +15,7 @@ import { ChatOllama } from '@langchain/ollama'
 import { BaseChatModel } from '@langchain/core/language_models/chat_models'
 import { MemorySaver } from '@langchain/langgraph'
 import { createAgent } from 'langchain'
+import { MistralChat } from './mistralChat'
 
 const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
   official: (opts: OpenAIOptions) => {
@@ -70,15 +71,10 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
   },
 
   mistral: (opts: MistralOptions) => {
-    return new ChatOpenAI({
-      modelName: opts.mistralModel || 'mistral-large-latest',
-      configuration: {
-        apiKey: opts.mistralAPIKey,
-        baseURL: 'https://api.mistral.ai/v1',
-        dangerouslyAllowBrowser: true,
-        defaultHeaders: {},
-        defaultQuery: undefined
-      },
+    // Use custom implementation to avoid CORS issues with OpenAI SDK headers
+    return new MistralChat({
+      apiKey: opts.mistralAPIKey,
+      model: opts.mistralModel || 'mistral-large-latest',
       temperature: opts.temperature ?? 0.7,
       maxTokens: opts.maxTokens ?? 1024
     })
