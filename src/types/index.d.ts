@@ -1,25 +1,23 @@
-interface IStringKeyMap {
-  [propName: string]: any
-}
+type IStringKeyMap = Record<string, any>
 
 type supportedPlatforms = 'official' | 'azure' | 'gemini' | 'ollama' | 'groq' | 'mistral'
 
-type insertTypes = 'replace' |  'append' |  'newLine' | 'NoAction'
+type insertTypes = 'replace' | 'append' | 'newLine' | 'NoAction'
 
- interface ToolInputSchema {
+interface ToolInputSchema {
   type: 'object'
   properties: Record<string, ToolProperty>
   required?: string[]
 }
 
- interface ToolProperty {
+interface ToolProperty {
   type: 'string' | 'number' | 'boolean' | 'array' | 'object'
   description?: string
   enum?: string[]
   items?: ToolProperty
   default?: any
 }
- interface WordToolDefinition {
+interface WordToolDefinition {
   name: string
   description: string
   inputSchema: ToolInputSchema

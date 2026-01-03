@@ -1,11 +1,8 @@
 import { DynamicStructuredTool } from '@langchain/core/tools'
+import { evaluate } from 'mathjs'
 import { z } from 'zod'
 
-export type GeneralToolName =
-  | 'fetchWebContent'
-  | 'searchWeb'
-  | 'getCurrentDate'
-  | 'calculateMath'
+export type GeneralToolName = 'fetchWebContent' | 'searchWeb' | 'getCurrentDate' | 'calculateMath'
 
 export interface GeneralToolDefinition {
   name: GeneralToolName
@@ -18,15 +15,14 @@ const fetchWebContentTool = new DynamicStructuredTool({
   description:
     'Fetches content from a given URL. Useful for gathering reference material, quotes, or information to include in the document. Returns the main text content of the webpage.',
   schema: z.object({
-    url: z.string().describe('The URL to fetch content from')
+    url: z.string().describe('The URL to fetch content from'),
   }),
   func: async ({ url }) => {
     try {
       const response = await fetch(url, {
         headers: {
-          'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        }
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        },
       })
 
       if (!response.ok) {
@@ -43,16 +39,13 @@ const fetchWebContentTool = new DynamicStructuredTool({
         .trim()
 
       const maxLength = 5000
-      const content =
-        textContent.length > maxLength
-          ? textContent.substring(0, maxLength) + '...'
-          : textContent
+      const content = textContent.length > maxLength ? textContent.substring(0, maxLength) + '...' : textContent
 
       return `Content from ${url}:\n\n${content}`
     } catch (error: any) {
       return `Error fetching content: ${error.message}`
     }
-  }
+  },
 })
 
 const searchWebTool = new DynamicStructuredTool({
@@ -61,11 +54,7 @@ const searchWebTool = new DynamicStructuredTool({
     'Searches the web for information. Returns top search results with titles and snippets. Useful for finding references, facts, or background information for the document. If you need to look up information you do not know, use this tool.',
   schema: z.object({
     query: z.string().describe('The search query'),
-    maxResults: z
-      .number()
-      .optional()
-      .default(10)
-      .describe('Maximum number of results to return (default: 10)')
+    maxResults: z.number().optional().default(10).describe('Maximum number of results to return (default: 10)'),
   }),
   func: async ({ query, maxResults = 10 }) => {
     try {
@@ -83,7 +72,7 @@ const searchWebTool = new DynamicStructuredTool({
     } catch (error: any) {
       return `Error searching: ${error.message}`
     }
-  }
+  },
 })
 
 const getCurrentDateTool = new DynamicStructuredTool({
@@ -95,9 +84,7 @@ const getCurrentDateTool = new DynamicStructuredTool({
       .enum(['full', 'date', 'time', 'iso'])
       .optional()
       .default('full')
-      .describe(
-        'Format: "full" (date and time), "date" (date only), "time" (time only), "iso" (ISO 8601)'
-      )
+      .describe('Format: "full" (date and time), "date" (date only), "time" (time only), "iso" (ISO 8601)'),
   }),
   func: async ({ format = 'full' }) => {
     const now = new Date()
@@ -107,13 +94,13 @@ const getCurrentDateTool = new DynamicStructuredTool({
         return now.toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
-          day: 'numeric'
+          day: 'numeric',
         })
       case 'time':
         return now.toLocaleTimeString('en-US', {
           hour: '2-digit',
           minute: '2-digit',
-          second: '2-digit'
+          second: '2-digit',
         })
       case 'iso':
         return now.toISOString()
@@ -125,10 +112,10 @@ const getCurrentDateTool = new DynamicStructuredTool({
           day: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
-          second: '2-digit'
+          second: '2-digit',
         })
     }
-  }
+  },
 })
 
 const calculateMathTool = new DynamicStructuredTool({
@@ -136,70 +123,58 @@ const calculateMathTool = new DynamicStructuredTool({
   description:
     'Evaluates mathematical expressions safely. Useful for calculations, statistics, or numerical data in documents. Supports basic arithmetic (+, -, *, /), parentheses, and common math functions.',
   schema: z.object({
-    expression: z
-      .string()
-      .describe('The mathematical expression to evaluate (e.g., "2 + 2 * 3")')
+    expression: z.string().describe('The mathematical expression to evaluate (e.g., "2 + 2 * 3")'),
   }),
   func: async ({ expression }) => {
     try {
-      const sanitized = expression.replace(/[^0-9+\-*/().\s]/g, '')
+      const result = evaluate(expression)
 
-      if (sanitized !== expression) {
-        return 'Invalid expression: only numbers and basic operators (+, -, *, /, ()) are allowed'
-      }
-      const result = new Function(`return ${sanitized}`)()
-      if (typeof result !== 'number' || !isFinite(result)) {
-        return 'Invalid result'
+      if (typeof result !== 'number' && typeof result !== 'bigint') {
+        return `Calculation completed, but result is not a simple number: ${result}`
       }
 
       return `${expression} = ${result}`
     } catch (error: any) {
       return `Error evaluating expression: ${error.message}`
     }
-  }
+  },
 })
 
 export const generalToolDefinitions: GeneralToolDefinition[] = [
   {
     name: 'fetchWebContent',
     description: fetchWebContentTool.description,
-    tool: fetchWebContentTool
+    tool: fetchWebContentTool,
   },
   {
     name: 'searchWeb',
     description: searchWebTool.description,
-    tool: searchWebTool
+    tool: searchWebTool,
   },
   {
     name: 'getCurrentDate',
     description: getCurrentDateTool.description,
-    tool: getCurrentDateTool
+    tool: getCurrentDateTool,
   },
   {
     name: 'calculateMath',
     description: calculateMathTool.description,
-    tool: calculateMathTool
-  }
+    tool: calculateMathTool,
+  },
 ]
 
-export function createGeneralTools(
-  enabledTools?: GeneralToolName[]
-): DynamicStructuredTool[] {
+export function createGeneralTools(enabledTools?: GeneralToolName[]): DynamicStructuredTool[] {
   if (!enabledTools || enabledTools.length === 0) {
     return generalToolDefinitions.map(def => def.tool)
   }
 
-  return generalToolDefinitions
-    .filter(def => enabledTools.includes(def.name))
-    .map(def => def.tool)
+  return generalToolDefinitions.filter(def => enabledTools.includes(def.name)).map(def => def.tool)
 }
 
 export function getGeneralToolDefinitions(): GeneralToolDefinition[] {
   return generalToolDefinitions
 }
 
-export function getGeneralTool(
-  name: GeneralToolName
-): GeneralToolDefinition | undefined {
+export function getGeneralTool(name: GeneralToolName): GeneralToolDefinition | undefined {
   return generalToolDefinitions.find(def => def.name === name)
 }

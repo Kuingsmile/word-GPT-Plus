@@ -1,12 +1,13 @@
 import { i18n } from '@/i18n'
+
 import { forceNumber, optionLists } from './common'
 import {
   availableModels,
   availableModelsForGemini,
   availableModelsForGroq,
-  availableModelsForOllama,
   availableModelsForMistral,
-  availableModelsForOpenWebUI
+  availableModelsForOllama,
+  availableModelsForOpenWebUI,
 } from './constant'
 import { localStorageKey } from './enum'
 
@@ -30,8 +31,7 @@ const getCustomModels = (key: string, oldKey: string): string[] => {
   return []
 }
 
-const saveCustomModels = (key: string, models: string[]) =>
-  localStorage.setItem(key, JSON.stringify(models))
+const saveCustomModels = (key: string, models: string[]) => localStorage.setItem(key, JSON.stringify(models))
 
 interface ISettingOption<T> {
   defaultValue: T
@@ -92,7 +92,7 @@ export const Setting_Names = [
   'openwebuiCustomModel',
   'openwebuiCustomModels',
   'systemPrompt',
-  'userPrompt'
+  'userPrompt',
 ] as const
 
 export type SettingNames = (typeof Setting_Names)[number]
@@ -102,59 +102,51 @@ type keyOfLocalStorageKey = keyof typeof localStorageKey
 // Helper functions
 const createStorageFuncs = (key: string, defaultValue: number) => ({
   getFunc: () => forceNumber(localStorage.getItem(key)) || defaultValue,
-  saveFunc: (value: number) => localStorage.setItem(key, value.toString())
+  saveFunc: (value: number) => localStorage.setItem(key, value.toString()),
 })
 
-const inputSetting = (
-  defaultValue: string,
-  saveKey?: keyOfLocalStorageKey
-): ISettingOption<string> => ({
+const inputSetting = (defaultValue: string, saveKey?: keyOfLocalStorageKey): ISettingOption<string> => ({
   defaultValue,
   saveKey,
-  type: 'input'
+  type: 'input',
 })
 
 const inputNumSetting = (
   defaultValue: number,
   saveKey: keyOfLocalStorageKey,
-  stepStyle: 'temperature' | 'maxTokens'
+  stepStyle: 'temperature' | 'maxTokens',
 ): ISettingOption<number> => ({
   defaultValue,
   saveKey,
   type: 'inputNum',
   stepStyle,
-  ...createStorageFuncs(localStorageKey[saveKey], defaultValue)
+  ...createStorageFuncs(localStorageKey[saveKey], defaultValue),
 })
 
 const selectSetting = (
   defaultValue: string,
   saveKey: keyOfLocalStorageKey,
-  optionList: string[]
+  optionList: string[],
 ): ISettingOption<string> => ({
   defaultValue,
   saveKey,
   type: 'select',
   optionList,
-  getFunc: () => localStorage.getItem(localStorageKey[saveKey]) || defaultValue
+  getFunc: () => localStorage.getItem(localStorageKey[saveKey]) || defaultValue,
 })
 
-const customModelsetting = (
-  saveKey: keyOfLocalStorageKey,
-  oldKey: keyOfLocalStorageKey
-): ISettingOption<string[]> => ({
+const customModelsetting = (saveKey: keyOfLocalStorageKey, oldKey: keyOfLocalStorageKey): ISettingOption<string[]> => ({
   defaultValue: [],
   saveKey,
-  getFunc: () =>
-    getCustomModels(localStorageKey[saveKey], localStorageKey[oldKey]),
-  saveFunc: (value: string[]) =>
-    saveCustomModels(localStorageKey[saveKey], value)
+  getFunc: () => getCustomModels(localStorageKey[saveKey], localStorageKey[oldKey]),
+  saveFunc: (value: string[]) => saveCustomModels(localStorageKey[saveKey], value),
 })
 
 export const settingPreset = {
   api: {
     ...inputSetting('official'),
     type: 'select',
-    optionObj: optionLists.apiList
+    optionObj: optionLists.apiList,
   },
   localLanguage: {
     ...inputSetting('en'),
@@ -163,12 +155,12 @@ export const settingPreset = {
     saveFunc: (value: string) => {
       i18n.global.locale.value = value as 'en' | 'zh-cn'
       localStorage.setItem(localStorageKey.localLanguage, value)
-    }
+    },
   },
   replyLanguage: {
     ...inputSetting('English'),
     type: 'select',
-    optionObj: optionLists.replyLanguageList
+    optionObj: optionLists.replyLanguageList,
   },
   officialAPIKey: inputSetting('', 'apiKey'),
   officialBasePath: inputSetting('', 'basePath'),
@@ -185,37 +177,19 @@ export const settingPreset = {
   azureAPIVersion: inputSetting(''),
   geminiAPIKey: inputSetting(''),
   geminiCustomModel: inputSetting(''),
-  geminiCustomModels: customModelsetting(
-    'geminiCustomModels',
-    'geminiCustomModel'
-  ),
-  geminiModelSelect: selectSetting(
-    'gemini-3-pro-preview',
-    'geminiModel',
-    availableModelsForGemini
-  ),
+  geminiCustomModels: customModelsetting('geminiCustomModels', 'geminiCustomModel'),
+  geminiModelSelect: selectSetting('gemini-3-pro-preview', 'geminiModel', availableModelsForGemini),
   geminiTemperature: inputNumSetting(0.7, 'geminiTemperature', 'temperature'),
   geminiMaxTokens: inputNumSetting(800, 'geminiMaxTokens', 'maxTokens'),
   ollamaEndpoint: inputSetting(''),
   ollamaCustomModel: inputSetting(''),
-  ollamaCustomModels: customModelsetting(
-    'ollamaCustomModels',
-    'ollamaCustomModel'
-  ),
-  ollamaModelSelect: selectSetting(
-    'qwen3:latest',
-    'ollamaModel',
-    availableModelsForOllama
-  ),
+  ollamaCustomModels: customModelsetting('ollamaCustomModels', 'ollamaCustomModel'),
+  ollamaModelSelect: selectSetting('qwen3:latest', 'ollamaModel', availableModelsForOllama),
   ollamaTemperature: inputNumSetting(0.7, 'ollamaTemperature', 'temperature'),
   groqAPIKey: inputSetting(''),
   groqTemperature: inputNumSetting(0.5, 'groqTemperature', 'temperature'),
   groqMaxTokens: inputNumSetting(1024, 'groqMaxTokens', 'maxTokens'),
-  groqModelSelect: selectSetting(
-    'qwen/qwen3-32b',
-    'groqModel',
-    availableModelsForGroq
-  ),
+  groqModelSelect: selectSetting('qwen/qwen3-32b', 'groqModel', availableModelsForGroq),
   groqCustomModel: inputSetting(''),
   groqCustomModels: customModelsetting('groqCustomModels', 'groqCustomModel'),
   mistralAPIKey: inputSetting(''),
@@ -240,5 +214,5 @@ export const settingPreset = {
   openwebuiCustomModel: inputSetting(''),
   openwebuiCustomModels: customModelsetting('openwebuiCustomModels', 'openwebuiCustomModel'),
   systemPrompt: inputSetting('', 'defaultSystemPrompt'),
-  userPrompt: inputSetting('', 'defaultPrompt')
+  userPrompt: inputSetting('', 'defaultPrompt'),
 } as const satisfies Record<SettingNames, ISettingOption<any>>

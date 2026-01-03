@@ -1,21 +1,22 @@
+import { BaseChatModel } from '@langchain/core/language_models/chat_models'
+import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
+import { ChatGroq } from '@langchain/groq'
+import { MemorySaver } from '@langchain/langgraph'
+import { ChatOllama } from '@langchain/ollama'
+import { AzureChatOpenAI, ChatOpenAI } from '@langchain/openai'
+import { createAgent } from 'langchain'
+
 import {
+  AgentOptions,
   AzureOptions,
   GeminiOptions,
   GroqOptions,
+  MistralOptions,
   OllamaOptions,
   OpenAIOptions,
-  MistralOptions,
   OpenWebUIOptions,
   ProviderOptions,
-  AgentOptions
 } from './types'
-import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
-import { ChatOpenAI, AzureChatOpenAI } from '@langchain/openai'
-import { ChatGroq } from '@langchain/groq'
-import { ChatOllama } from '@langchain/ollama'
-import { BaseChatModel } from '@langchain/core/language_models/chat_models'
-import { MemorySaver } from '@langchain/langgraph'
-import { createAgent } from 'langchain'
 import { MistralChat } from './mistralChat'
 
 const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
@@ -25,19 +26,18 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
       modelName,
       configuration: {
         apiKey: opts.config.apiKey,
-        baseURL: opts.config.baseURL || 'https://api.openai.com/v1'
+        baseURL: opts.config.baseURL || 'https://api.openai.com/v1',
       },
       temperature: opts.temperature ?? 0.7,
-      maxTokens: opts.maxTokens ?? 800
+      maxTokens: opts.maxTokens ?? 800,
     })
   },
 
   ollama: (opts: OllamaOptions) => {
     return new ChatOllama({
       model: opts.ollamaModel,
-      baseUrl:
-        opts.ollamaEndpoint?.replace(/\/$/, '') || 'http://localhost:11434',
-      temperature: opts.temperature
+      baseUrl: opts.ollamaEndpoint?.replace(/\/$/, '') || 'http://localhost:11434',
+      temperature: opts.temperature,
     })
   },
 
@@ -46,7 +46,7 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
       model: opts.groqModel,
       apiKey: opts.groqAPIKey,
       temperature: opts.temperature ?? 0.5,
-      maxTokens: opts.maxTokens ?? 1024
+      maxTokens: opts.maxTokens ?? 1024,
     })
   },
 
@@ -55,7 +55,7 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
       model: opts.geminiModel ?? 'gemini-3-pro-preview',
       apiKey: opts.geminiAPIKey,
       temperature: opts.temperature ?? 0.7,
-      maxOutputTokens: opts.maxTokens ?? 800
+      maxOutputTokens: opts.maxTokens ?? 800,
     })
   },
 
@@ -67,7 +67,7 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
       azureOpenAIApiKey: opts.azureAPIKey,
       azureOpenAIEndpoint: opts.azureAPIEndpoint,
       azureOpenAIApiDeploymentName: opts.azureDeploymentName,
-      azureOpenAIApiVersion: opts.azureAPIVersion ?? '2024-10-01'
+      azureOpenAIApiVersion: opts.azureAPIVersion ?? '2024-10-01',
     })
   },
 
@@ -77,7 +77,7 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
       apiKey: opts.mistralAPIKey,
       model: opts.mistralModel || 'mistral-large-latest',
       temperature: opts.temperature ?? 0.7,
-      maxTokens: opts.maxTokens ?? 1024
+      maxTokens: opts.maxTokens ?? 1024,
     })
   },
 
@@ -88,35 +88,32 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
       modelName: opts.openwebuiModel || 'llama3.1:latest',
       configuration: {
         apiKey: opts.openwebuiAPIKey,
-        baseURL: baseURL
+        baseURL: baseURL,
       },
       temperature: opts.temperature ?? 0.7,
-      maxTokens: opts.maxTokens ?? 1024
+      maxTokens: opts.maxTokens ?? 1024,
     })
-  }
+  },
 }
 
 const checkpointer = new MemorySaver()
 
-async function executeChatFlow(
-  model: BaseChatModel,
-  options: ProviderOptions
-): Promise<void> {
+async function executeChatFlow(model: BaseChatModel, options: ProviderOptions): Promise<void> {
   try {
     const agent = createAgent({
       model,
       tools: [],
-      checkpointer
+      checkpointer,
     })
     const stream = await agent.stream(
       {
-        messages: options.messages
+        messages: options.messages,
       },
       {
         signal: options.abortSignal,
         configurable: { thread_id: options.threadId },
-        streamMode: 'messages'
-      }
+        streamMode: 'messages',
+      },
     )
 
     let fullContent = ''
@@ -125,8 +122,7 @@ async function executeChatFlow(
         break
       }
 
-      const content =
-        typeof chunk[0].content === 'string' ? chunk[0].content : ''
+      const content = typeof chunk[0].content === 'string' ? chunk[0].content : ''
       fullContent += content
       options.onStream(fullContent)
     }
@@ -142,26 +138,23 @@ async function executeChatFlow(
   }
 }
 
-async function executeAgentFlow(
-  model: BaseChatModel,
-  options: AgentOptions
-): Promise<void> {
+async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Promise<void> {
   try {
     const agent = createAgent({
       model,
       tools: options.tools || [],
-      checkpointer
+      checkpointer,
     })
 
     const stream = await agent.stream(
       {
-        messages: options.messages
+        messages: options.messages,
       },
       {
         signal: options.abortSignal,
         configurable: { thread_id: options.threadId },
-        streamMode: 'values'
-      }
+        streamMode: 'values',
+      },
     )
 
     let fullContent = ''
@@ -175,8 +168,7 @@ async function executeAgentFlow(
       stepCount++
       console.log(`[Agent] Step ${stepCount}:`, {
         messageCount: step.messages?.length || 0,
-        lastMessageType:
-          step.messages?.[step.messages.length - 1]?.constructor?.name
+        lastMessageType: step.messages?.[step.messages.length - 1]?.constructor?.name,
       })
 
       const messages = step.messages || []
@@ -195,7 +187,7 @@ async function executeAgentFlow(
         for (const toolCall of msg.tool_calls) {
           console.log('[Agent] Tool call:', {
             name: toolCall.name,
-            args: toolCall.args
+            args: toolCall.args,
           })
           if (options.onToolCall) {
             options.onToolCall(toolCall.name, toolCall.args)
@@ -210,7 +202,7 @@ async function executeAgentFlow(
         console.log('[Agent] Tool result:', {
           name: toolName,
           contentLength: toolContent.length,
-          contentPreview: toolContent.substring(0, 100)
+          contentPreview: toolContent.substring(0, 100),
         })
         if (options.onToolResult) {
           options.onToolResult(toolName, toolContent)
@@ -223,7 +215,7 @@ async function executeAgentFlow(
         if (content && (!msg.tool_calls || msg.tool_calls.length === 0)) {
           fullContent = content
           console.log('[Agent] AI response:', {
-            content
+            content,
           })
           options.onStream(fullContent)
         }

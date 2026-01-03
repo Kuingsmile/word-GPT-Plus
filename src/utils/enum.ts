@@ -61,5 +61,5 @@ export const localStorageKey = {
   enableProxy: 'enableProxy',
   proxy: 'proxy',
   defaultSystemPrompt: 'defaultSystemPrompt',
-  defaultPrompt: 'defaultPrompt'
+  defaultPrompt: 'defaultPrompt',
 } as const
