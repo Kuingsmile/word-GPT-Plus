@@ -5,7 +5,8 @@ import {
   availableModelsForGemini,
   availableModelsForGroq,
   availableModelsForOllama,
-  availableModelsForMistral
+  availableModelsForMistral,
+  availableModelsForOpenWebUI
 } from './constant'
 import { localStorageKey } from './enum'
 
@@ -83,6 +84,13 @@ export const Setting_Names = [
   'mistralModelSelect',
   'mistralCustomModel',
   'mistralCustomModels',
+  'openwebuiBaseURL',
+  'openwebuiAPIKey',
+  'openwebuiTemperature',
+  'openwebuiMaxTokens',
+  'openwebuiModelSelect',
+  'openwebuiCustomModel',
+  'openwebuiCustomModels',
   'systemPrompt',
   'userPrompt'
 ] as const
@@ -220,6 +228,17 @@ export const settingPreset = {
   ),
   mistralCustomModel: inputSetting(''),
   mistralCustomModels: customModelsetting('mistralCustomModels', 'mistralCustomModel'),
+  openwebuiBaseURL: inputSetting('', 'openwebuiBaseURL'),
+  openwebuiAPIKey: inputSetting('', 'openwebuiAPIKey'),
+  openwebuiTemperature: inputNumSetting(0.7, 'openwebuiTemperature', 'temperature'),
+  openwebuiMaxTokens: inputNumSetting(1024, 'openwebuiMaxTokens', 'maxTokens'),
+  openwebuiModelSelect: selectSetting(
+    'llama3.1:latest',
+    'openwebuiModel',
+    availableModelsForOpenWebUI
+  ),
+  openwebuiCustomModel: inputSetting(''),
+  openwebuiCustomModels: customModelsetting('openwebuiCustomModels', 'openwebuiCustomModel'),
   systemPrompt: inputSetting('', 'defaultSystemPrompt'),
   userPrompt: inputSetting('', 'defaultPrompt')
 } as const satisfies Record<SettingNames, ISettingOption<any>>

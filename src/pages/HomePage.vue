@@ -712,6 +712,14 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
       mistralModel: settings.mistralModelSelect,
       maxTokens: settings.mistralMaxTokens,
       temperature: settings.mistralTemperature
+    },
+    openwebui: {
+      provider: 'openwebui',
+      openwebuiBaseURL: settings.openwebuiBaseURL,
+      openwebuiAPIKey: settings.openwebuiAPIKey,
+      openwebuiModel: settings.openwebuiModelSelect,
+      maxTokens: settings.openwebuiMaxTokens,
+      temperature: settings.openwebuiTemperature
     }
   }
 

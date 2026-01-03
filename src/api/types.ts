@@ -55,6 +55,13 @@ export interface MistralOptions extends BaseChatCompletionOptions {
   mistralAPIKey: string
 }
 
+export interface OpenWebUIOptions extends BaseChatCompletionOptions {
+  provider: 'openwebui'
+  openwebuiBaseURL: string
+  openwebuiAPIKey: string
+  openwebuiModel: string
+}
+
 export type ProviderOptions =
   | OpenAIOptions
   | OllamaOptions
@@ -62,8 +69,9 @@ export type ProviderOptions =
   | GeminiOptions
   | AzureOptions
   | MistralOptions
+  | OpenWebUIOptions
 
-type supportedProviders = 'official' | 'ollama' | 'groq' | 'gemini' | 'azure' | 'mistral'
+type supportedProviders = 'official' | 'ollama' | 'groq' | 'gemini' | 'azure' | 'mistral' | 'openwebui'
 // Agent options with tools support
 export interface AgentOptions extends BaseChatCompletionOptions {
   provider: supportedProviders
@@ -89,4 +97,7 @@ export interface AgentOptions extends BaseChatCompletionOptions {
   azureAPIVersion?: string
   mistralModel?: string
   mistralAPIKey?: string
+  openwebuiBaseURL?: string
+  openwebuiAPIKey?: string
+  openwebuiModel?: string
 }

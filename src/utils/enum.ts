@@ -49,6 +49,14 @@ export const localStorageKey = {
   mistralModel: 'mistralModel',
   mistralCustomModel: 'mistralCustomModel',
   mistralCustomModels: 'mistralCustomModels',
+  // openwebui api
+  openwebuiBaseURL: 'openwebuiBaseURL',
+  openwebuiAPIKey: 'openwebuiAPIKey',
+  openwebuiModel: 'openwebuiModel',
+  openwebuiTemperature: 'openwebuiTemperature',
+  openwebuiMaxTokens: 'openwebuiMaxTokens',
+  openwebuiCustomModel: 'openwebuiCustomModel',
+  openwebuiCustomModels: 'openwebuiCustomModels',
   // proxy
   enableProxy: 'enableProxy',
   proxy: 'proxy',

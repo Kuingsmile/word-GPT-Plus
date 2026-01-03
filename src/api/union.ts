@@ -5,6 +5,7 @@ import {
   OllamaOptions,
   OpenAIOptions,
   MistralOptions,
+  OpenWebUIOptions,
   ProviderOptions,
   AgentOptions
 } from './types'
@@ -75,6 +76,20 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
     return new MistralChat({
       apiKey: opts.mistralAPIKey,
       model: opts.mistralModel || 'mistral-large-latest',
+      temperature: opts.temperature ?? 0.7,
+      maxTokens: opts.maxTokens ?? 1024
+    })
+  },
+
+  openwebui: (opts: OpenWebUIOptions) => {
+    // Open WebUI is OpenAI-compatible, so we reuse ChatOpenAI with custom baseURL
+    const baseURL = opts.openwebuiBaseURL.replace(/\/$/, '') // Remove trailing slash
+    return new ChatOpenAI({
+      modelName: opts.openwebuiModel || 'llama3.1:latest',
+      configuration: {
+        apiKey: opts.openwebuiAPIKey,
+        baseURL: baseURL
+      },
       temperature: opts.temperature ?? 0.7,
       maxTokens: opts.maxTokens ?? 1024
     })
