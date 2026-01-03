@@ -57,6 +57,24 @@
                 </select>
               </div>
             </div>
+
+            <div class="setting-divider" />
+
+            <div class="setting-item">
+              <div class="setting-info">
+                <label class="setting-label">{{ $t('agentMaxIterationsLabel') }}</label>
+              </div>
+              <div class="setting-control">
+                <input
+                  v-model.number="settingForm.agentMaxIterations"
+                  class="text-input number-input"
+                  type="number"
+                  min="1"
+                  max="50"
+                  step="1"
+                />
+              </div>
+            </div>
           </div>
         </div>
 

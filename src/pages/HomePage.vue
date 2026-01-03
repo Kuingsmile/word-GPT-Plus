@@ -306,7 +306,7 @@ const useWordFormatting = useStorage(localStorageKey.useWordFormatting, true)
 const useSelectedText = useStorage(localStorageKey.useSelectedText, true)
 const insertType = ref<insertTypes>('replace')
 
-const errorIssue = ref(false)
+const errorIssue = ref<boolean | string | null>(false)
 
 const displayHistory = computed(() => {
   return history.value.filter(msg => !(msg instanceof SystemMessage))
@@ -640,6 +640,7 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
 
     await getAgentResponse({
       ...currentConfig,
+      recursionLimit: settings.agentMaxIterations,
       messages: finalMessages,
       tools,
       errorIssue,
@@ -687,8 +688,12 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
   }
 
   if (errorIssue.value) {
-    errorIssue.value = false
-    messageUtil.error(t('somethingWentWrong'))
+    if (typeof errorIssue.value === 'string') {
+      messageUtil.error(t(errorIssue.value))
+    } else {
+      messageUtil.error(t('somethingWentWrong'))
+    }
+    errorIssue.value = null
     return
   }
 

@@ -73,6 +73,7 @@ export const Setting_Names = [
   'groqCustomModels',
   'systemPrompt',
   'userPrompt',
+  'agentMaxIterations',
 ] as const
 
 export type SettingNames = (typeof Setting_Names)[number]
@@ -174,4 +175,5 @@ export const settingPreset = {
   groqCustomModels: customModelsetting('groqCustomModels', 'groqCustomModel'),
   systemPrompt: inputSetting('', 'defaultSystemPrompt'),
   userPrompt: inputSetting('', 'defaultPrompt'),
+  agentMaxIterations: inputNumSetting(10, 'agentMaxIterations', 'maxTokens'),
 } as const satisfies Record<SettingNames, ISettingOption<any>>

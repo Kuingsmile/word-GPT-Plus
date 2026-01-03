@@ -124,6 +124,7 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
         messages: options.messages,
       },
       {
+        recursionLimit: options.recursionLimit, //最大迭代次数
         signal: options.abortSignal,
         configurable: { thread_id: options.threadId },
         streamMode: 'values',
@@ -201,7 +202,10 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
     if (error.name === 'AbortError' || options.abortSignal?.aborted) {
       throw error
     }
-    options.errorIssue.value = true
+    if (error.name === 'GraphRecursionError') {
+      options.errorIssue.value = 'recursionLimitExceeded'
+    }
+    // TODO: more specific error handling based on LangGraph error
     console.error(error)
   } finally {
     options.loading.value = false

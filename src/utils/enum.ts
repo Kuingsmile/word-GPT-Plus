@@ -7,6 +7,7 @@ export const localStorageKey = {
   insertType: 'insertType',
   useWordFormatting: 'useWordFormatting',
   useSelectedText: 'useSelectedText',
+  agentMaxIterations: 'agentMaxIterations',
   // official api
   apiKey: 'apiKey',
   model: 'model',

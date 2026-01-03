@@ -4,7 +4,7 @@ import { Ref } from 'vue'
 export interface BaseChatCompletionOptions {
   messages: Messages
   result: Ref<string>
-  errorIssue: Ref<boolean>
+  errorIssue: Ref<boolean | string | null> // extends string for specific issues
   loading: Ref<boolean>
   maxTokens?: number
   temperature?: number
@@ -58,6 +58,7 @@ export interface AgentOptions extends BaseChatCompletionOptions {
   tools?: any[]
   onToolCall?: (toolName: string, args: any) => void
   onToolResult?: (toolName: string, result: string) => void
+  recursionLimit?: number
   // Provider-specific options
   model?: string
   config?: {
