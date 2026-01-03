@@ -83,7 +83,11 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
 
   openwebui: (opts: OpenWebUIOptions) => {
     // Open WebUI is OpenAI-compatible, so we reuse ChatOpenAI with custom baseURL
-    const baseURL = opts.openwebuiBaseURL.replace(/\/$/, '') // Remove trailing slash
+    // Ensure the baseURL has /v1 suffix for OpenAI compatibility
+    let baseURL = opts.openwebuiBaseURL.replace(/\/$/, '') // Remove trailing slash
+    if (!baseURL.endsWith('/v1')) {
+      baseURL = `${baseURL}/v1`
+    }
     return new ChatOpenAI({
       modelName: opts.openwebuiModel || 'llama3.1:latest',
       configuration: {
