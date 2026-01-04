@@ -574,7 +574,7 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
   const finalSystemMessage =
     customSystemPrompt.value || systemMessage || (isAgentMode ? agentPrompt(lang) : standardPrompt(lang))
 
-    const defaultSystemMessage = new SystemMessage(finalSystemMessage)
+  const defaultSystemMessage = new SystemMessage(finalSystemMessage)
 
   // Add user message to history
   history.value.push(userMessage)
