@@ -1,3 +1,17 @@
+##  (2026-01-04)
+
+* :bug: Fix(custom): resolve issue where eslint not triggering and remove new Func usage 82204df
+* :hammer: Refactor(custom): add css and json lint a037bfc
+* :sparkles: Feature(custom): change default and max iteration limit 42b6789
+* Add renovate.json (#123) fb66c8a, closes #123
+* fix insertParagraph function (#128) b3e131d, closes #128
+* fix issue127 (#130) af92ce5, closes #130
+* Update dependency vue-i18n to v11.2.8 (#131) 037792a, closes #131
+* Update dependency zod to v4.3.5 (#132) ff97f9b, closes #132
+* Fix:  Resolve 'System message should be the first one' error on subsequent prompts (#126) b3abe94, closes #126 #125 #125
+
+
+
 ##  (2025-12-28)
 
 * :arrow_up: Upgrade(custom): upgrade deps 659831b
