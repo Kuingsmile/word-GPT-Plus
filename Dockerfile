@@ -1,5 +1,5 @@
 # 第一阶段：使用Node.js 22版本构建Vue项目
-FROM node:22.21.1-alpine3.22 as build-stage
+FROM node:24.12.0-alpine3.22 as build-stage
 WORKDIR /app
 
 # 复制项目文件并安装依赖
