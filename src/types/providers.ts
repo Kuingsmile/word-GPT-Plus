@@ -60,6 +60,11 @@ export interface OpenWebUIOptions extends BaseChatCompletionOptions {
   openwebuiBaseURL: string
   openwebuiAPIKey: string
   openwebuiModel: string
+  // RAG Options
+  ragEnabled?: boolean
+  selectedKnowledgeBases?: string[]
+  ragSearchType?: 'similarity' | 'mmr' | 'similarity_score_threshold'
+  ragTopK?: number
 }
 
 export type ProviderOptions =
@@ -71,10 +76,11 @@ export type ProviderOptions =
   | MistralOptions
   | OpenWebUIOptions
 
-type supportedProviders = 'official' | 'ollama' | 'groq' | 'gemini' | 'azure' | 'mistral' | 'openwebui'
+export type SupportedProviders = 'official' | 'ollama' | 'groq' | 'gemini' | 'azure' | 'mistral' | 'openwebui'
+
 // Agent options with tools support
 export interface AgentOptions extends BaseChatCompletionOptions {
-  provider: supportedProviders
+  provider: SupportedProviders
   tools?: any[]
   onToolCall?: (toolName: string, args: any) => void
   onToolResult?: (toolName: string, result: string) => void

@@ -12,6 +12,8 @@ type SettingValue = string | number | string[]
 function initializeSettings(): Record<string, SettingValue> {
   const settings: Record<string, SettingValue> = {}
 
+  console.log('DEBUG initializeSettings: Starting initialization')
+
   for (const key of Setting_Names) {
     const preset = settingPreset[key]
 
@@ -21,6 +23,16 @@ function initializeSettings(): Record<string, SettingValue> {
       const storageKey = preset.saveKey || key
       const storedValue = localStorage.getItem(storageKey)
       settings[key] = storedValue ?? preset.defaultValue
+
+      // Debug Mistral settings
+      if (key.startsWith('mistral')) {
+        console.log(`DEBUG initializeSettings: ${key}`, {
+          storageKey,
+          storedValue,
+          defaultValue: preset.defaultValue,
+          finalValue: settings[key],
+        })
+      }
     }
   }
 
@@ -30,11 +42,27 @@ function initializeSettings(): Record<string, SettingValue> {
     localStorage.setItem(localStorageKey.api, 'gemini')
   }
 
+  console.log('DEBUG initializeSettings: Mistral settings loaded:', {
+    mistralAPIKey: settings.mistralAPIKey,
+    mistralModelSelect: settings.mistralModelSelect,
+    mistralTemperature: settings.mistralTemperature,
+    mistralMaxTokens: settings.mistralMaxTokens,
+  })
+
   return settings
 }
 
+// Singleton instance - shared across all components
+let settingFormInstance: Ref<SettingForm> | null = null
+
 function useSettingForm() {
-  return ref(initializeSettings()) as Ref<SettingForm>
+  if (!settingFormInstance) {
+    console.log('DEBUG: Creating NEW settingForm instance')
+    settingFormInstance = ref(initializeSettings()) as Ref<SettingForm>
+  } else {
+    console.log('DEBUG: Reusing EXISTING settingForm instance')
+  }
+  return settingFormInstance
 }
 
 export default useSettingForm

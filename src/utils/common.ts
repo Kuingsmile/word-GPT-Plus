@@ -17,6 +17,10 @@ export function checkAuth(auth: Auth): boolean {
       return !!auth.geminiAPIKey
     case 'groq':
       return !!auth.groqAPIKey
+    case 'mistral':
+      return !!auth.mistralAPIKey
+    case 'openwebui':
+      return !!auth.openwebuiAPIKey && !!auth.openwebuiBaseURL
     case 'ollama':
       return true
     default:

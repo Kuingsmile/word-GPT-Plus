@@ -6,13 +6,16 @@ import { ChatOllama } from '@langchain/ollama'
 import { AzureChatOpenAI, ChatOpenAI } from '@langchain/openai'
 import { createAgent } from 'langchain'
 
+import { MistralChat } from './mistralChat'
 import {
   AgentOptions,
   AzureOptions,
   GeminiOptions,
   GroqOptions,
+  MistralOptions,
   OllamaOptions,
   OpenAIOptions,
+  OpenWebUIOptions,
   ProviderOptions,
 } from './types'
 
@@ -65,6 +68,39 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
       azureOpenAIEndpoint: opts.azureAPIEndpoint,
       azureOpenAIApiDeploymentName: opts.azureDeploymentName,
       azureOpenAIApiVersion: opts.azureAPIVersion ?? '2024-10-01',
+    })
+  },
+
+  mistral: (opts: MistralOptions) => {
+    // Use custom implementation to avoid CORS issues with OpenAI SDK headers
+    return new MistralChat({
+      apiKey: opts.mistralAPIKey,
+      model: opts.mistralModel || 'mistral-large-latest',
+      temperature: opts.temperature ?? 0.7,
+      maxTokens: opts.maxTokens ?? 1024,
+    })
+  },
+
+  openwebui: (opts: OpenWebUIOptions) => {
+    // Open WebUI API with JWT authentication
+    // Use /api/v1 endpoint which accepts JWT tokens
+    let baseURL = opts.openwebuiBaseURL.replace(/\/$/, '') // Remove trailing slash
+
+    // Add /api/v1 if not already present
+    if (!baseURL.includes('/api/v1')) {
+      baseURL = `${baseURL}/api/v1`
+    }
+
+    console.log('[OpenWebUI] Using baseURL:', baseURL)
+
+    return new ChatOpenAI({
+      modelName: opts.openwebuiModel || 'llama3.1:latest',
+      configuration: {
+        apiKey: opts.openwebuiAPIKey, // This will be the JWT token
+        baseURL,
+      },
+      temperature: opts.temperature ?? 0.7,
+      maxTokens: opts.maxTokens ?? 1024,
     })
   },
 }

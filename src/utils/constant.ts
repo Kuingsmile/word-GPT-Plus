@@ -49,6 +49,8 @@ export const availableAPIs: IStringKeyMap = {
   gemini: 'gemini',
   ollama: 'ollama',
   groq: 'groq',
+  mistral: 'mistral',
+  openwebui: 'openwebui',
 }
 
 // official API 可用的模型
@@ -104,6 +106,26 @@ export const availableModelsForGroq: string[] = [
   'meta-llama/llama-prompt-guard-2-86m',
   'moonshotai/kimi-k2-instruct-0905',
   'qwen/qwen3-32b',
+]
+
+export const availableModelsForMistral: string[] = [
+  'mistral-large-latest',
+  'mistral-small-latest',
+  'ministral-8b-latest',
+  'ministral-3b-latest',
+  'codestral-latest',
+  'codestral-mamba-latest',
+  'mistral-embed',
+]
+
+export const availableModelsForOpenWebUI: string[] = [
+  'llama3.1:latest',
+  'llama3.2:latest',
+  'llama4:latest',
+  'gpt-4',
+  'gpt-3.5-turbo',
+  'mistral-large-latest',
+  'gemini-pro',
 ]
 export const buildInPrompt = {
   translate: {
