@@ -991,3 +991,59 @@
     color: #8b949e;
   }
 }
+
+/* Icon Button for Refresh Models */
+.icon-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  color: #656d76;
+  background: #fff;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.icon-button:hover:not(:disabled) {
+  color: #0969da;
+  border-color: #0969da;
+  background: #f0f6ff;
+}
+
+.icon-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Spin animation for refresh icon */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Dark mode for icon button */
+@media (prefers-color-scheme: dark) {
+  .icon-button {
+    border-color: #30363d;
+    color: #8b949e;
+    background: #0d1117;
+  }
+
+  .icon-button:hover:not(:disabled) {
+    color: #58a6ff;
+    border-color: #58a6ff;
+    background: #161b22;
+  }
+}

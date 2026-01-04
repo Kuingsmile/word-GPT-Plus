@@ -1,0 +1,225 @@
+# Word GPT Plus Docker Compose Template
+# Copy this file to docker-compose.yml and customize for your deployment
+# 
+# Usage:
+#   cp docker-compose.template.yml docker-compose.yml
+#   docker-compose up -d
+
+version: '3.8'
+
+services:
+  word-gpt-plus:
+    # Build from local Dockerfile or use a pre-built image
+    build:
+      context: .
+      dockerfile: Dockerfile
+    
+    # Alternative: Use pre-built image (uncomment and adjust as needed)
+    # image: word-gpt-plus:latest
+    
+    container_name: word-gpt-plus
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Port mapping
+    ports:
+      - "80:80"  # Change left side to 8080 if port 80 is busy: "8080:80"
+    
+    # Environment variables (customize as needed)
+    environment:
+      # Node environment
+      NODE_ENV: production
+      
+      # Optional: Add your environment variables here
+      # API keys and endpoints should be configured through the Word add-in UI
+      # or passed at runtime
+      
+    # Volume mounts (customize as needed)
+    volumes:
+      # Example: Mount persistent configuration
+      # - ./config:/app/config
+      
+      # Example: Mount nginx config
+      # - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    
+    # Resource limits (adjust based on your system)
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Optional: Nginx reverse proxy for better control and SSL
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: word-gpt-plus-nginx
+  #   restart: unless-stopped
+  #   ports:
+  #     - "443:443"
+  #     - "80:80"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./ssl/cert.pem:/etc/nginx/ssl/cert.pem:ro
+  #     - ./ssl/key.pem:/etc/nginx/ssl/key.pem:ro
+  #   depends_on:
+  #     - word-gpt-plus
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+
+# Optional: Define a named volume for persistence
+# volumes:
+#   word-gpt-plus-data:
+#     driver: local
+
+# Network configuration (optional)
+# networks:
+#   word-gpt-plus-network:
+#     driver: bridge
+
+################################################################################
+# Configuration Guide
+################################################################################
+
+# CUSTOMIZATION TIPS:
+#
+# 1. PORT MAPPING:
+#    - Change "80:80" to "8080:80" if port 80 is unavailable
+#    - Ensure the port is not blocked by firewall
+#
+# 2. BUILDING THE IMAGE:
+#    - Option A (recommended): Use 'build' section to build locally
+#    - Option B: Pre-build image with: docker build -t word-gpt-plus:latest .
+#                Then use 'image' section instead
+#
+# 3. ENVIRONMENT VARIABLES:
+#    - The application is configured via the Word add-in UI
+#    - No need to set API keys in docker-compose.yml
+#    - They are stored in browser localStorage when configured in Word
+#
+# 4. VOLUMES:
+#    - Enable volume mounts if you want to persist configuration
+#    - nginx.conf example: https://nginx.org/en/docs/beginners_guide.html
+#
+# 5. SSL/HTTPS:
+#    - Uncomment the nginx service for production HTTPS setup
+#    - Generate self-signed cert: 
+#      openssl req -x509 -newkey rsa:4096 -keyout ssl/key.pem -out ssl/cert.pem -days 365 -nodes
+#
+# 6. RESOURCE LIMITS:
+#    - Adjust CPU and memory limits based on your system capacity
+#    - Remove 'deploy' section if using Docker version < 3.3
+#
+# 7. HEALTH CHECKS:
+#    - Health check helps ensure container is running properly
+#    - Adjust timeout values if behind slow networks
+#
+# 8. LOGGING:
+#    - Logs are stored in Docker's json-file format
+#    - Adjust max-size and max-file for your needs
+#    - View logs with: docker logs -f word-gpt-plus
+
+################################################################################
+# QUICK START COMMANDS
+################################################################################
+
+# Start the service:
+#   docker-compose up -d
+#
+# Stop the service:
+#   docker-compose down
+#
+# View logs:
+#   docker-compose logs -f
+#
+# Rebuild the image:
+#   docker-compose up -d --build
+#
+# Execute command in container:
+#   docker-compose exec word-gpt-plus <command>
+#
+# Remove everything (including volumes):
+#   docker-compose down -v
+
+################################################################################
+# NGINX REVERSE PROXY CONFIGURATION EXAMPLE
+################################################################################
+
+# Save this as nginx.conf and uncomment nginx service above:
+#
+# user nginx;
+# worker_processes auto;
+# error_log /var/log/nginx/error.log warn;
+# pid /var/run/nginx.pid;
+#
+# events {
+#     worker_connections 1024;
+# }
+#
+# http {
+#     include /etc/nginx/mime.types;
+#     default_type application/octet-stream;
+#
+#     log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+#                     '$status $body_bytes_sent "$http_referer" '
+#                     '"$http_user_agent" "$http_x_forwarded_for"';
+#
+#     access_log /var/log/nginx/access.log main;
+#
+#     sendfile on;
+#     tcp_nopush on;
+#     tcp_nodelay on;
+#     keepalive_timeout 65;
+#     types_hash_max_size 2048;
+#     client_max_body_size 20M;
+#
+#     upstream word_gpt_plus {
+#         server word-gpt-plus:80;
+#     }
+#
+#     server {
+#         listen 80;
+#         server_name _;
+#         return 301 https://$host$request_uri;
+#     }
+#
+#     server {
+#         listen 443 ssl http2;
+#         server_name _;
+#
+#         ssl_certificate /etc/nginx/ssl/cert.pem;
+#         ssl_certificate_key /etc/nginx/ssl/key.pem;
+#         ssl_protocols TLSv1.2 TLSv1.3;
+#         ssl_ciphers HIGH:!aNULL:!MD5;
+#
+#         location / {
+#             proxy_pass http://word_gpt_plus;
+#             proxy_set_header Host $host;
+#             proxy_set_header X-Real-IP $remote_addr;
+#             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#             proxy_set_header X-Forwarded-Proto $scheme;
+#             proxy_read_timeout 60s;
+#         }
+#     }
+# }

@@ -42,6 +42,21 @@ export const localStorageKey = {
   groqModel: 'groqModel',
   groqCustomModel: 'groqCustomModel',
   groqCustomModels: 'groqCustomModels',
+  // mistral api
+  mistralAPIKey: 'mistralAPIKey',
+  mistralTemperature: 'mistralTemperature',
+  mistralMaxTokens: 'mistralMaxTokens',
+  mistralModel: 'mistralModel',
+  mistralCustomModel: 'mistralCustomModel',
+  mistralCustomModels: 'mistralCustomModels',
+  // openwebui api
+  openwebuiBaseURL: 'openwebuiBaseURL',
+  openwebuiAPIKey: 'openwebuiAPIKey',
+  openwebuiModel: 'openwebuiModel',
+  openwebuiTemperature: 'openwebuiTemperature',
+  openwebuiMaxTokens: 'openwebuiMaxTokens',
+  openwebuiCustomModel: 'openwebuiCustomModel',
+  openwebuiCustomModels: 'openwebuiCustomModels',
   // proxy
   enableProxy: 'enableProxy',
   proxy: 'proxy',

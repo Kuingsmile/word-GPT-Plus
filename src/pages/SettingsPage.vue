@@ -153,13 +153,28 @@
                   <div class="setting-info">
                     <label class="setting-label">{{ $t(getLabel(item)) }}</label>
                   </div>
-                  <div style="width: 100%">
-                    <select v-model="settingForm[item as SettingNames]" class="select-input">
+                  <div style="width: 100%; display: flex; gap: 8px; align-items: center">
+                    <select v-model="settingForm[item as SettingNames]" class="select-input" style="flex: 1">
                       <option v-for="option in getMergedModelOptions(platform)" :key="option" :value="option">
                         {{ option }}
                       </option>
                     </select>
+                    <!-- Refresh Models Button for OpenWebUI -->
+                    <button
+                      v-if="platform === 'openwebui'"
+                      class="icon-button"
+                      :class="{ 'is-loading': isFetchingModels }"
+                      :disabled="isFetchingModels"
+                      :title="isFetchingModels ? 'Fetching models...' : 'Refresh models from Open WebUI'"
+                      @click="refreshOpenWebUIModels"
+                    >
+                      <RefreshCw :size="16" :class="{ spin: isFetchingModels }" />
+                    </button>
                   </div>
+                </div>
+                <!-- Error message for OpenWebUI models fetch -->
+                <div v-if="platform === 'openwebui' && modelsFetchError" style="padding: 8px 0">
+                  <span style="color: #ef4444; font-size: 12px">{{ modelsFetchError }}</span>
                 </div>
               </div>
 
@@ -183,6 +198,13 @@
                   </div>
                 </div>
               </div>
+
+              <!-- OpenWebUI RAG Settings -->
+              <OpenWebUIRagSettings
+                v-if="platform === 'openwebui'"
+                :base-u-r-l="settingForm.openwebuiBaseURL"
+                :jwt-token="settingForm.openwebuiAPIKey"
+              />
             </div>
           </div>
         </div>
@@ -377,10 +399,24 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, Cpu, Edit2, Globe, MessageSquare, Plus, Settings, Trash2, Wrench, X } from 'lucide-vue-next'
+import {
+  ArrowLeft,
+  Cpu,
+  Edit2,
+  Globe,
+  MessageSquare,
+  Plus,
+  RefreshCw,
+  Settings,
+  Trash2,
+  Wrench,
+  X,
+} from 'lucide-vue-next'
 import { onBeforeMount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { fetchOpenWebUIModels, loadOpenWebUIModels, saveOpenWebUIModels } from '@/api/openwebui'
+import OpenWebUIRagSettings from '@/components/OpenWebUIRagSettings.vue'
 import { getLabel, getPlaceholder } from '@/utils/common'
 import { availableAPIs, buildInPrompt } from '@/utils/constant'
 import { getGeneralToolDefinitions } from '@/utils/generalTools'
@@ -398,6 +434,11 @@ const wordToolsList = [...getGeneralToolDefinitions(), ...getWordToolDefinitions
 
 const newCustomModel = ref<Record<string, string>>({})
 const customModelsMap = ref<Record<string, string[]>>({})
+
+// OpenWebUI dynamic models
+const openwebuiDynamicModels = ref<string[]>(loadOpenWebUIModels())
+const isFetchingModels = ref(false)
+const modelsFetchError = ref<string | null>(null)
 
 // Prompt management
 interface Prompt {
@@ -500,7 +541,7 @@ const getCustomModelsKey = (platform: string): SettingNames | null => {
 }
 
 const loadCustomModels = () => {
-  const platforms = ['official', 'gemini', 'ollama', 'groq']
+  const platforms = ['official', 'gemini', 'ollama', 'groq', 'mistral']
   platforms.forEach(platform => {
     const key = getCustomModelsKey(platform)
     if (key && settingPreset[key].getFunc) {
@@ -546,9 +587,18 @@ const removeCustomModel = (platform: string, model: string) => {
 
 const getMergedModelOptions = (platform: string) => {
   const selectKey = `${platform}ModelSelect` as SettingNames
-  const presetOptions = settingPreset[selectKey]?.optionList || []
   const customModels = customModelsMap.value[platform] || []
 
+  // For OpenWebUI, use dynamically fetched models instead of hardcoded list
+  if (platform === 'openwebui') {
+    const dynamicModels = openwebuiDynamicModels.value
+    // Only use dynamic models if they've been fetched, otherwise fall back to preset
+    if (dynamicModels.length > 0) {
+      return [...customModels, ...dynamicModels]
+    }
+  }
+
+  const presetOptions = settingPreset[selectKey]?.optionList || []
   return [...customModels, ...presetOptions]
 }
 
@@ -636,6 +686,32 @@ const deletePrompt = (id: string) => {
   if (index !== -1) {
     savedPrompts.value.splice(index, 1)
     savePromptsToStorage()
+  }
+}
+
+// OpenWebUI models fetching
+const refreshOpenWebUIModels = async () => {
+  const baseURL = settingForm.value.openwebuiBaseURL
+  const apiKey = settingForm.value.openwebuiAPIKey
+
+  if (!baseURL || !apiKey) {
+    modelsFetchError.value = 'Please configure Base URL and API Key first'
+    return
+  }
+
+  isFetchingModels.value = true
+  modelsFetchError.value = null
+
+  try {
+    const models = await fetchOpenWebUIModels(baseURL, apiKey)
+    openwebuiDynamicModels.value = models
+    saveOpenWebUIModels(models)
+    console.log('[SettingsPage] Successfully fetched', models.length, 'models from Open WebUI')
+  } catch (error: any) {
+    console.error('[SettingsPage] Failed to fetch Open WebUI models:', error)
+    modelsFetchError.value = error.message || 'Failed to fetch models'
+  } finally {
+    isFetchingModels.value = false
   }
 }
 

@@ -362,6 +362,10 @@ const currentModelOptions = computed(() => {
       presetOptions = settingPreset.groqModelSelect.optionList || []
       customModels = getCustomModels('groqCustomModels', 'groqCustomModel')
       break
+    case 'mistral':
+      presetOptions = settingPreset.mistralModelSelect.optionList || []
+      customModels = getCustomModels('mistralCustomModels', 'mistralCustomModel')
+      break
     case 'azure':
       return []
     default:
@@ -382,6 +386,8 @@ const currentModelSelect = computed({
         return settingForm.value.ollamaModelSelect
       case 'groq':
         return settingForm.value.groqModelSelect
+      case 'mistral':
+        return settingForm.value.mistralModelSelect
       case 'azure':
         return settingForm.value.azureDeploymentName
       default:
@@ -405,6 +411,10 @@ const currentModelSelect = computed({
       case 'groq':
         settingForm.value.groqModelSelect = value
         localStorage.setItem(localStorageKey.groqModel, value)
+        break
+      case 'mistral':
+        settingForm.value.mistralModelSelect = value
+        localStorage.setItem(localStorageKey.mistralModel, value)
         break
       case 'azure':
         settingForm.value.azureDeploymentName = value
@@ -624,13 +634,34 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
       ollamaModel: settings.ollamaModelSelect,
       temperature: settings.ollamaTemperature,
     },
+    mistral: {
+      provider: 'mistral',
+      mistralAPIKey: settings.mistralAPIKey,
+      mistralModel: settings.mistralModelSelect,
+      maxTokens: settings.mistralMaxTokens,
+      temperature: settings.mistralTemperature,
+    },
+    openwebui: {
+      provider: 'openwebui',
+      openwebuiBaseURL: settings.openwebuiBaseURL,
+      openwebuiAPIKey: settings.openwebuiAPIKey,
+      openwebuiModel: settings.openwebuiModelSelect,
+      maxTokens: settings.openwebuiMaxTokens,
+      temperature: settings.openwebuiTemperature,
+    },
   }
+
+  console.log('DEBUG: Provider:', provider)
+  console.log('DEBUG: Settings mistralAPIKey:', settings.mistralAPIKey)
+  console.log('DEBUG: All settings:', settings)
 
   const currentConfig = providerConfigs[provider]
   if (!currentConfig) {
     messageUtil.error(t('notSupportedProvider'))
     return
   }
+
+  console.log('DEBUG: Current config for', provider, ':', currentConfig)
 
   history.value.push(new AIMessage(''))
 
@@ -717,7 +748,13 @@ function checkApiKey() {
     azureAPIKey: settingForm.value.azureAPIKey,
     geminiAPIKey: settingForm.value.geminiAPIKey,
     groqAPIKey: settingForm.value.groqAPIKey,
+    mistralAPIKey: settingForm.value.mistralAPIKey,
+    openwebuiAPIKey: settingForm.value.openwebuiAPIKey,
+    openwebuiBaseURL: settingForm.value.openwebuiBaseURL,
   }
+
+  console.log('DEBUG checkApiKey:', auth)
+
   if (!checkAuth(auth)) {
     messageUtil.error(t('noAPIKey'))
     return false

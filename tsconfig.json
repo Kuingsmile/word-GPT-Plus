@@ -14,7 +14,7 @@
     "sourceMap": true,
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
-    "types": ["office-js","element-plus/global"],
+    "types": ["office-js", "element-plus/global"],
     "paths": {
       "@/*": ["src/*"]
     },
