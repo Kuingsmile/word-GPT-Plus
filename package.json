@@ -30,7 +30,7 @@
     "vue": "^3.5.26",
     "vue-i18n": "^11.2.7",
     "vue-router": "^4.6.4",
-    "zod": "^4.2.1"
+    "zod": "^4.3.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

@@ -168,7 +168,7 @@
                       :title="isFetchingModels ? 'Fetching models...' : 'Refresh models from Open WebUI'"
                       @click="refreshOpenWebUIModels"
                     >
-                      <RefreshCw :size="16" :class="{ 'spin': isFetchingModels }" />
+                      <RefreshCw :size="16" :class="{ spin: isFetchingModels }" />
                     </button>
                   </div>
                 </div>
@@ -198,6 +198,13 @@
                   </div>
                 </div>
               </div>
+
+              <!-- OpenWebUI RAG Settings -->
+              <OpenWebUIRagSettings
+                v-if="platform === 'openwebui'"
+                :base-u-r-l="settingForm.openwebuiBaseURL"
+                :jwt-token="settingForm.openwebuiAPIKey"
+              />
             </div>
           </div>
         </div>
@@ -392,11 +399,24 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, Cpu, Edit2, Globe, MessageSquare, Plus, RefreshCw, Settings, Trash2, Wrench, X } from 'lucide-vue-next'
+import {
+  ArrowLeft,
+  Cpu,
+  Edit2,
+  Globe,
+  MessageSquare,
+  Plus,
+  RefreshCw,
+  Settings,
+  Trash2,
+  Wrench,
+  X,
+} from 'lucide-vue-next'
 import { onBeforeMount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { fetchOpenWebUIModels, loadOpenWebUIModels, saveOpenWebUIModels } from '@/api/openwebui'
+import OpenWebUIRagSettings from '@/components/OpenWebUIRagSettings.vue'
 import { getLabel, getPlaceholder } from '@/utils/common'
 import { availableAPIs, buildInPrompt } from '@/utils/constant'
 import { getGeneralToolDefinitions } from '@/utils/generalTools'

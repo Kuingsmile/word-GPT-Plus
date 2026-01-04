@@ -115,7 +115,7 @@ export const availableModelsForMistral: string[] = [
   'ministral-3b-latest',
   'codestral-latest',
   'codestral-mamba-latest',
-  'mistral-embed'
+  'mistral-embed',
 ]
 
 export const availableModelsForOpenWebUI: string[] = [
@@ -125,7 +125,7 @@ export const availableModelsForOpenWebUI: string[] = [
   'gpt-4',
   'gpt-3.5-turbo',
   'mistral-large-latest',
-  'gemini-pro'
+  'gemini-pro',
 ]
 export const buildInPrompt = {
   translate: {

@@ -4869,7 +4869,7 @@ yoctocolors-cjs@^2.1.2:
   resolved "https://registry.npmjs.org/yoctocolors-cjs/-/yoctocolors-cjs-2.1.2.tgz"
   integrity sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==
 
-"zod@^3.25 || ^4.0", "zod@^3.25.32 || ^4.1.0", "zod@^3.25.76 || ^4", zod@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.npmjs.org/zod/-/zod-4.2.1.tgz"
-  integrity sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==
+"zod@^3.25 || ^4.0", "zod@^3.25.32 || ^4.1.0", "zod@^3.25.76 || ^4", zod@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.npmjs.org/zod/-/zod-4.3.4.tgz"
+  integrity sha512-Zw/uYiiyF6pUT1qmKbZziChgNPRu+ZRneAsMUDU6IwmXdWt5JwcUfy2bvLOCUtz5UniaN/Zx5aFttZYbYc7O/A==

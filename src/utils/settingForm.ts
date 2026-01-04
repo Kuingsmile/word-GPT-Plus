@@ -30,7 +30,7 @@ function initializeSettings(): Record<string, SettingValue> {
           storageKey,
           storedValue,
           defaultValue: preset.defaultValue,
-          finalValue: settings[key]
+          finalValue: settings[key],
         })
       }
     }
@@ -46,7 +46,7 @@ function initializeSettings(): Record<string, SettingValue> {
     mistralAPIKey: settings.mistralAPIKey,
     mistralModelSelect: settings.mistralModelSelect,
     mistralTemperature: settings.mistralTemperature,
-    mistralMaxTokens: settings.mistralMaxTokens
+    mistralMaxTokens: settings.mistralMaxTokens,
   })
 
   return settings

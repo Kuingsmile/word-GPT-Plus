@@ -6,6 +6,7 @@ import { ChatOllama } from '@langchain/ollama'
 import { AzureChatOpenAI, ChatOpenAI } from '@langchain/openai'
 import { createAgent } from 'langchain'
 
+import { MistralChat } from './mistralChat'
 import {
   AgentOptions,
   AzureOptions,
@@ -17,7 +18,6 @@ import {
   OpenWebUIOptions,
   ProviderOptions,
 } from './types'
-import { MistralChat } from './mistralChat'
 
 const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
   official: (opts: OpenAIOptions) => {
@@ -82,17 +82,22 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
   },
 
   openwebui: (opts: OpenWebUIOptions) => {
-    // Open WebUI is OpenAI-compatible, so we reuse ChatOpenAI with custom baseURL
-    // Ensure the baseURL has /v1 suffix for OpenAI compatibility
+    // Open WebUI API with JWT authentication
+    // Use /api/v1 endpoint which accepts JWT tokens
     let baseURL = opts.openwebuiBaseURL.replace(/\/$/, '') // Remove trailing slash
-    if (!baseURL.endsWith('/v1')) {
-      baseURL = `${baseURL}/v1`
+
+    // Add /api/v1 if not already present
+    if (!baseURL.includes('/api/v1')) {
+      baseURL = `${baseURL}/api/v1`
     }
+
+    console.log('[OpenWebUI] Using baseURL:', baseURL)
+
     return new ChatOpenAI({
       modelName: opts.openwebuiModel || 'llama3.1:latest',
       configuration: {
-        apiKey: opts.openwebuiAPIKey,
-        baseURL: baseURL,
+        apiKey: opts.openwebuiAPIKey, // This will be the JWT token
+        baseURL,
       },
       temperature: opts.temperature ?? 0.7,
       maxTokens: opts.maxTokens ?? 1024,

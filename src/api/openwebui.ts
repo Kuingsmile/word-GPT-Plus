@@ -16,38 +16,30 @@ export interface OpenWebUIModelsResponse {
 
 /**
  * Fetch available models from Open WebUI instance
- * @param baseURL - Open WebUI base URL (e.g., https://wordai.hekanet.de/api)
- * @param apiKey - Open WebUI API key
+ * @param baseURL - Open WebUI base URL (e.g., https://wordai.hekanet.de)
+ * @param jwtToken - Open WebUI JWT token (from login)
  * @returns Array of model IDs
  */
-export async function fetchOpenWebUIModels(
-  baseURL: string,
-  apiKey: string
-): Promise<string[]> {
+export async function fetchOpenWebUIModels(baseURL: string, jwtToken: string): Promise<string[]> {
   try {
     // Remove trailing slash and ensure we have the base URL
     const cleanBaseURL = baseURL.replace(/\/$/, '')
 
-    // Open WebUI models endpoint: /api/models
-    // Note: Don't add /v1 here - the /api/models endpoint is separate from OpenAI-compatible endpoint
-    const modelsURL = cleanBaseURL.endsWith('/api')
-      ? `${cleanBaseURL}/models`
-      : `${cleanBaseURL}/api/models`
+    // Use /api/models endpoint which accepts JWT authentication
+    const modelsURL = `${cleanBaseURL}/api/models`
 
     console.log('[OpenWebUI] Fetching models from:', modelsURL)
 
     const response = await fetch(modelsURL, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      }
+        Authorization: `Bearer ${jwtToken}`,
+        'Content-Type': 'application/json',
+      },
     })
 
     if (!response.ok) {
-      throw new Error(
-        `Failed to fetch models: ${response.status} ${response.statusText}`
-      )
+      throw new Error(`Failed to fetch models: ${response.status} ${response.statusText}`)
     }
 
     const data: OpenWebUIModelsResponse = await response.json()
@@ -69,10 +61,7 @@ export async function fetchOpenWebUIModels(
  */
 export function saveOpenWebUIModels(models: string[]): void {
   localStorage.setItem('openwebuiFetchedModels', JSON.stringify(models))
-  localStorage.setItem(
-    'openwebuiModelsLastFetch',
-    new Date().toISOString()
-  )
+  localStorage.setItem('openwebuiModelsLastFetch', new Date().toISOString())
 }
 
 /**

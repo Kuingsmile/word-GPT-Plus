@@ -1,7 +1,7 @@
-import { BaseChatModel } from '@langchain/core/language_models/chat_models'
-import { BaseMessage, AIMessage, AIMessageChunk } from '@langchain/core/messages'
-import { ChatGeneration, ChatGenerationChunk, ChatResult } from '@langchain/core/outputs'
 import { CallbackManagerForLLMRun } from '@langchain/core/callbacks/manager'
+import { BaseChatModel } from '@langchain/core/language_models/chat_models'
+import { AIMessage, AIMessageChunk, BaseMessage } from '@langchain/core/messages'
+import { ChatGeneration, ChatGenerationChunk, ChatResult } from '@langchain/core/outputs'
 
 interface MistralChatParams {
   apiKey: string
@@ -35,9 +35,9 @@ export class MistralChat extends BaseChatModel {
   async _generate(
     messages: BaseMessage[],
     options?: this['ParsedCallOptions'],
-    runManager?: CallbackManagerForLLMRun
+    runManager?: CallbackManagerForLLMRun,
   ): Promise<ChatResult> {
-    const mistralMessages = messages.map((msg) => {
+    const mistralMessages = messages.map(msg => {
       const type = msg._getType()
       if (type === 'human') {
         return { role: 'user' as const, content: msg.content as string }
@@ -53,15 +53,15 @@ export class MistralChat extends BaseChatModel {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`
+        Authorization: `Bearer ${this.apiKey}`,
       },
       body: JSON.stringify({
         model: this.modelName,
         messages: mistralMessages,
         temperature: this.temperature,
-        max_tokens: this.maxTokens
+        max_tokens: this.maxTokens,
       }),
-      signal: options?.signal
+      signal: options?.signal,
     })
 
     if (!response.ok) {
@@ -76,18 +76,18 @@ export class MistralChat extends BaseChatModel {
       generations: [
         {
           text: content,
-          message: new AIMessage(content)
-        }
-      ]
+          message: new AIMessage(content),
+        },
+      ],
     }
   }
 
   async *_streamResponseChunks(
     messages: BaseMessage[],
     options?: this['ParsedCallOptions'],
-    runManager?: CallbackManagerForLLMRun
+    runManager?: CallbackManagerForLLMRun,
   ): AsyncGenerator<ChatGenerationChunk> {
-    const mistralMessages = messages.map((msg) => {
+    const mistralMessages = messages.map(msg => {
       const type = msg._getType()
       if (type === 'human') {
         return { role: 'user' as const, content: msg.content as string }
@@ -103,16 +103,16 @@ export class MistralChat extends BaseChatModel {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`
+        Authorization: `Bearer ${this.apiKey}`,
       },
       body: JSON.stringify({
         model: this.modelName,
         messages: mistralMessages,
         temperature: this.temperature,
         max_tokens: this.maxTokens,
-        stream: true
+        stream: true,
       }),
-      signal: options?.signal
+      signal: options?.signal,
     })
 
     if (!response.ok) {
@@ -147,7 +147,7 @@ export class MistralChat extends BaseChatModel {
               if (content) {
                 yield new ChatGenerationChunk({
                   text: content,
-                  message: new AIMessageChunk(content)
+                  message: new AIMessageChunk(content),
                 })
               }
             } catch (e) {

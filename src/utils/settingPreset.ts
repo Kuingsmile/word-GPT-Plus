@@ -195,22 +195,14 @@ export const settingPreset = {
   mistralAPIKey: inputSetting(''),
   mistralTemperature: inputNumSetting(0.7, 'mistralTemperature', 'temperature'),
   mistralMaxTokens: inputNumSetting(1024, 'mistralMaxTokens', 'maxTokens'),
-  mistralModelSelect: selectSetting(
-    'mistral-large-latest',
-    'mistralModel',
-    availableModelsForMistral
-  ),
+  mistralModelSelect: selectSetting('mistral-large-latest', 'mistralModel', availableModelsForMistral),
   mistralCustomModel: inputSetting(''),
   mistralCustomModels: customModelsetting('mistralCustomModels', 'mistralCustomModel'),
   openwebuiBaseURL: inputSetting('', 'openwebuiBaseURL'),
   openwebuiAPIKey: inputSetting('', 'openwebuiAPIKey'),
   openwebuiTemperature: inputNumSetting(0.7, 'openwebuiTemperature', 'temperature'),
   openwebuiMaxTokens: inputNumSetting(1024, 'openwebuiMaxTokens', 'maxTokens'),
-  openwebuiModelSelect: selectSetting(
-    'llama3.1:latest',
-    'openwebuiModel',
-    availableModelsForOpenWebUI
-  ),
+  openwebuiModelSelect: selectSetting('llama3.1:latest', 'openwebuiModel', availableModelsForOpenWebUI),
   openwebuiCustomModel: inputSetting(''),
   openwebuiCustomModels: customModelsetting('openwebuiCustomModels', 'openwebuiCustomModel'),
   systemPrompt: inputSetting('', 'defaultSystemPrompt'),
