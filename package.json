@@ -22,6 +22,7 @@
     "@langchain/ollama": "^1.1.0",
     "@langchain/openai": "^1.2.0",
     "@vueuse/core": "^14.1.0",
+    "dexie": "^4.2.1",
     "element-plus": "2.13.0",
     "langchain": "^1.2.3",
     "lucide-vue-next": "^0.562.0",
