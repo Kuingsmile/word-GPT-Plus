@@ -126,7 +126,10 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
       {
         recursionLimit: options.recursionLimit, //最大迭代次数
         signal: options.abortSignal,
-        configurable: { thread_id: options.threadId },
+        configurable: {
+          thread_id: options.threadId,
+          checkpoint_id: options.checkpointId,
+        },
         streamMode: 'values',
       },
     )

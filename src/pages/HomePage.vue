@@ -13,6 +13,9 @@
         <button class="settings-icon-btn" :title="$t('settings')" @click="settings">
           <Settings :size="18" />
         </button>
+        <button class="history-icon-btn" :title="$t('checkPoints')" @click="checkPoints">
+          <History :size="18" />
+        </button>
       </div>
     </div>
 
@@ -157,6 +160,7 @@ import {
   FileCheck,
   FileText,
   Globe,
+  History,
   MessageSquare,
   Plus,
   Send,
@@ -416,6 +420,10 @@ const currentModelSelect = computed({
 
 function settings() {
   router.push('/settings')
+}
+
+function checkPoints() {
+  router.push('/checkpoints')
 }
 
 function startNewChat() {

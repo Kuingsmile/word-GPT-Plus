@@ -1,6 +1,5 @@
 import type { RunnableConfig } from '@langchain/core/runnables'
 import { BaseCheckpointSaver, Checkpoint, CheckpointMetadata, CheckpointTuple } from '@langchain/langgraph'
-// Removed failing import for PendingWrite
 import Dexie, { Table } from 'dexie'
 
 export interface Thread {
@@ -21,8 +20,8 @@ interface CheckpointRow {
   thread_id: string
   checkpoint_id: string
   parent_checkpoint_id?: string
-  checkpoint: Checkpoint
-  metadata: CheckpointMetadata
+  checkpoint: any
+  metadata: any
 }
 
 export interface CheckpointListOptions {
@@ -69,14 +68,13 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
       row = rows[0]
     }
 
-    if (!row) {
-      return undefined
-    }
-
+    if (!row) return undefined
+    const checkpoint = row.checkpoint as Checkpoint
+    const metadata = row.metadata as CheckpointMetadata
     return {
       config: { configurable: { thread_id, checkpoint_id: row.checkpoint_id } },
-      checkpoint: row.checkpoint,
-      metadata: row.metadata,
+      checkpoint,
+      metadata,
       parentConfig: row.parent_checkpoint_id
         ? { configurable: { thread_id, checkpoint_id: row.parent_checkpoint_id } }
         : undefined,
@@ -137,14 +135,22 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
     const checkpointConfig = { configurable: { ...config.configurable, checkpoint_id: taskId } }
     const current = await this.getTuple(config)
 
+    // Deep copy channel values
+    const channel_values = JSON.parse(JSON.stringify(current?.checkpoint.channel_values ?? {}))
+    // Apply writes to channel values
+    for (const [key, value] of writes) {
+      if (channel_values[key] && Array.isArray(channel_values[key]) && Array.isArray(value)) {
+        channel_values[key] = channel_values[key].concat(value)
+      } else {
+        channel_values[key] = value
+      }
+    }
+
     const newCheckpoint: Checkpoint = {
       v: 1,
       ts: new Date().toISOString(),
       id: taskId,
-      channel_values: {
-        ...current?.checkpoint.channel_values,
-        ...Object.fromEntries(writes),
-      },
+      channel_values,
       channel_versions: current?.checkpoint.channel_versions ?? {},
       versions_seen: current?.checkpoint.versions_seen ?? {},
     }

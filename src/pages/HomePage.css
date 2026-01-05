@@ -45,7 +45,8 @@
 }
 
 .new-chat-btn,
-.settings-icon-btn {
+.settings-icon-btn,
+.history-icon-btn {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -60,7 +61,8 @@
 }
 
 .new-chat-btn:hover,
-.settings-icon-btn:hover {
+.settings-icon-btn:hover,
+.history-icon-btn:hover {
   color: #0969da;
   background: #e6eaef;
 }
