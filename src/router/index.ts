@@ -14,11 +14,6 @@ export default createRouter({
       component: () => import('../pages/SettingsPage.vue'),
     },
     {
-      path: '/checkpoints',
-      name: 'checkPoints',
-      component: () => import('../pages/checkPointsPage.vue'),
-    },
-    {
       path: '/:pathMatch(.*)*',
       redirect: '/',
     },

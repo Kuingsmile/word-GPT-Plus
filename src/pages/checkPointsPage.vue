@@ -11,9 +11,53 @@
     </div>
 
     <div class="checkpoint-main">
-      <div class="checkpoint-body">
-        <div class="no-checkpoint-body">
-          {{ $t('NocheckPoints') || 'No History Records' }}
+      <div v-if="loading" class="loading-body">
+        <div class="loading-main">{{ $t('loading') || 'Loading history...' }}</div>
+      </div>
+
+      <div v-else-if="historyItems.length === 0" class="no-checkpoint-body">
+        {{ $t('NocheckPoints') || 'No History Records' }}
+      </div>
+      <div v-else class="checkpoint-body">
+        <div class="checkpoint-section">
+          <div class="checkpoint-card">
+            <div
+              v-for="item in historyItems"
+              :key="item.id"
+              class="checkpoint-item vertical"
+              :class="{ active: currentCheckpointId === item.id }"
+              :title="'ID: ' + item.id"
+              @click="handleRestore(item)"
+            >
+              <div class="checkpoint-info">
+                <component :is="getIcon(item.type)" :size="16" :class="getIconClass(item.type)" />
+                <span style="font-weight: 600; font-size: 13px"> Step {{ item.step }}</span>
+                <span
+                  v-if="item.toolName"
+                  style="font-size: 12px; color: #e65100; background: #fff3e0; padding: 0 4px; border-radius: 4px"
+                >
+                  {{ item.toolName }}
+                </span>
+                <span style="color: #656d76; font-size: 12px; margin-left: auto">
+                  {{ formatTime(item.timestamp) }}
+                </span>
+              </div>
+
+              <div class="checkpoint-control left-gap">
+                <div
+                  style="
+                    font-size: 13px;
+                    color: #57606a;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  "
+                >
+                  {{ item.previewText }}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -22,12 +66,10 @@
 
 <script setup lang="ts">
 import { RunnableConfig } from '@langchain/core/runnables'
-import { ArrowLeft } from 'lucide-vue-next'
+import { ArrowLeft, Bot, Clock, Hammer, User } from 'lucide-vue-next'
 import { ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
 
 import { IndexedDBSaver } from '@/api/checkpoints'
-const router = useRouter()
 
 // 定义 Props
 const props = defineProps<{
@@ -36,8 +78,11 @@ const props = defineProps<{
   currentCheckpointId?: string // 当前正在显示的节点 ID
 }>()
 
-// 定义 Emits
-// const emit = defineEmits<(e: 'restore', checkpointId: string) => void>()
+// 定义 Emits - 允许父组件处理回溯逻辑
+const emit = defineEmits<{
+  (e: 'restore', checkpointId: string): void
+  (e: 'close'): void
+}>()
 
 interface HistoryViewItem {
   id: string
@@ -51,71 +96,219 @@ interface HistoryViewItem {
 const historyItems = ref<HistoryViewItem[]>([])
 const loading = ref(false)
 
-// 核心逻辑：加载历史
+// 图标映射逻辑
+const getIcon = (type: string) => {
+  switch (type) {
+    case 'human':
+      return User
+    case 'tool':
+      return Hammer
+    case 'ai':
+      return Bot
+    default:
+      return Clock
+  }
+}
+
+// 图标颜色样式（内联或辅助类）
+const getIconClass = (type: string) => {
+  switch (type) {
+    case 'human':
+      return 'text-blue-500'
+    case 'tool':
+      return 'text-orange-500'
+    case 'ai':
+      return 'text-green-500'
+    default:
+      return 'text-gray-500'
+  }
+}
+
+// 格式化时间
+const formatTime = (isoStr: string) => {
+  try {
+    const date = new Date(isoStr)
+    return date.toLocaleString(undefined, {
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    })
+  } catch (e) {
+    console.error('Failed to format time:', e)
+    return isoStr
+  }
+}
+
+// // 核心逻辑：加载历史
+// const loadHistory = async () => {
+//   if (!props.threadId) return
+//   loading.value = true
+//   historyItems.value = []
+
+//   try {
+//     const config: RunnableConfig = {
+//       configurable: { thread_id: props.threadId },
+//     }
+
+//     // 调用 Saver 的 list 方法
+//     // limit: 50 限制加载数量，避免卡顿
+//     const iterator = props.saver.list(config, { limit: 50 })
+
+//     for await (const tuple of iterator) {
+//       const { checkpoint, metadata, config } = tuple
+
+//       // 解析 checkpoint 里的消息
+//       // HACK: 类型断言处理
+//       interface CheckpointMessage {
+//         _getType: () => 'ai' | 'human' | 'tool'
+//         content: string | any
+//         tool_calls?: { name: string }[]
+//       }
+
+//       const messages = (checkpoint.channel_values?.messages || []) as CheckpointMessage[]
+//       const lastMsg = messages.at(-1)
+
+//       if (!lastMsg) continue
+
+//       // 构建视图数据
+//       // 这里的 getType 需要做安全检查，防止某些非标准消息报错
+//       const msgType = lastMsg._getType ? lastMsg._getType() : 'ai'
+//       const isTool = msgType === 'tool'
+//       const isAI = msgType === 'ai'
+//       const isHuman = msgType === 'human'
+
+//       let type: 'ai' | 'human' | 'tool' = 'ai'
+//       if (isTool) type = 'tool'
+//       else if (isHuman) type = 'human'
+
+//       // 内容预览处理：处理字符串或复杂对象
+//       let previewText = '[Complex Content]'
+//       if (typeof lastMsg.content === 'string') {
+//         previewText = lastMsg.content
+//       } else if (Array.isArray(lastMsg.content)) {
+//         // 处理多模态内容或 Block 内容
+//         previewText = lastMsg.content.map((c: any) => c.text || '').join(' ')
+//       }
+
+//       // 截断过长文本
+//       previewText = previewText.slice(0, 100) + (previewText.length > 100 ? '...' : '')
+//       if (!previewText) previewText = '[Empty Message]'
+
+//       historyItems.value.push({
+//         id: config.configurable?.checkpoint_id || '',
+//         step: metadata?.step || 0,
+//         timestamp: checkpoint.ts,
+//         previewText,
+//         type,
+//         toolName: isAI && lastMsg.tool_calls?.length ? lastMsg.tool_calls[0].name : undefined,
+//       })
+//     }
+//   } catch (err) {
+//     console.error('Failed to load history:', err)
+//   } finally {
+//     loading.value = false
+//   }
+// }
 const loadHistory = async () => {
   if (!props.threadId) return
   loading.value = true
   historyItems.value = []
 
   try {
+    console.log('[CheckpointsPage] Loading history for thread:', props.threadId)
+
     const config: RunnableConfig = {
       configurable: { thread_id: props.threadId },
     }
 
-    // 调用 Saver 的 list 方法
-    // 假设 list 返回的是 AsyncGenerator
     const iterator = props.saver.list(config, { limit: 50 })
 
+    let count = 0
     for await (const tuple of iterator) {
+      count++
+      console.log(`[CheckpointsPage] Processing checkpoint ${count}:`, {
+        checkpoint_id: tuple.config.configurable?.checkpoint_id,
+        step: tuple.metadata?.step,
+        has_messages: !!tuple.checkpoint.channel_values?.messages,
+        // message_count: tuple.checkpoint.channel_values?.messages?.length,
+      })
+
       const { checkpoint, metadata, config } = tuple
 
-      // 解析 checkpoint 里的消息
-      // LangGraph 的 checkpoint 通常包含 channel_values
-      // HACK: The type of checkpoint is `any`, manually define the type of the message
       interface CheckpointMessage {
-        _getType: () => 'ai' | 'human' | 'tool'
+        _getType?: () => 'ai' | 'human' | 'tool'
         content: string | any
         tool_calls?: { name: string }[]
       }
+
       const messages = (checkpoint.channel_values?.messages || []) as CheckpointMessage[]
+      console.log(`[CheckpointsPage] Messages in checkpoint:`, messages.length)
+
       const lastMsg = messages.at(-1)
 
-      if (!lastMsg) continue
+      if (!lastMsg) {
+        console.warn('[CheckpointsPage] No last message found')
+        continue
+      }
 
-      // 构建视图数据
-      const isTool = lastMsg._getType() === 'tool'
-      const isAI = lastMsg._getType() === 'ai'
+      // ✅ 安全地获取消息类型
+      let msgType: 'ai' | 'human' | 'tool' = 'ai'
+      if (typeof lastMsg._getType === 'function') {
+        try {
+          msgType = lastMsg._getType()
+        } catch (e) {
+          console.warn('[CheckpointsPage] Failed to get message type:', e)
+        }
+      }
+
+      const isTool = msgType === 'tool'
+      const isAI = msgType === 'ai'
+      const isHuman = msgType === 'human'
+
+      let type: 'ai' | 'human' | 'tool' = 'ai'
+      if (isTool) type = 'tool'
+      else if (isHuman) type = 'human'
+
+      let previewText = '[Complex Content]'
+      if (typeof lastMsg.content === 'string') {
+        previewText = lastMsg.content
+      } else if (Array.isArray(lastMsg.content)) {
+        previewText = lastMsg.content.map((c: any) => (typeof c === 'string' ? c : c.text || '')).join(' ')
+      } else if (lastMsg.content && typeof lastMsg.content === 'object') {
+        // 处理对象类型的 content
+        previewText = JSON.stringify(lastMsg.content).slice(0, 100)
+      }
+
+      previewText = previewText.slice(0, 100) + (previewText.length > 100 ? '...' : '')
+      if (!previewText || previewText.trim() === '') previewText = '[Empty Message]'
 
       historyItems.value.push({
         id: config.configurable?.checkpoint_id || '',
         step: metadata?.step || 0,
-        timestamp: checkpoint.ts, // ISO string
-        previewText:
-          typeof lastMsg.content === 'string'
-            ? lastMsg.content.slice(0, 50) + (lastMsg.content.length > 50 ? '...' : '')
-            : '[非文本内容]',
-        type: isTool ? 'tool' : isAI ? 'ai' : 'human',
+        timestamp: checkpoint.ts,
+        previewText,
+        type,
         toolName: isAI && lastMsg.tool_calls?.length ? lastMsg.tool_calls[0].name : undefined,
       })
     }
+
+    console.log(`[CheckpointsPage] Loaded ${historyItems.value.length} history items`)
   } catch (err) {
-    console.error('Failed to load history:', err)
+    console.error('[CheckpointsPage] Failed to load history:', err)
   } finally {
     loading.value = false
   }
 }
-
-// // 格式化时间
-// const formatTime = (isoStr: string) => {
-//   return new Date(isoStr).toLocaleTimeString()
-// }
-
-// // 点击恢复
-// const handleRestore = (item: HistoryViewItem) => {
-//   if (confirm(`确定要回溯到 Step ${item.step} 吗？之后的操作将被创建一个新的分支。`)) {
-//     emit('restore', item.id)
-//   }
-// }
+// 点击恢复
+const handleRestore = (item: HistoryViewItem) => {
+  // 简单的确认逻辑，实际业务中可以用 Modal
+  if (confirm(`Revert to Step ${item.step}? This will branch the conversation.`)) {
+    emit('restore', item.id)
+    backToHome() // 恢复后通常跳转回聊天界面
+  }
+}
 
 // 监听 threadId 变化自动加载
 watch(
@@ -126,10 +319,11 @@ watch(
   { immediate: true },
 )
 
-// 暴露 loadHistory 给父组件，以便在对话更新后刷新列表
+// 暴露给父组件
 defineExpose({ loadHistory })
+
 function backToHome() {
-  router.push('/')
+  emit('close')
 }
 </script>
 

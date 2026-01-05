@@ -1,10 +1,12 @@
 import { BaseChatModel } from '@langchain/core/language_models/chat_models'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { ChatGroq } from '@langchain/groq'
-import { MemorySaver } from '@langchain/langgraph'
+// import { MemorySaver } from '@langchain/langgraph'
 import { ChatOllama } from '@langchain/ollama'
 import { AzureChatOpenAI, ChatOpenAI } from '@langchain/openai'
 import { createAgent } from 'langchain'
+
+import { IndexedDBSaver } from '@/api/checkpoints'
 
 import {
   AgentOptions,
@@ -69,10 +71,15 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
   },
 }
 
-const checkpointer = new MemorySaver()
+// const checkpointer = new MemorySaver()
+const checkpointer = new IndexedDBSaver()
 
 async function executeChatFlow(model: BaseChatModel, options: ProviderOptions): Promise<void> {
   try {
+    if (!options.threadId) {
+      options.threadId = crypto.randomUUID()
+      console.log(`[Chat] New thread started: ${options.threadId}`)
+    }
     const agent = createAgent({
       model,
       tools: [],
@@ -113,6 +120,10 @@ async function executeChatFlow(model: BaseChatModel, options: ProviderOptions): 
 
 async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Promise<void> {
   try {
+    if (!options.threadId) {
+      options.threadId = crypto.randomUUID()
+      console.log(`[Agent] New thread started: ${options.threadId}`)
+    }
     const agent = createAgent({
       model,
       tools: options.tools || [],
