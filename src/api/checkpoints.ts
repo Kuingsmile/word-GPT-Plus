@@ -78,7 +78,7 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
         return undefined
       }
 
-      // ✅ 直接使用对象，不需要序列化
+      //直接使用对象，不需要序列化
       const checkpoint = row.checkpoint as Checkpoint
       const metadata = row.metadata as CheckpointMetadata
 
@@ -96,42 +96,8 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
     }
   }
 
-  // async *list(config: RunnableConfig, options?: CheckpointListOptions): AsyncGenerator<CheckpointTuple> {
-  //   if (!config.configurable || !config.configurable.thread_id) {
-  //     return
-  //   }
-  //   const { thread_id } = config.configurable
-  //   let query = db.checkpoints.where({ thread_id }).reverse()
-
-  //   const before_id = options?.before?.configurable?.checkpoint_id
-  //   if (before_id) {
-  //     query = query.filter(row => row.checkpoint_id < before_id)
-  //   }
-
-  //   if (options?.limit) {
-  //     query = query.limit(options.limit)
-  //   }
-
-  //   const rows = await query.toArray()
-
-  //   for (const row of rows) {
-  //     const checkpoint = row.checkpoint as Checkpoint
-  //     const metadata = row.metadata as CheckpointMetadata
-  //     yield {
-  //       config: { configurable: { thread_id: row.thread_id, checkpoint_id: row.checkpoint_id } },
-  //       checkpoint,
-  //       metadata,
-  //       parentConfig: row.parent_checkpoint_id
-  //         ? { configurable: { thread_id: row.thread_id, checkpoint_id: row.parent_checkpoint_id } }
-  //         : undefined,
-  //     }
-  //   }
-  // }
-
   async *list(config: RunnableConfig, options?: CheckpointListOptions): AsyncGenerator<CheckpointTuple> {
-    console.log('[IndexedDBSaver] list called with:', { config, options })
     if (!config.configurable || !config.configurable.thread_id) {
-      console.warn('[IndexedDBSaver] list: missing thread_id')
       return
     }
     const { thread_id } = config.configurable
@@ -147,31 +113,12 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
     }
 
     const rows = await query.toArray()
-    console.log(`[IndexedDBSaver] list found ${rows.length} checkpoints for thread ${thread_id}`)
 
     for (const row of rows) {
-      // 调试：打印第一条数据的结构
-      if (rows.indexOf(row) === 0) {
-        console.log('[IndexedDBSaver] First checkpoint structure:', {
-          checkpoint_id: row.checkpoint_id,
-          has_checkpoint: !!row.checkpoint,
-          has_metadata: !!row.metadata,
-          checkpoint_keys: Object.keys(row.checkpoint || {}),
-          has_messages: !!row.checkpoint?.channel_values?.messages,
-          message_count: row.checkpoint?.channel_values?.messages?.length,
-        })
-      }
-
       const checkpoint = row.checkpoint as Checkpoint
       const metadata = row.metadata as CheckpointMetadata
-
       yield {
-        config: {
-          configurable: {
-            thread_id: row.thread_id,
-            checkpoint_id: row.checkpoint_id,
-          },
-        },
+        config: { configurable: { thread_id: row.thread_id, checkpoint_id: row.checkpoint_id } },
         checkpoint,
         metadata,
         parentConfig: row.parent_checkpoint_id
@@ -228,7 +175,6 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
 
       const current = await this.getTuple(config)
 
-      // ✅ 使用 structuredClone 替代 JSON.parse(JSON.stringify())
       const channel_values = current?.checkpoint.channel_values
         ? structuredClone(current.checkpoint.channel_values)
         : {}
