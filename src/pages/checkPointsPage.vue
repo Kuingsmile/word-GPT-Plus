@@ -37,10 +37,10 @@
                 </span>
 
                 <div class="card-actions">
-                  <button class="icon-btn" :title="$t('detail')" @click.stop="loadHistory">
+                  <button class="icon-btn" :title="$t('detail')" @click.stop="loadItemHistory(item.id)">
                     <SquareMousePointer :size="14" />
                   </button>
-                  <button class="icon-btn" :title="$t('copy')" @click.stop="loadHistory">
+                  <button class="icon-btn" :title="$t('copy')" @click.stop="copyItemPrompt(item.previewText)">
                     <Copy :size="14" />
                   </button>
                 </div>
@@ -57,8 +57,10 @@
 import { RunnableConfig } from '@langchain/core/runnables'
 import { ArrowLeft, Copy, SquareMousePointer } from 'lucide-vue-next'
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { IndexedDBSaver } from '@/api/checkpoints'
+import { message as messageUtil } from '@/utils/message'
 
 // 定义 Props
 const props = defineProps<{
@@ -72,6 +74,8 @@ const emit = defineEmits<{
   (e: 'restore', checkpointId: string): void
   (e: 'close'): void
 }>()
+
+const { t } = useI18n()
 
 interface HistoryViewItem {
   id: string
@@ -163,14 +167,23 @@ const loadHistory = async () => {
 }
 
 const handleRestore = (item: HistoryViewItem) => {
-  // 简单的确认逻辑，实际业务中可以用 Modal
   if (confirm(`Revert to Step ${item.step}? This will branch the conversation.`)) {
     emit('restore', item.id)
-    backToHome() // 恢复后通常跳转回聊天界面
+    backToHome()
   }
 }
 
-// 监听 threadId 变化自动加载
+const loadItemHistory = (checkpointId: string) => {
+  emit('restore', checkpointId)
+  backToHome()
+}
+
+const copyItemPrompt = (text: string) => {
+  if (!text) return
+  navigator.clipboard.writeText(text)
+  messageUtil.success(t('copied'))
+}
+
 watch(
   () => props.threadId,
   () => {
