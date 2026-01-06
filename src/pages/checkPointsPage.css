@@ -1,3 +1,4 @@
+/* stylelint-disable color-function-alias-notation */
 .checkpoint-container {
   display: flex;
   overflow: hidden;
@@ -92,10 +93,9 @@
 }
 
 .checkpoint-card {
-  overflow: hidden;
-  border: 1px solid #d0d7de;
-  border-radius: 6px;
-  background: #ffffff;
+  border: none !important;
+  padding: 0 4px;
+  background: transparent !important;
 }
 
 .checkpoint-item {
@@ -103,6 +103,21 @@
   padding: 12px 16px;
   transition: background-color 0.2s ease;
   cursor: pointer;
+}
+
+.checkpoint-item.card-style {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* 上下内容的间距 */
+  margin-bottom: 12px; /* 卡片之间的间距 */
+  border: 1px solid #d0d7de;
+  border-bottom: 1px solid #d0d7de; 
+  border-radius: 12px;
+  padding: 16px;
+  color: #24292f;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .checkpoint-item.vertical {
@@ -113,8 +128,10 @@
   border-bottom: none;
 }
 
-.checkpoint-item:hover {
-  background-color: #f6f8fa;
+.checkpoint-item.card-style:hover {
+  transform: translateY(-2px);
+  border-color: #0969da;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
 }
 
 .checkpoint-item.active {
@@ -127,6 +144,60 @@
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.checkpoint-preview-text{
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;   
+  color: #57606a;
+}
+
+.card-content {
+  display: -webkit-box;
+  overflow: hidden; 
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 500;
+  word-break: break-all;
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  margin-top: 4px;
+}
+
+.card-time {
+  font-size: 12px;
+  color: #57606a; 
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px; 
+}
+
+.icon-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 4px;
+  padding: 4px;
+  color: #57606a;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.icon-btn:hover {
+  color: #0969da;
+  background-color: rgb(0 0 0 / 10%);
 }
 
 .checkpoint-control{
@@ -184,6 +255,34 @@
 
   .checkpoint-item:hover {
     background: #3a3c3d;
+  }
+
+  .checkpoint-item.card-style {
+    border-color: #30363d;
+    color: #c9d1d9;
+    background: #21262d; /* Github Dark Dimmed 风格 */
+  }
+
+  /* 悬停高亮 */
+  .checkpoint-item.card-style:hover {
+    border-color: #58a6ff;
+    background: #262c36;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 50%);
+  }
+  
+  /* 时间文字颜色 */
+  .card-time {
+    color: #8b949e;
+  }
+  
+  /* 按钮颜色 */
+  .icon-btn {
+    color: #8b949e;
+  }
+  
+  .icon-btn:hover {
+    color: #58a6ff;
+    background-color: rgb(255 255 255 / 10%);
   }
 }
 
