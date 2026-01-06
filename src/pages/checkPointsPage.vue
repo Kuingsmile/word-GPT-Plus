@@ -53,6 +53,9 @@
                     text-overflow: ellipsis;
                   "
                 >
+                  <button class="back-button" :title="$t('back')" @click="loadHistory">
+                    <ArrowLeft :size="20" />
+                  </button>
                   {{ item.previewText }}
                 </div>
               </div>

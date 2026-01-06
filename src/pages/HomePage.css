@@ -579,12 +579,14 @@
   }
 
   .new-chat-btn,
-  .settings-icon-btn {
+  .settings-icon-btn,
+  .history-icon-btn {
     color: #7d8590;
   }
 
   .new-chat-btn:hover,
-  .settings-icon-btn:hover {
+  .settings-icon-btn:hover,
+  .history-icon-btn:hover {
     color: #58a6ff;
     background: #21262d;
   }

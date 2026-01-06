@@ -432,6 +432,7 @@ const currentModelSelect = computed({
 })
 
 function settings() {
+  // FIXME: 使用路由方式会改变当前的threadID,进而重置页面
   router.push('/settings')
 }
 

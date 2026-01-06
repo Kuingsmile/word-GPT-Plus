@@ -181,6 +181,10 @@
   .checkpoint-card {
     background: #161b22;
   }
+
+  .checkpoint-item:hover {
+    background: #3a3c3d;
+  }
 }
 
 @media (width <= 480px) {
