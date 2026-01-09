@@ -15,17 +15,17 @@
         <div class="loading-main">{{ $t('loading') || 'Loading history...' }}</div>
       </div>
 
-      <div v-else-if="historyItems.length === 0" class="no-checkpoint-body">
+      <div v-else-if="sessionItems.length === 0" class="no-checkpoint-body">
         {{ $t('NocheckPoints') || 'No History Records' }}
       </div>
       <div v-else class="checkpoint-body">
         <div class="checkpoint-section">
           <div class="checkpoint-card">
             <div
-              v-for="item in historyItems"
-              :key="item.id"
+              v-for="item in sessionItems"
+              :key="item.threadId"
               class="checkpoint-item card-style"
-              @click="handleRestore(item)"
+              @click="handleSelectSession(item.threadId)"
             >
               <div class="card-content">
                 {{ item.previewText }}
@@ -37,11 +37,14 @@
                 </span>
 
                 <div class="card-actions">
-                  <button class="icon-btn" :title="$t('detail')" @click.stop="loadItemHistory(item.id)">
+                  <button class="icon-btn" :title="$t('detail')" @click.stop="handleSelectSession(item.threadId)">
                     <SquareMousePointer :size="14" />
                   </button>
                   <button class="icon-btn" :title="$t('copy')" @click.stop="copyItemPrompt(item.previewText)">
                     <Copy :size="14" />
+                  </button>
+                  <button class="icon-btn" :title="$t('delete')" @click.stop="deleteSession(item.threadId)">
+                    <Delete :size="14" />
                   </button>
                 </div>
               </div>
@@ -55,8 +58,8 @@
 
 <script setup lang="ts">
 import { RunnableConfig } from '@langchain/core/runnables'
-import { ArrowLeft, Copy, SquareMousePointer } from 'lucide-vue-next'
-import { ref, watch } from 'vue'
+import { ArrowLeft, Copy, Delete, SquareMousePointer } from 'lucide-vue-next'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { IndexedDBSaver } from '@/api/checkpoints'
@@ -64,29 +67,29 @@ import { message as messageUtil } from '@/utils/message'
 
 // 定义 Props
 const props = defineProps<{
-  threadId: string
+  threadId?: string
   saver: IndexedDBSaver
   currentCheckpointId?: string // 当前正在显示的节点 ID
 }>()
 
-// 定义 Emits - 允许父组件处理回溯逻辑
+// 定义 Emits
 const emit = defineEmits<{
+  (e: 'select-thread', threadId: string): void
   (e: 'restore', checkpointId: string): void
   (e: 'close'): void
 }>()
 
 const { t } = useI18n()
 
-interface HistoryViewItem {
-  id: string
-  step: number
+interface SessionViewItem {
+  threadId: string
   timestamp: string
   previewText: string
-  type: 'ai' | 'human' | 'tool'
+  messageCount: number
   toolName?: string
 }
 
-const historyItems = ref<HistoryViewItem[]>([])
+const sessionItems = ref<SessionViewItem[]>([])
 const loading = ref(false)
 
 // 格式化时间
@@ -105,20 +108,30 @@ const formatTime = (isoStr: string) => {
     return isoStr
   }
 }
-
-const loadHistory = async () => {
-  if (!props.threadId) return
+// 加载所有会话
+const loadAllSessions = async () => {
   loading.value = true
-  historyItems.value = []
+  sessionItems.value = []
 
+  const sessionMap = new Map<string, SessionViewItem>()
   try {
     const config: RunnableConfig = {
-      configurable: { thread_id: props.threadId },
+      configurable: {},
     }
+
     const iterator = props.saver.list(config, { limit: 50 })
 
     for await (const tuple of iterator) {
-      const { checkpoint, metadata, config } = tuple
+      const { checkpoint, config } = tuple
+
+      const tId = config.configurable?.thread_id
+      if (!tId) continue
+
+      const existing = sessionMap.get(tId)
+      const currentTs = checkpoint.ts
+      if (existing && new Date(existing.timestamp) >= new Date(currentTs)) {
+        continue
+      }
 
       interface CheckpointMessage {
         _getType: () => 'ai' | 'human' | 'tool'
@@ -130,16 +143,6 @@ const loadHistory = async () => {
       const lastMsg = messages.at(-1)
 
       if (!lastMsg) continue
-
-      const msgType = lastMsg._getType ? lastMsg._getType() : 'ai'
-      const isTool = msgType === 'tool'
-      const isAI = msgType === 'ai'
-      const isHuman = msgType === 'human'
-
-      let type: 'ai' | 'human' | 'tool' = 'ai'
-      if (isTool) type = 'tool'
-      else if (isHuman) type = 'human'
-
       let previewText = '[Complex Content]'
       if (typeof lastMsg.content === 'string') {
         previewText = lastMsg.content
@@ -150,32 +153,37 @@ const loadHistory = async () => {
       previewText = previewText.slice(0, 100) + (previewText.length > 100 ? '...' : '')
       if (!previewText) previewText = '[Empty Message]'
 
-      historyItems.value.push({
-        id: config.configurable?.checkpoint_id || '',
-        step: metadata?.step || 0,
-        timestamp: checkpoint.ts,
-        previewText,
-        type,
-        toolName: isAI && lastMsg.tool_calls?.length ? lastMsg.tool_calls[0].name : undefined,
+      sessionMap.set(tId, {
+        threadId: tId,
+        timestamp: currentTs,
+        previewText: previewText || '[Empty Session]',
+        messageCount: messages.length,
+        toolName: lastMsg.tool_calls?.length ? lastMsg.tool_calls[0].name : undefined,
       })
     }
+    sessionItems.value = Array.from(sessionMap.values()).sort((a, b) => {
+      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    })
   } catch (err) {
-    console.error('Failed to load history:', err)
+    console.error('Failed to load sessions:', err)
   } finally {
     loading.value = false
   }
 }
 
-const handleRestore = (item: HistoryViewItem) => {
-  if (confirm(`Revert to Step ${item.step}? This will branch the conversation.`)) {
-    emit('restore', item.id)
-    backToHome()
-  }
+const handleSelectSession = (threadId: string) => {
+  emit('select-thread', threadId)
 }
 
-const loadItemHistory = (checkpointId: string) => {
-  emit('restore', checkpointId)
-  backToHome()
+const deleteSession = async (threadId: string) => {
+  try {
+    await props.saver.deleteThread(threadId)
+    sessionItems.value = sessionItems.value.filter(item => item.threadId !== threadId)
+    messageUtil.success(t('deleteSuccess', 'Session deleted.'))
+  } catch (error) {
+    console.error('Failed to delete session:', error)
+    messageUtil.error(t('deleteFail', 'Failed to delete session.'))
+  }
 }
 
 const copyItemPrompt = (text: string) => {
@@ -184,16 +192,9 @@ const copyItemPrompt = (text: string) => {
   messageUtil.success(t('copied'))
 }
 
-watch(
-  () => props.threadId,
-  () => {
-    loadHistory()
-  },
-  { immediate: true },
-)
-
-// 暴露给父组件
-defineExpose({ loadHistory })
+onMounted(() => {
+  loadAllSessions()
+})
 
 function backToHome() {
   emit('close')

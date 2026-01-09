@@ -6,6 +6,7 @@
     :current-checkpoint-id="currentCheckpointId"
     @close="showCheckpoints = false"
     @restore="handleRestore"
+    @select-thread="handleSelectThread"
   />
   <div v-show="!showCheckpoints" class="copilot-chat">
     <!-- Header -->
@@ -182,7 +183,7 @@ import { computed, nextTick, onBeforeMount, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
-import { IndexedDBSaver } from '@/api/checkpoints'
+import { type CheckpointTuple, IndexedDBSaver } from '@/api/checkpoints'
 import { insertFormattedResult, insertResult } from '@/api/common'
 import { getAgentResponse, getChatResponse } from '@/api/union'
 import CheckPointsPage from '@/pages/checkPointsPage.vue'
@@ -855,13 +856,54 @@ async function handleRestore(checkpointId: string) {
   if (checkpointTuple) {
     const messages = checkpointTuple.checkpoint.channel_values.messages
     if (messages && Array.isArray(messages)) {
-      history.value = messages.map((msg: any) => {
-        if (msg.type === 'human') return new HumanMessage(msg.content)
-        if (msg.type === 'ai') return new AIMessage(msg.content)
-        return msg // Keep other types as they are
-      })
+      history.value = messages
+        .filter((msg: any) => ['human', 'ai'].includes(msg.type))
+        .map((msg: any) => {
+          return msg.type === 'human' ? new HumanMessage(msg.content) : new AIMessage(msg.content)
+        })
     }
   }
+}
+
+async function loadThreadHistory(targetThreadId: string) {
+  const checkpoints: CheckpointTuple[] = []
+  const iterator = saver.list({
+    configurable: { thread_id: targetThreadId },
+  })
+
+  for await (const checkpoint of iterator) {
+    checkpoints.push(checkpoint)
+  }
+
+  if (checkpoints.length > 0) {
+    checkpoints.sort((a, b) => (a.metadata?.step ?? 0) - (b.metadata?.step ?? 0))
+
+    const latestCheckpoint = checkpoints[checkpoints.length - 1]
+    const messages = latestCheckpoint.checkpoint.channel_values.messages
+    // TODO: 优化过滤策略
+    if (messages && Array.isArray(messages)) {
+      history.value = messages
+        .filter((msg: any) => ['human', 'ai'].includes(msg.type))
+        .map((msg: any) => {
+          return msg.type === 'human' ? new HumanMessage(msg.content) : new AIMessage(msg.content)
+        })
+      currentCheckpointId.value = latestCheckpoint.config.configurable?.checkpoint_id || ''
+    } else {
+      history.value = []
+      currentCheckpointId.value = ''
+    }
+  } else {
+    // No checkpoints found for this thread
+    history.value = []
+    currentCheckpointId.value = ''
+  }
+  await scrollToBottom()
+}
+
+async function handleSelectThread(newThreadId: string) {
+  threadId.value = newThreadId
+  showCheckpoints.value = false
+  await loadThreadHistory(newThreadId)
 }
 
 onBeforeMount(() => {

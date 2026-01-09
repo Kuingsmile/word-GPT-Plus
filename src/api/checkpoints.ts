@@ -1,5 +1,6 @@
 import type { RunnableConfig } from '@langchain/core/runnables'
-import { BaseCheckpointSaver, Checkpoint, CheckpointMetadata, CheckpointTuple } from '@langchain/langgraph'
+import { BaseCheckpointSaver, Checkpoint, CheckpointMetadata, type CheckpointTuple } from '@langchain/langgraph'
+export type { CheckpointTuple }
 import Dexie, { Table } from 'dexie'
 
 export interface Thread {
@@ -68,9 +69,13 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
       if (checkpoint_id) {
         row = await db.checkpoints.get([thread_id, checkpoint_id])
       } else {
-        // 没有 checkpoint_id 时，获取最新的
-        const rows = await db.checkpoints.where('thread_id').equals(thread_id).reverse().limit(1).toArray()
-        row = rows[0]
+        // When checkpoint_id is not provided, get the latest one by step
+        const rows = await db.checkpoints.where('thread_id').equals(thread_id).toArray()
+        if (rows.length > 0) {
+          // Sort by step in descending order to find the most recent
+          rows.sort((a, b) => (b.metadata?.step ?? 0) - (a.metadata?.step ?? 0))
+          row = rows[0]
+        }
       }
 
       if (!row) {
@@ -97,11 +102,13 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
   }
 
   async *list(config: RunnableConfig, options?: CheckpointListOptions): AsyncGenerator<CheckpointTuple> {
-    if (!config.configurable || !config.configurable.thread_id) {
-      return
+    const thread_id = config.configurable?.thread_id
+    let query
+    if (thread_id) {
+      query = db.checkpoints.where({ thread_id }).reverse()
+    } else {
+      query = db.checkpoints.toCollection().reverse()
     }
-    const { thread_id } = config.configurable
-    let query = db.checkpoints.where({ thread_id }).reverse()
 
     const before_id = options?.before?.configurable?.checkpoint_id
     if (before_id) {
@@ -135,7 +142,6 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
         throw new Error('thread_id is required in config.configurable')
       }
 
-      // 如果没有 checkpoint_id，使用 checkpoint.id 或生成一个
       const checkpoint_id = config.configurable?.checkpoint_id || checkpoint.id || crypto.randomUUID()
 
       console.log('[IndexedDBSaver] put:', { thread_id, checkpoint_id })
@@ -209,6 +215,14 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
       throw error
     }
   }
+
+  async deleteCheckpoint(threadId: string, checkpointId: string): Promise<void> {
+    if (!threadId || !checkpointId) {
+      return
+    }
+    await db.checkpoints.delete([threadId, checkpointId])
+  }
+
   async deleteThread(threadId: string): Promise<void> {
     if (!threadId) {
       return
