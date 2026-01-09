@@ -824,6 +824,17 @@ onBeforeMount(() => {
   addWatch()
   initData()
   loadSavedPrompts()
+
+  if (threadId.value) {
+    loading.value = true // 可选：显示加载状态
+    try {
+      loadThreadHistory(threadId.value)
+    } catch (e) {
+      console.error('Auto reload history failed:', e)
+    } finally {
+      loading.value = false
+    }
+  }
 })
 </script>
 
