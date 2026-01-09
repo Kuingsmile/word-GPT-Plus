@@ -59,6 +59,7 @@ export interface AgentOptions extends BaseChatCompletionOptions {
   onToolCall?: (toolName: string, args: any) => void
   onToolResult?: (toolName: string, result: string) => void
   recursionLimit?: number
+  checkpointId?: string
   // Provider-specific options
   model?: string
   config?: {
