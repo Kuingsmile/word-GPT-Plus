@@ -873,12 +873,12 @@
     uuid "^10.0.0"
 
 "@langchain/openai@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@langchain/openai/-/openai-1.2.0.tgz#18ea4258192d81010492fb89d7816b877a77b3ef"
-  integrity sha512-r2g5Be3Sygw7VTJ89WVM/M94RzYToNTwXf8me1v+kgKxzdHbd/8XPYDFxpXEp3REyPgUrtJs+Oplba9pkTH5ug==
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@langchain/openai/-/openai-1.2.3.tgz#39f4b843ea72d71bf653aa21896f151311027e27"
+  integrity sha512-+bKR4+Obz5a/NHEw0bAm3f/s4k0cXc/g46ZRRXqjcyDYP+9wFarItvGNn6DEEk5S7pGp1QqApAQNt9IZk1Ic1Q==
   dependencies:
     js-tiktoken "^1.0.12"
-    openai "^6.10.0"
+    openai "^6.16.0"
     zod "^3.25.76 || ^4"
 
 "@nodelib/fs.scandir@2.1.5":
@@ -1625,7 +1625,7 @@ balanced-match@^2.0.0:
 
 base64-js@^1.3.1, base64-js@^1.5.1:
   version "1.5.1"
-  resolved "https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz"
+  resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
 baseline-browser-mapping@^2.9.0:
@@ -3950,10 +3950,10 @@ onetime@^7.0.0:
   dependencies:
     mimic-function "^5.0.0"
 
-openai@^6.10.0:
-  version "6.15.0"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-6.15.0.tgz#94f23643a50206a6ae889e9df8fc3bfb2dbf2c2b"
-  integrity sha512-F1Lvs5BoVvmZtzkUEVyh8mDQPPFolq4F+xdsx/DO8Hee8YF3IGAlZqUIsF+DVGhqf4aU0a3bTghsxB6OIsRy1g==
+openai@^6.16.0:
+  version "6.16.0"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-6.16.0.tgz#53661d9f6307dc7523e89637ff7c6ccd0be16c67"
+  integrity sha512-fZ1uBqjFUjXzbGc35fFtYKEOxd20kd9fDpFeqWtsOZWiubY8CZ1NAlXHW3iathaFvqmNtCWMIsosCuyeI7Joxg==
 
 optionator@^0.9.3:
   version "0.9.3"
@@ -5229,9 +5229,9 @@ yoctocolors-cjs@^2.1.2:
   integrity sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==
 
 "zod@^3.25.76 || ^4":
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-4.2.1.tgz#07f0388c7edbfd5f5a2466181cb4adf5b5dbd57b"
-  integrity sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-4.3.6.tgz#89c56e0aa7d2b05107d894412227087885ab112a"
+  integrity sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==
 
 zod@^4.2.1:
   version "4.3.5"
