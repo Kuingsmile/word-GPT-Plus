@@ -1131,9 +1131,9 @@
   integrity sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==
 
 "@types/office-js@^1.0.565":
-  version "1.0.565"
-  resolved "https://registry.yarnpkg.com/@types/office-js/-/office-js-1.0.565.tgz#f539cca42dfb0c2bf592745fee4ca24ee87e526f"
-  integrity sha512-MN2x0ooqeWVfyvfB4Ju4y2YwDEf0x1x/bAMwxvQfKZ8XXmqoMjHpw1u+7R5MHAMEzyibd2gPi16BN4QXALs4RQ==
+  version "1.0.569"
+  resolved "https://registry.yarnpkg.com/@types/office-js/-/office-js-1.0.569.tgz#be456a58dd308f3267dec781fa5ec20f5a23dfbf"
+  integrity sha512-YtiM6JTBdBjNr9gn+7iphMfDo6VTeDzdbbcg2wqM4SLCGGKvvDqOkr/GLat5q0pw59bKyVRzYO9/YEeSsvioBQ==
 
 "@types/retry@0.12.0":
   version "0.12.0"
