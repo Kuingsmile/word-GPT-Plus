@@ -1,0 +1,245 @@
+@import 'tailwindcss';
+
+@theme {
+  --background-image-custom: var(--background-image, none);
+  --blur-custom: var(--background-blur, none);
+  --opacity-custom: var(--background-image-opacity);
+  --color-main: var(--color-text-primary);
+  --color-secondary: var(--color-text-secondary);
+  --color-tertiary: var(--color-text-tertiary);
+  --color-bg: var(--color-background-primary);
+  --color-bg-secondary: var(--color-background-secondary);
+  --color-bg-tertiary: var(--color-background-tertiary);
+  --color-surface: var(--color-surface);
+  --color-surface-elevated: var(--color-surface-elevated);
+  --color-border: var(--color-border);
+  --color-border-secondary: var(--color-border-secondary);
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-danger: var(--color-danger);
+  --color-error: var(--color-error);
+
+  /* shadows */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+
+  /* radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-round: 50%;
+
+  /* transition */
+  --transition-duration-fast: 150ms;
+  --transition-duration-medium: 250ms;
+  --transition-duration-slow: 350ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-apple: cubic-bezier(0.3, 1, 0.3, 1);
+
+  /* breakpoints */
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
+
+
+@layer base {
+  body {
+    @apply m-0 h-full w-full overflow-hidden bg-transparent p-0 font-[inherit] text-main;
+  }
+
+  html {
+    @apply m-0 h-full w-full bg-transparent p-0;
+  }
+
+  #app {
+    @apply h-full w-full bg-transparent;
+  }
+
+  :focus {
+    @apply outline-none;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent outline-solid;
+  }
+
+  ::selection {
+    @apply bg-accent/20 text-main;
+  }
+
+  ::-webkit-scrollbar {
+    @apply h-3 w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-sm bg-accent/50 transition-colors duration-fast ease-standard;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent/70;
+  }
+
+  ::-webkit-scrollbar-corner {
+    @apply bg-bg;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  :root {
+    font-size: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizelegibility;
+  }
+
+  :root,
+  .light,
+  [data-theme='light'] {
+    --background-image: none;
+    --background-image-opacity: 1;
+    --color-text-primary: #1d1d1f;
+    --color-text-secondary: #6e6e73;
+    --color-text-tertiary: #86868b;
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #f5f5f7;
+    --color-background-tertiary: #fbfbfd;
+    --color-surface: rgb(255 255 255 / 80%);
+    --color-surface-elevated: rgb(255 255 255 / 95%);
+    --color-border: rgb(0 0 0 / 10%);
+    --color-border-secondary: rgb(0 0 0 / 5%);
+    --color-primary: #6366f1;
+    --color-primary-hover: #4f46e5;
+    --color-accent: #007aff;
+    --color-accent-hover: #3b82f6;
+    --color-success: #34c759;
+    --color-warning: #f1930f;
+    --color-danger: #ff3b30;
+    --color-error: #cb2431;
+    --shadow-sm: 0 1px 3px rgb(0 0 0 / 4%), 0 1px 2px rgb(0 0 0 / 6%);
+    --shadow-md: 0 4px 6px rgb(0 0 0 / 5%), 0 2px 4px rgb(0 0 0 / 6%);
+    --shadow-lg: 0 10px 15px rgb(0 0 0 / 8%), 0 4px 6px rgb(0 0 0 / 5%);
+    --shadow-xl: 0 20px 25px rgb(0 0 0 / 10%), 0 10px 10px rgb(0 0 0 / 4%);
+  }
+
+  :root.dark,
+  .dark,
+  [data-theme='dark'] {
+    --color-text-primary: #f5f5f7;
+    --color-text-secondary: #a1a1a6;
+    --color-text-tertiary: #86868b;
+    --color-background-primary: #000000;
+    --color-background-secondary: #1c1c1e;
+    --color-background-tertiary: #2c2c2e;
+    --color-surface: rgb(28 28 30 / 80%);
+    --color-surface-elevated: rgb(44 44 46 / 95%);
+    --color-border: rgb(255 255 255 / 10%);
+    --color-border-secondary: rgb(255 255 255 / 5%);
+    --color-primary: #6366f1;
+    --color-primary-hover: #818cf8;
+    --color-accent: #0a84ff;
+    --color-accent-hover: #409cff;
+    --color-success: #34c759;
+    --color-warning: #f1930f;
+    --color-danger: #ff3b30;
+    --color-error: #cb2431;
+    --shadow-sm: 0 1px 3px rgb(0 0 0 / 4%), 0 1px 2px rgb(0 0 0 / 6%);
+    --shadow-md: 0 4px 6px rgb(0 0 0 / 5%), 0 2px 4px rgb(0 0 0 / 6%);
+    --shadow-lg: 0 10px 15px rgb(0 0 0 / 8%), 0 4px 6px rgb(0 0 0 / 5%);
+    --shadow-xl: 0 20px 25px rgb(0 0 0 / 10%), 0 10px 10px rgb(0 0 0 / 4%);
+  }
+
+  @keyframes badge-scroll {
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes badge-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      box-shadow: 0 2px 6px color-mix(in srgb, var(--color-accent) 60%, transparent);
+    }
+
+    50% {
+      transform: scale(1.1);
+      box-shadow: 0 2px 6px color-mix(in srgb, var(--color-accent) 60%, transparent);
+    }
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes slide-right {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+}

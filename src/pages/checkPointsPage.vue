@@ -1,52 +1,68 @@
 <template>
-  <div class="checkpoint-container">
-    <!-- Header with back button -->
-    <div class="checkpoint-header">
-      <button class="back-button" :title="$t('back')" @click="backToHome">
-        <ArrowLeft :size="20" />
-      </button>
-      <h2 class="header-title">
-        {{ $t('checkPoints') || 'History Records' }}
+  <div class="flex h-full w-full flex-col gap-2 overflow-hidden bg-bg-secondary p-2">
+    <div
+      class="flex shrink-0 items-center gap-2.5 rounded-md border-b border-b-border bg-bg-secondary px-4 py-2 shadow-sm"
+    >
+      <CustomButton text="" :icon="ArrowLeft" type="secondary" class="border-none p-1!" @click="backToHome" />
+      <h2 class="text-sm font-semibold text-main">
+        {{ t('checkPoints') }}
       </h2>
     </div>
 
-    <div class="checkpoint-main">
-      <div v-if="loading" class="loading-body">
-        <div class="loading-main">{{ $t('loading') || 'Loading history...' }}</div>
+    <div
+      class="flex flex-1 flex-col items-center justify-center overflow-hidden rounded-md border border-border bg-bg-secondary shadow-sm"
+    >
+      <div v-if="loading" class="flex h-full w-full items-center justify-center">
+        <div class="flex flex-col items-center gap-2">
+          <div class="h-12 w-12 animate-spin rounded-full border-3 border-t-3 border-accent border-t-white"></div>
+          <div class="p-4 text-center font-semibold text-secondary">{{ t('loading') }}</div>
+        </div>
       </div>
-
-      <div v-else-if="sessionItems.length === 0" class="no-checkpoint-body">
-        {{ $t('NocheckPoints') || 'No History Records' }}
+      <div v-if="sessionItems.length === 0" class="flex h-full flex-col items-center justify-center gap-4">
+        <PackageIcon :size="48" class="text-secondary opacity-50" />
+        <span class="text-sm text-secondary">{{ t('NocheckPoints') }}</span>
       </div>
-      <div v-else class="checkpoint-body">
-        <div class="checkpoint-section">
-          <div class="checkpoint-card">
+      <div v-else class="flex h-full w-full overflow-auto p-2">
+        <div class="flex w-full flex-col gap-2">
+          <div
+            v-for="item in sessionItems"
+            :key="item.threadId"
+            class="flex cursor-pointer flex-col gap-2 rounded-md border border-border-secondary bg-surface p-2 shadow-sm hover:border-2 hover:border-accent"
+            @click="handleSelectSession(item.threadId)"
+          >
             <div
-              v-for="item in sessionItems"
-              :key="item.threadId"
-              class="checkpoint-item card-style"
-              @click="handleSelectSession(item.threadId)"
+              class="text line-clamp-3 overflow-hidden text-sm leading-normal font-medium break-all text-ellipsis text-secondary"
             >
-              <div class="card-content">
-                {{ item.previewText }}
-              </div>
+              {{ item.previewText }}
+            </div>
 
-              <div class="card-footer">
-                <span class="card-time">
-                  {{ formatTime(item.timestamp) }}
-                </span>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-secondary">
+                {{ formatTime(item.timestamp) }}
+              </span>
 
-                <div class="card-actions">
-                  <button class="icon-btn" :title="$t('detail')" @click.stop="handleSelectSession(item.threadId)">
-                    <SquareMousePointer :size="14" />
-                  </button>
-                  <button class="icon-btn" :title="$t('copy')" @click.stop="copyItemPrompt(item.previewText)">
-                    <Copy :size="14" />
-                  </button>
-                  <button class="icon-btn" :title="$t('delete')" @click.stop="deleteSession(item.threadId)">
-                    <Delete :size="14" />
-                  </button>
-                </div>
+              <div class="flex gap-2">
+                <button
+                  class="flex cursor-pointer items-center justify-center rounded-md border-none p-1 text-secondary hover:bg-accent/30 hover:text-white"
+                  :title="t('detail')"
+                  @click.stop="handleSelectSession(item.threadId)"
+                >
+                  <SquareMousePointer :size="14" />
+                </button>
+                <button
+                  class="flex cursor-pointer items-center justify-center rounded-md border-none p-1 text-secondary hover:bg-success/30 hover:text-white"
+                  :title="t('copyToClipboard')"
+                  @click.stop="copyItemPrompt(item.previewText)"
+                >
+                  <Copy :size="14" />
+                </button>
+                <button
+                  class="flex cursor-pointer items-center justify-center rounded-md border-none p-1 text-secondary hover:bg-danger/50 hover:text-white"
+                  :title="t('delete')"
+                  @click.stop="deleteSession(item.threadId)"
+                >
+                  <Delete :size="14" />
+                </button>
               </div>
             </div>
           </div>
@@ -58,21 +74,20 @@
 
 <script setup lang="ts">
 import { RunnableConfig } from '@langchain/core/runnables'
-import { ArrowLeft, Copy, Delete, SquareMousePointer } from 'lucide-vue-next'
+import { ArrowLeft, Copy, Delete, PackageIcon, SquareMousePointer } from 'lucide-vue-next'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { IndexedDBSaver } from '@/api/checkpoints'
+import CustomButton from '@/components/CustomButton.vue'
 import { message as messageUtil } from '@/utils/message'
 
-// 定义 Props
 const props = defineProps<{
   threadId?: string
   saver: IndexedDBSaver
   currentCheckpointId?: string // 当前正在显示的节点 ID
 }>()
 
-// 定义 Emits
 const emit = defineEmits<{
   (e: 'select-thread', threadId: string): void
   (e: 'restore', checkpointId: string): void
@@ -92,7 +107,6 @@ interface SessionViewItem {
 const sessionItems = ref<SessionViewItem[]>([])
 const loading = ref(false)
 
-// 格式化时间
 const formatTime = (isoStr: string) => {
   try {
     const date = new Date(isoStr)
@@ -108,7 +122,7 @@ const formatTime = (isoStr: string) => {
     return isoStr
   }
 }
-// 加载所有会话
+
 const loadAllSessions = async () => {
   loading.value = true
   sessionItems.value = []
@@ -179,10 +193,10 @@ const deleteSession = async (threadId: string) => {
   try {
     await props.saver.deleteThread(threadId)
     sessionItems.value = sessionItems.value.filter(item => item.threadId !== threadId)
-    messageUtil.success(t('deleteSuccess', 'Session deleted.'))
+    messageUtil.success(t('deleteSuccess'))
   } catch (error) {
     console.error('Failed to delete session:', error)
-    messageUtil.error(t('deleteFail', 'Failed to delete session.'))
+    messageUtil.error(t('deleteFailed'))
   }
 }
 
@@ -200,5 +214,3 @@ function backToHome() {
   emit('close')
 }
 </script>
-
-<style scoped src="./checkPointsPage.css"></style>

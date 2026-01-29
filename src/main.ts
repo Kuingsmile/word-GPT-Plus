@@ -1,4 +1,5 @@
 import 'element-plus/dist/index.css'
+import './index.css'
 
 import ElementUI from 'element-plus'
 import { createApp } from 'vue'
