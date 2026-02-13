@@ -163,6 +163,8 @@ Choose the method that best suits your needs:
 
 To get started with Word GPT Plus, you will need to sideload the add-in into Microsoft Word.
 
+### Windows
+
 You can find instructions provided by MicroSoft at the following link: [sideload office add-ins](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins)
 
 1. Go to the folder where you saved the `manifest.xml` file, for example `C:\Users\username\Documents\WordGPT`.
@@ -181,6 +183,26 @@ You can find instructions provided by MicroSoft at the following link: [sideload
 11. Click **Insert** > **My Add-ins** > **Shared Folder**, choose **GPT Plus**, and then choose **Add**.
 12. Enjoy it!
 ![image](https://user-images.githubusercontent.com/96409857/234744280-9d9f13cf-536b-4fb5-adfa-cbec262d56a2.png)
+
+### Mac
+
+You can find instructions provided by Microsoft at the following link: [sideload office add-ins](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/sideload-an-office-add-in-on-mac)
+
+1. Create a 'wef' folder at  ~/Library/Containers/com.microsoft.Word/Data/Documents
+
+```bash
+mkdir -p ~/Library/Containers/com.microsoft.Word/Data/Documents/wef
+```
+
+2. Copy your `manifest.xml` file to that 'wef' folder
+
+```bash
+cp manifest.xml ~/Library/Containers/com.microsoft.Word/Data/Documents/wef
+```
+
+3. Close and then restart Word.
+4. Click **Start** > **Add-ins** and choose ** Word GPT Plus** from the Developertool Add-Ins.
+5. Enjoy!
 
 ## 📖 Usage
 
@@ -278,3 +300,4 @@ MIT License
 ## Show your support
 
 Give a ⭐️ if this project helped you!
+
