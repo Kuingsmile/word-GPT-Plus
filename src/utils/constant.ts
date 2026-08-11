@@ -45,11 +45,14 @@ export const languageMap: IStringKeyMap = {
 
 export const availableAPIs: IStringKeyMap = {
   official: 'official',
+  atlascloud: 'atlascloud',
   azure: 'azure',
   gemini: 'gemini',
   ollama: 'ollama',
   groq: 'groq',
 }
+
+export const availableModelsForAtlasCloud: string[] = ['qwen/qwen3.8-max']
 
 // official API 可用的模型
 export const availableModels: string[] = [

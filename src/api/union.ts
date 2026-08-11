@@ -10,6 +10,7 @@ import { IndexedDBSaver } from '@/api/checkpoints'
 
 import {
   AgentOptions,
+  AtlasCloudOptions,
   AzureOptions,
   GeminiOptions,
   GroqOptions,
@@ -26,6 +27,18 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
       configuration: {
         apiKey: opts.config.apiKey,
         baseURL: opts.config.baseURL || 'https://api.openai.com/v1',
+      },
+      temperature: opts.temperature ?? 0.7,
+      maxTokens: opts.maxTokens ?? 800,
+    })
+  },
+
+  atlascloud: (opts: AtlasCloudOptions) => {
+    return new ChatOpenAI({
+      modelName: opts.atlascloudModel || 'qwen/qwen3.8-max',
+      configuration: {
+        apiKey: opts.atlascloudAPIKey,
+        baseURL: opts.atlascloudBasePath?.replace(/\/$/, '') || 'https://api.atlascloud.ai/v1',
       },
       temperature: opts.temperature ?? 0.7,
       maxTokens: opts.maxTokens ?? 800,

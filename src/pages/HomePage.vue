@@ -452,6 +452,10 @@ const currentModelOptions = computed(() => {
       presetOptions = settingPreset.officialModelSelect.optionList || []
       customModels = getCustomModels('customModels', 'customModel')
       break
+    case 'atlascloud':
+      presetOptions = settingPreset.atlascloudModelSelect.optionList || []
+      customModels = getCustomModels('atlascloudCustomModels', 'atlascloudCustomModel')
+      break
     case 'gemini':
       presetOptions = settingPreset.geminiModelSelect.optionList || []
       customModels = getCustomModels('geminiCustomModels', 'geminiCustomModel')
@@ -478,6 +482,8 @@ const currentModelSelect = computed({
     switch (settingForm.value.api) {
       case 'official':
         return settingForm.value.officialModelSelect
+      case 'atlascloud':
+        return settingForm.value.atlascloudModelSelect
       case 'gemini':
         return settingForm.value.geminiModelSelect
       case 'ollama':
@@ -495,6 +501,10 @@ const currentModelSelect = computed({
       case 'official':
         settingForm.value.officialModelSelect = value
         localStorage.setItem(localStorageKey.model, value)
+        break
+      case 'atlascloud':
+        settingForm.value.atlascloudModelSelect = value
+        localStorage.setItem(localStorageKey.atlascloudModel, value)
         break
       case 'gemini':
         settingForm.value.geminiModelSelect = value
@@ -701,6 +711,14 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
       temperature: settings.officialTemperature,
       model: settings.officialModelSelect,
     },
+    atlascloud: {
+      provider: 'atlascloud',
+      atlascloudAPIKey: settings.atlascloudAPIKey,
+      atlascloudBasePath: settings.atlascloudBasePath,
+      atlascloudModel: settings.atlascloudModelSelect,
+      maxTokens: settings.atlascloudMaxTokens,
+      temperature: settings.atlascloudTemperature,
+    },
     groq: {
       provider: 'groq',
       groqAPIKey: settings.groqAPIKey,
@@ -826,6 +844,7 @@ function checkApiKey() {
   const auth = {
     type: settingForm.value.api as supportedPlatforms,
     apiKey: settingForm.value.officialAPIKey,
+    atlascloudAPIKey: settingForm.value.atlascloudAPIKey,
     azureAPIKey: settingForm.value.azureAPIKey,
     geminiAPIKey: settingForm.value.geminiAPIKey,
     groqAPIKey: settingForm.value.groqAPIKey,
