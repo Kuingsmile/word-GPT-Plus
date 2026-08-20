@@ -578,7 +578,7 @@
     "@eslint/core" "^0.17.0"
     levn "^0.4.1"
 
-"@google/generative-ai@^0.24.0":
+"@google/generative-ai@^0.24.1":
   version "0.24.1"
   resolved "https://registry.yarnpkg.com/@google/generative-ai/-/generative-ai-0.24.1.tgz#634a3c06f8ea7a6125c1b0d6c1e66bb11afb52c9"
   integrity sha512-MqO+MLfM6kjxcKoy0p1wRzG3b4ZZXtPI+z2IE26UogS2Cm/XHO+7gGRBh6gcJsOiIVoH93UwKvW4HdgiOZCy9Q==
@@ -858,12 +858,11 @@
     zod "^3.25.76 || ^4"
 
 "@langchain/google-genai@^2.1.13":
-  version "2.1.13"
-  resolved "https://registry.yarnpkg.com/@langchain/google-genai/-/google-genai-2.1.13.tgz#98c4a3f9787996c2a4ea9f7195c131b9f375aa2e"
-  integrity sha512-XWypAcTV8c32H+83ktfjgkzPC6hO/EmCz/G78HlYddAkJ0MP7kSeZ5+MIzFbdl6ShCLbIiTH+NZ9OLE+75cWfA==
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@langchain/google-genai/-/google-genai-2.3.0.tgz#60eaf6b7ee2f5f2d76ec9336474b103e5485a20d"
+  integrity sha512-i797N4UToqFZHaXLR24mhLrlODwiEIxq/pnjHDvfQcrrm/qn+YIPBoIlefN6BVUua96rxumZ4m2iQ7FG6Aa2ww==
   dependencies:
-    "@google/generative-ai" "^0.24.0"
-    uuid "^11.1.0"
+    "@google/generative-ai" "^0.24.1"
 
 "@langchain/groq@^1.0.3":
   version "1.0.3"
@@ -5188,11 +5187,6 @@ uuid@^10.0.0:
   version "10.0.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-10.0.0.tgz#5a95aa454e6e002725c79055fd42aaba30ca6294"
   integrity sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==
-
-uuid@^11.1.0:
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-11.1.0.tgz#9549028be1753bb934fc96e2bca09bb4105ae912"
-  integrity sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==
 
 uuid@^13.0.0:
   version "13.0.0"
