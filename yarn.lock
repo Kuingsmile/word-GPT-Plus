@@ -2299,9 +2299,9 @@ detect-libc@^2.0.3:
   integrity sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==
 
 dexie@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/dexie/-/dexie-4.2.1.tgz#70d111ae8d2dabf53f424fca79f6f918c407e6db"
-  integrity sha512-Ckej0NS6jxQ4Po3OrSQBFddayRhTCic2DoCAG5zacOfOVB9P2Q5Xc5uL/nVa7ZVs+HdMnvUPzLFCB/JwpB6Csg==
+  version "4.4.6"
+  resolved "https://registry.yarnpkg.com/dexie/-/dexie-4.4.6.tgz#aba734b9ed251c637073d2715ed8c89d6da5f43e"
+  integrity sha512-hJP/BO6mjB+tX6hToIO1kmxYLNmun90wYbfcoAoLpKEyDYal/k33dg0TAfoUe2TDsbbLoVIzljJ3BN2UbR5EOg==
 
 diff-sequences@^27.5.1:
   version "27.5.1"
