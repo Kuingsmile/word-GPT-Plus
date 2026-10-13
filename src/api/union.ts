@@ -7,6 +7,7 @@ import { AzureChatOpenAI, ChatOpenAI } from '@langchain/openai'
 import { createAgent } from 'langchain'
 
 import { IndexedDBSaver } from '@/api/checkpoints'
+import { logDiagnostic } from '@/utils/diagnostics'
 
 import {
   AgentOptions,
@@ -75,10 +76,11 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
 const checkpointer = new IndexedDBSaver()
 
 async function executeChatFlow(model: BaseChatModel, options: ProviderOptions): Promise<void> {
+  const startedAt = performance.now()
   try {
     if (!options.threadId) {
       options.threadId = crypto.randomUUID()
-      console.log(`[Chat] New thread started: ${options.threadId}`)
+      logDiagnostic('log', '[Chat] New thread started', { threadId: options.threadId })
     }
     const agent = createAgent({
       model,
@@ -107,22 +109,27 @@ async function executeChatFlow(model: BaseChatModel, options: ProviderOptions): 
       options.onStream(fullContent)
     }
   } catch (error: any) {
-    if (error.name === 'AbortError' || options.abortSignal?.aborted) {
+    if (error?.name === 'AbortError' || options.abortSignal?.aborted) {
       // Don't mark as error if intentionally aborted
       throw error
     }
     options.errorIssue.value = true
-    console.error(error)
+    logDiagnostic('error', '[Chat] Error', { error, threadId: options.threadId })
   } finally {
+    logDiagnostic('log', '[Chat] Flow ended', {
+      threadId: options.threadId,
+      durationMs: performance.now() - startedAt,
+    })
     options.loading.value = false
   }
 }
 
 async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Promise<void> {
+  const startedAt = performance.now()
   try {
     if (!options.threadId) {
       options.threadId = crypto.randomUUID()
-      console.log(`[Agent] New thread started: ${options.threadId}`)
+      logDiagnostic('log', '[Agent] New thread started', { threadId: options.threadId })
     }
     const agent = createAgent({
       model,
@@ -154,9 +161,10 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
       }
 
       stepCount++
-      console.log(`[Agent] Step ${stepCount}:`, {
+      logDiagnostic('log', '[Agent] Step', {
+        threadId: options.threadId,
+        stepCount,
         messageCount: step.messages?.length || 0,
-        lastMessageType: step.messages?.[step.messages.length - 1]?.constructor?.name,
       })
 
       const messages = step.messages || []
@@ -167,15 +175,16 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
       // Cast to any for accessing tool-related properties
       const msg = lastMessage as any
 
-      console.log(`[Agent] Message type: ${msg._getType?.() || 'unknown'}`)
-
       // Handle AI messages with tool calls
       if (msg._getType?.() === 'ai' && msg.tool_calls?.length > 0) {
-        console.log('[Agent] Tool calls detected:', msg.tool_calls.length)
+        logDiagnostic('log', '[Agent] Tool calls detected', {
+          threadId: options.threadId,
+          toolCallCount: msg.tool_calls.length,
+        })
         for (const toolCall of msg.tool_calls) {
-          console.log('[Agent] Tool call:', {
-            name: toolCall.name,
-            args: toolCall.args,
+          logDiagnostic('log', '[Agent] Tool call', {
+            threadId: options.threadId,
+            toolCallId: toolCall.id,
           })
           if (options.onToolCall) {
             options.onToolCall(toolCall.name, toolCall.args)
@@ -187,10 +196,10 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
       if (msg._getType?.() === 'tool') {
         const toolName = msg.name || 'unknown'
         const toolContent = String(msg.content || '')
-        console.log('[Agent] Tool result:', {
-          name: toolName,
+        logDiagnostic('log', '[Agent] Tool result', {
+          threadId: options.threadId,
+          toolCallId: msg.tool_call_id,
           contentLength: toolContent.length,
-          contentPreview: toolContent.substring(0, 100),
         })
         if (options.onToolResult) {
           options.onToolResult(toolName, toolContent)
@@ -202,26 +211,30 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
         const content = typeof msg.content === 'string' ? msg.content : ''
         if (content && (!msg.tool_calls || msg.tool_calls.length === 0)) {
           fullContent = content
-          console.log('[Agent] AI response:', {
-            content,
+          logDiagnostic('log', '[Agent] AI response', {
+            threadId: options.threadId,
+            contentLength: content.length,
           })
           options.onStream(fullContent)
         }
       }
     }
 
-    console.log('[Agent] Flow completed. Total steps:', stepCount)
+    logDiagnostic('log', '[Agent] Flow completed', { threadId: options.threadId, stepCount })
   } catch (error: any) {
-    console.error('[Agent] Error:', error)
-    if (error.name === 'AbortError' || options.abortSignal?.aborted) {
+    if (error?.name === 'AbortError' || options.abortSignal?.aborted) {
       throw error
     }
-    if (error.name === 'GraphRecursionError') {
+    if (error?.name === 'GraphRecursionError') {
       options.errorIssue.value = 'recursionLimitExceeded'
     }
     // TODO: more specific error handling based on LangGraph error
-    console.error(error)
+    logDiagnostic('error', '[Agent] Error', { error, threadId: options.threadId })
   } finally {
+    logDiagnostic('log', '[Agent] Flow ended', {
+      threadId: options.threadId,
+      durationMs: performance.now() - startedAt,
+    })
     options.loading.value = false
   }
 }

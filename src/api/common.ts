@@ -1,5 +1,6 @@
 import { Ref } from 'vue'
 
+import { logDiagnostic } from '@/utils/diagnostics'
 import { WordFormatter } from '@/utils/wordFormatter'
 
 export function insertResult(result: string, insertType: Ref): void {
@@ -16,7 +17,7 @@ export function insertResult(result: string, insertType: Ref): void {
           range.insertParagraph(paragraph[i], 'After')
         }
         await context.sync()
-      })
+      }).catch(error => logDiagnostic('error', '[Word] Plain text insertion failed', { error }))
       break
     case 'append':
       Word.run(async context => {
@@ -26,7 +27,7 @@ export function insertResult(result: string, insertType: Ref): void {
           range.insertParagraph(paragraph[i], 'After')
         }
         await context.sync()
-      })
+      }).catch(error => logDiagnostic('error', '[Word] Plain text insertion failed', { error }))
       break
     case 'newLine':
       Word.run(async context => {
@@ -35,7 +36,7 @@ export function insertResult(result: string, insertType: Ref): void {
           range.insertParagraph(paragraph[i], 'After')
         }
         await context.sync()
-      })
+      }).catch(error => logDiagnostic('error', '[Word] Plain text insertion failed', { error }))
       break
     case 'NoAction':
       break
@@ -46,7 +47,7 @@ export async function insertFormattedResult(result: string, insertType: Ref): Pr
   try {
     await WordFormatter.insertFormattedResult(result, insertType)
   } catch (error) {
-    console.warn('Formatted insertion failed, falling back to plain text:', error)
+    logDiagnostic('warn', '[Word] Formatted insertion failed, falling back to plain text', { error })
     insertResult(result, insertType)
   }
 }

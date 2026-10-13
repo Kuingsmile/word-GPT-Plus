@@ -452,6 +452,7 @@ import SettingSection from '@/components/SettingSection.vue'
 import SingleSelect from '@/components/SingleSelect.vue'
 import { getLabel, getPlaceholder } from '@/utils/common'
 import { availableAPIs, buildInPrompt } from '@/utils/constant'
+import { logDiagnostic } from '@/utils/diagnostics'
 import { getGeneralToolDefinitions } from '@/utils/generalTools'
 import useSettingForm from '@/utils/settingForm'
 import { Setting_Names, SettingNames, settingPreset } from '@/utils/settingPreset'
@@ -632,11 +633,11 @@ const addWatch = () => {
       () => {
         if (settingPreset[key].saveFunc) {
           ;(settingPreset[key] as any).saveFunc(settingForm.value[key])
-          console.log(`Saved setting ${key} via custom saveFunc with value: ${settingForm.value[key]}`)
+          logDiagnostic('log', '[Settings] Saved via custom saveFunc')
           return
         }
         localStorage.setItem(settingPreset[key].saveKey || key, settingForm.value[key] as string)
-        console.log(`Saved setting ${key} to localStorage with value: ${settingForm.value[key]}`)
+        logDiagnostic('log', '[Settings] Saved to localStorage')
       },
       { deep: true },
     )
@@ -725,7 +726,7 @@ const loadBuiltInPrompts = () => {
         }
       })
     } catch (error) {
-      console.error('Error loading custom built-in prompts:', error)
+      logDiagnostic('error', '[Settings] Error loading custom built-in prompts', { error })
     }
   }
 }

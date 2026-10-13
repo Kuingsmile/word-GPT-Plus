@@ -80,6 +80,7 @@ import { useI18n } from 'vue-i18n'
 
 import { IndexedDBSaver } from '@/api/checkpoints'
 import CustomButton from '@/components/CustomButton.vue'
+import { logDiagnostic } from '@/utils/diagnostics'
 import { message as messageUtil } from '@/utils/message'
 
 const props = defineProps<{
@@ -118,7 +119,7 @@ const formatTime = (isoStr: string) => {
       second: '2-digit',
     })
   } catch (e) {
-    console.error('Failed to format time:', e)
+    logDiagnostic('error', '[Sessions] Failed to format time', { error: e })
     return isoStr
   }
 }
@@ -179,7 +180,7 @@ const loadAllSessions = async () => {
       return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     })
   } catch (err) {
-    console.error('Failed to load sessions:', err)
+    logDiagnostic('error', '[Sessions] Failed to load sessions', { error: err })
   } finally {
     loading.value = false
   }
@@ -195,7 +196,7 @@ const deleteSession = async (threadId: string) => {
     sessionItems.value = sessionItems.value.filter(item => item.threadId !== threadId)
     messageUtil.success(t('deleteSuccess'))
   } catch (error) {
-    console.error('Failed to delete session:', error)
+    logDiagnostic('error', '[Sessions] Failed to delete session', { error, threadId })
     messageUtil.error(t('deleteFailed'))
   }
 }

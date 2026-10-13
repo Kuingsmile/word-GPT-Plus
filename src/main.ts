@@ -5,9 +5,12 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import { i18n } from './i18n'
 import router from './router'
+import { logDiagnostic } from './utils/diagnostics'
 
 window.Office.onReady(() => {
   const app = createApp(App)
+  // Vue's default error handler can print SDK payloads and component state.
+  app.config.errorHandler = error => logDiagnostic('error', '[App] Unhandled error', { error })
   const debounce = (fn: (...args: any[]) => void, delay?: number) => {
     let timer: number | null = null
     return function (this: unknown, ...args: any[]) {

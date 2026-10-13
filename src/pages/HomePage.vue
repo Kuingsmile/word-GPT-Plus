@@ -273,6 +273,7 @@ import SingleSelect from '@/components/SingleSelect.vue'
 import CheckPointsPage from '@/pages/checkPointsPage.vue'
 import { checkAuth } from '@/utils/common'
 import { buildInPrompt, getBuiltInPrompt } from '@/utils/constant'
+import { logDiagnostic } from '@/utils/diagnostics'
 import { localStorageKey } from '@/utils/enum'
 import { createGeneralTools, GeneralToolName } from '@/utils/generalTools'
 import { message as messageUtil } from '@/utils/message'
@@ -366,7 +367,7 @@ function loadSavedPrompts() {
     try {
       savedPrompts.value = JSON.parse(stored)
     } catch (error) {
-      console.error('Error loading saved prompts:', error)
+      logDiagnostic('error', '[Prompts] Error loading saved prompts', { error })
       savedPrompts.value = []
     }
   }
@@ -591,10 +592,10 @@ async function sendMessage() {
   try {
     await processChat(fullMessage, undefined)
   } catch (error: any) {
-    if (error.name === 'AbortError') {
+    if (error?.name === 'AbortError') {
       messageUtil.info(t('generationStop'))
     } else {
-      console.error(error)
+      logDiagnostic('error', '[Chat] Failed to send message', { error, threadId: threadId.value })
       messageUtil.error(t('failedToResponse'))
       history.value.pop()
     }
@@ -636,10 +637,10 @@ async function applyQuickAction(actionKey: keyof typeof buildInPrompt) {
   try {
     await processChat(userMessage, systemMessage)
   } catch (error: any) {
-    if (error.name === 'AbortError') {
+    if (error?.name === 'AbortError') {
       messageUtil.info(t('generationStop'))
     } else {
-      console.error(error)
+      logDiagnostic('error', '[Chat] Failed to process action', { error, threadId: threadId.value })
       messageUtil.error(t('failedToProcessAction'))
       // Remove failed message
       history.value.pop()
@@ -990,7 +991,7 @@ async function handleSelectThread(newThreadId: string) {
   await loadThreadHistory(newThreadId)
 }
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   addWatch()
   initData()
   loadSavedPrompts()
@@ -998,9 +999,9 @@ onBeforeMount(() => {
   if (threadId.value) {
     loading.value = true // 可选：显示加载状态
     try {
-      loadThreadHistory(threadId.value)
+      await loadThreadHistory(threadId.value)
     } catch (e) {
-      console.error('Auto reload history failed:', e)
+      logDiagnostic('error', '[Sessions] Auto reload history failed', { error: e, threadId: threadId.value })
     } finally {
       loading.value = false
     }
