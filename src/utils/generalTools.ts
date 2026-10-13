@@ -2,7 +2,9 @@ import { DynamicStructuredTool } from '@langchain/core/tools'
 import { evaluate } from 'mathjs'
 import { z } from 'zod'
 
-import { readToolPreference, resolveToolSelection, toolPermissionError, ToolSelection } from './toolPermissions'
+import { getErrorMessage } from './errors'
+import type { ToolSelection } from './toolPermissions'
+import { readToolPreference, resolveToolSelection, toolPermissionError } from './toolPermissions'
 
 export type GeneralToolName = 'fetchWebContent' | 'searchWeb' | 'getCurrentDate' | 'calculateMath'
 
@@ -48,8 +50,8 @@ const fetchWebContentTool = new DynamicStructuredTool({
       const content = textContent.length > maxLength ? textContent.substring(0, maxLength) + '...' : textContent
 
       return `Content from ${url}:\n\n${content}`
-    } catch (error: any) {
-      return `Error fetching content: ${error.message}`
+    } catch (error) {
+      return `Error fetching content: ${getErrorMessage(error)}`
     }
   },
 })
@@ -68,14 +70,18 @@ const searchWebTool = new DynamicStructuredTool({
       if (!response.ok) {
         return `Search failed: ${response.status}`
       }
-      const data = await response.json()
+      const data = z
+        .object({
+          results: z.array(z.object({ title: z.string(), href: z.string(), body: z.string() })),
+        })
+        .parse(await response.json())
       let results = ''
-      data.results.forEach((result: any, index: number) => {
+      data.results.forEach((result, index) => {
         results += `Result ${index + 1}:\nTitle: ${result.title}\nLink: ${result.href}\nSnippet: ${result.body}\n\n`
       })
       return results
-    } catch (error: any) {
-      return `Error searching: ${error.message}`
+    } catch (error) {
+      return `Error searching: ${getErrorMessage(error)}`
     }
   },
 })
@@ -139,8 +145,8 @@ const calculateMathTool = new DynamicStructuredTool({
       }
 
       return `${expression} = ${result}`
-    } catch (error: any) {
-      return `Error evaluating expression: ${error.message}`
+    } catch (error) {
+      return `Error evaluating expression: ${getErrorMessage(error)}`
     }
   },
 })

@@ -176,4 +176,15 @@ export const settingPreset = {
   systemPrompt: inputSetting('', 'defaultSystemPrompt'),
   userPrompt: inputSetting('', 'defaultPrompt'),
   agentMaxIterations: inputNumSetting(25, 'agentMaxIterations', 'maxTokens'),
-} as const satisfies Record<SettingNames, ISettingOption<any>>
+} as const satisfies Record<SettingNames, ISettingOption<string> | ISettingOption<number> | ISettingOption<string[]>>
+
+export type SettingValues = {
+  [K in SettingNames]: (typeof settingPreset)[K]['defaultValue']
+}
+
+export function saveSetting<K extends SettingNames>(key: K, value: SettingValues[K]) {
+  // The key and value share K; this preserves that relationship through the indexed lookup.
+  const preset = settingPreset[key] as ISettingOption<SettingValues[K]>
+  if (preset.saveFunc) preset.saveFunc(value)
+  else localStorage.setItem(preset.saveKey || key, String(value))
+}

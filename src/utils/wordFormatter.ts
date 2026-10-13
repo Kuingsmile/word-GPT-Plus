@@ -1,18 +1,9 @@
-import { Ref } from 'vue'
+import type { Ref } from 'vue'
 
 interface FormatPart {
   text: string
   style?:
-    | 'bold'
-    | 'italic'
-    | 'heading1'
-    | 'heading2'
-    | 'heading3'
-    | 'heading4'
-    | 'heading5'
-    | 'heading6'
-    | 'code'
-    | 'quote'
+    'bold' | 'italic' | 'heading1' | 'heading2' | 'heading3' | 'heading4' | 'heading5' | 'heading6' | 'code' | 'quote'
   listType?: 'bullet' | 'number'
   listLevel?: number
 }
@@ -47,12 +38,12 @@ class WordFormatter {
       }
 
       const headingMatch = line.match(/^(#{1,6})\s+(.+)/)
-      if (headingMatch) {
+      if (headingMatch?.[1] && headingMatch[2] !== undefined) {
         const level = headingMatch[1].length
         const text = headingMatch[2]
         parts.push({
           text,
-          style: `heading${level}` as any,
+          style: `heading${level}` as FormatPart['style'],
         })
         continue
       }
@@ -67,7 +58,7 @@ class WordFormatter {
       }
 
       const numberedListMatch = line.match(/^\s*(\d+)\.\s+(.+)/)
-      if (numberedListMatch) {
+      if (numberedListMatch?.[2] !== undefined) {
         const text = numberedListMatch[2]
         const indent = line.search(/\d/)
         const level = Math.floor(indent / 2) + 1
@@ -80,7 +71,7 @@ class WordFormatter {
       }
 
       const bulletListMatch = line.match(/^\s*[-*+]\s+(.+)/)
-      if (bulletListMatch) {
+      if (bulletListMatch?.[1] !== undefined) {
         const text = bulletListMatch[1]
         const indent = line.search(/[-*+]/)
         const level = Math.floor(indent / 2) + 1
@@ -107,7 +98,7 @@ class WordFormatter {
           }
 
           lineParts.push({
-            text: match[1],
+            text: match[1] ?? '',
             style: 'code',
           })
 
@@ -162,7 +153,7 @@ class WordFormatter {
     return parts
   }
 
-  static async insertFormattedResult(result: string, insertType: Ref): Promise<void> {
+  static async insertFormattedResult(result: string, insertType: Ref<insertTypes>): Promise<void> {
     const content = result
     if (!content || typeof content !== 'string') return
 
@@ -242,16 +233,16 @@ class WordFormatter {
     })
   }
 
-  static async insertPlainResult(result: string, insertType: Ref): Promise<void> {
+  static async insertPlainResult(result: string, insertType: Ref<insertTypes>): Promise<void> {
     const paragraph = result.replace(/\n+/g, '\n').replace(/\r+/g, '\n').split('\n')
 
     switch (insertType.value) {
       case 'replace':
         await Word.run(async context => {
           const range = context.document.getSelection()
-          range.insertText(paragraph[0], 'Replace')
-          for (let i = paragraph.length - 1; i > 0; i--) {
-            range.insertParagraph(paragraph[i], 'After')
+          range.insertText(paragraph[0] ?? '', 'Replace')
+          for (const text of paragraph.slice(1).reverse()) {
+            range.insertParagraph(text, 'After')
           }
           await context.sync()
         })
@@ -259,9 +250,9 @@ class WordFormatter {
       case 'append':
         await Word.run(async context => {
           const range = context.document.getSelection()
-          range.insertText(paragraph[0], 'End')
-          for (let i = paragraph.length - 1; i > 0; i--) {
-            range.insertParagraph(paragraph[i], 'After')
+          range.insertText(paragraph[0] ?? '', 'End')
+          for (const text of paragraph.slice(1).reverse()) {
+            range.insertParagraph(text, 'After')
           }
           await context.sync()
         })
@@ -269,8 +260,8 @@ class WordFormatter {
       case 'newLine':
         await Word.run(async context => {
           const range = context.document.getSelection()
-          for (let i = paragraph.length - 1; i >= 0; i--) {
-            range.insertParagraph(paragraph[i], 'After')
+          for (const text of paragraph.slice().reverse()) {
+            range.insertParagraph(text, 'After')
           }
           await context.sync()
         })

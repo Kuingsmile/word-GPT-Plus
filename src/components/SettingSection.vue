@@ -29,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Component } from 'vue'
 const {
   title = '',
   description = '',
@@ -38,7 +39,7 @@ const {
 } = defineProps<{
   title?: string
   description?: string
-  icon?: any
+  icon?: Component | null
   iconSize?: number
   onlyOneRow?: boolean
 }>()

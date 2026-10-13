@@ -1,0 +1,9 @@
+.git
+.github
+.husky
+node_modules
+dist
+docs
+*.log
+.env.local
+.env.*.local

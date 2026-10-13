@@ -2,7 +2,10 @@ import { availableAPIs, languageMap } from './constant'
 
 export interface Auth {
   type: supportedPlatforms
-  [propName: string]: any
+  apiKey?: string
+  azureAPIKey?: string
+  geminiAPIKey?: string
+  groqAPIKey?: string
 }
 
 export function checkAuth(auth: Auth): boolean {
@@ -24,15 +27,15 @@ export function checkAuth(auth: Auth): boolean {
   }
 }
 
-export function forceNumber(val: any): number {
+export function forceNumber(val: unknown): number {
   return Number(val) || 0
 }
 
 export function getOptionList(map: Record<string, string>, from: 'key' | 'value' = 'key') {
   return from === 'key'
-    ? Object.keys(map).map(key => ({
+    ? Object.entries(map).map(([key, value]) => ({
         label: key,
-        value: map[key],
+        value,
       }))
     : Object.values(map).map(key => ({
         label: key,

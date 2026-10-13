@@ -87,7 +87,7 @@ Word GPT Plus 是一款将 AI 和 Agent 无缝集成到 Microsoft Word 中的插
 
 - Microsoft Word 2016/2019 零售版、Word 2021 或 Microsoft 365
 - [Edge WebView2 运行时](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
-- Node.js 20+（仅用于自托管）
+- Node.js 24.21.0 LTS / pnpm 12.11.2（仅用于自托管）
 
 > **注意**：仅适用于 .docx 文件（不兼容旧版 .doc 格式）
 
@@ -137,27 +137,51 @@ Word GPT Plus 是一款将 AI 和 Agent 无缝集成到 Microsoft Word 中的插
 <details>
 <summary><strong>源码构建</strong></summary>
 
-*需要 Node.js 20+*
+*需要 Node.js 24.21.0 LTS / pnpm 12.11.2*
+
+Node 精确版本记录在 `.node-version`、`.nvmrc` 和 `package.json` 中，pnpm 版本记录在 `packageManager` 中；
+CI 和 Docker 使用相同版本。先安装指定 Node 版本（或运行 `nvm install` 和 `nvm use`），再执行以下命令。
+从 Yarn 迁移时先移除旧的 `node_modules` 目录。依赖变更后请提交 `pnpm-lock.yaml`。
+
+如果现有 `pnpm` 命令由 Corepack 管理，请先运行 `corepack disable pnpm`，再执行下方的 npm 安装命令。
+Corepack 0.36.0 仍使用旧入口 `bin/pnpm.cjs`，但 pnpm 12 已不再提供该文件。
+请通过 npm 直接安装指定 pnpm 版本，之后不要再运行 `corepack enable pnpm`。
 
 1. 克隆并启动项目：
 
    ```bash
    git clone https://github.com/Kuingsmile/Word-GPT-Plus.git
    cd Word-GPT-Plus
-   yarn
-   yarn run build
-   yarn run serve
+   npm install --global pnpm@12.11.2
+   pnpm install --frozen-lockfile
+   pnpm build
+   pnpm serve
    ```
+
+   开发时运行 `pnpm dev`，使用 `pnpm format` 格式化代码。提交前运行 `pnpm check`（格式、ESLint、
+   Stylelint、TypeScript 和循环依赖检查）以及 `pnpm build`，CI 也会执行相同的检查。
+   `pnpm cz` 使用 czg 并保留原有 emoji 提交规范；
+   `pnpm release --dry-run` 可预览发布结果。
 
 2. 使用 [自托管 manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml)。
 3. 继续阅读下方的 [旁加载插件指南](#旁加载插件)。
+
+版本于 2026-10-13 根据官方 [Node 发布列表](https://nodejs.org/dist/index.json)、
+[Node 支持计划](https://github.com/nodejs/Release/blob/main/schedule.json)、
+[pnpm 元数据](https://registry.npmjs.org/pnpm/12.11.2) 和
+[Docker 镜像标签](https://github.com/docker-library/official-images/blob/master/library/node) 核验。
+依赖使用满足 peer 要求的稳定版本。由于 `typescript-eslint@8.71.2` 要求 TypeScript `<6.1.0`，
+TypeScript 保持在 `~6.0.3`。已弃用的 `lucide-vue-next` 替换为 `@lucide/vue`，移除未使用的
+Stylus、JSON5 和样式排序工具，并使用 czg 替代旧 Commitizen 依赖树。发布工具所需依赖均已显式声明。
 
 </details>
 
 <details>
 <summary><strong>部署到腾讯 EdgeOne</strong></summary>
 
-[![使用 EdgeOne Pages 部署](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2FKuingsmile%2FWord-GPT-Plus%2Ftree%2Fmaster&build-command=npm%20run%20build&output-directory=.%2Fdist&install-command=yarn%20install)
+[![使用 EdgeOne Pages 部署](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2FKuingsmile%2FWord-GPT-Plus%2Ftree%2Fmaster&build-command=pnpm%20build&output-directory=.%2Fdist&install-command=npm%20install%20--global%20pnpm%4012.11.2%20%26%26%20pnpm%20install%20--frozen-lockfile)
+
+执行安装命令前，请将部署环境的 Node.js 版本设置为 `24.21.0`。
 
 </details>
 

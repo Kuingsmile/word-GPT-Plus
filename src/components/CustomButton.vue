@@ -24,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Component } from 'vue'
 import { computed } from 'vue'
 
 const {
@@ -38,7 +39,7 @@ const {
   textClass = '',
 } = defineProps<{
   text: string
-  icon?: any
+  icon?: Component | null
   active?: boolean
   iconSize?: number
   disabled?: boolean

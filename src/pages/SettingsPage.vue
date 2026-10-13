@@ -126,7 +126,7 @@
             >
               <SettingCard v-for="item in getApiInputSettings(platform)" :key="item">
                 <CustomInput
-                  v-model="settingForm[item as SettingNames]"
+                  v-model="settingForm[item]"
                   :title="t(getLabel(item))"
                   :placeholder="t(getPlaceholder(item))"
                 />
@@ -172,16 +172,16 @@
               </SettingCard>
               <SettingCard v-for="item in getApiSelectSettings(platform)" :key="item">
                 <SingleSelect
-                  v-model="settingForm[item as SettingNames]"
+                  v-model="settingForm[item]"
                   :key-list="getMergedModelOptions(platform)"
                   :title="t(getLabel(item))"
                   :fronticon="false"
-                  :placeholder="settingForm[item as SettingNames]"
+                  :placeholder="settingForm[item]"
                 />
               </SettingCard>
               <SettingCard v-for="item in getApiNumSettings(platform)" :key="item">
                 <CustomInput
-                  v-model.number="settingForm[item as SettingNames]"
+                  v-model.number="settingForm[item]"
                   :title="t(getLabel(item))"
                   :placeholder="t(getPlaceholder(item))"
                   type="number"
@@ -441,7 +441,7 @@ import {
   Trash2,
   Wrench,
   X,
-} from 'lucide-vue-next'
+} from '@lucide/vue'
 import { onBeforeMount, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -456,7 +456,8 @@ import { availableAPIs, buildInPrompt } from '@/utils/constant'
 import { logDiagnostic } from '@/utils/diagnostics'
 import { getGeneralToolDefinitions, loadEnabledGeneralTools, WEB_SEARCH_ENDPOINT } from '@/utils/generalTools'
 import useSettingForm from '@/utils/settingForm'
-import { Setting_Names, SettingNames, settingPreset } from '@/utils/settingPreset'
+import type { SettingNames } from '@/utils/settingPreset'
+import { saveSetting, Setting_Names, settingPreset } from '@/utils/settingPreset'
 import { getWordToolDefinitions, loadEnabledWordTools } from '@/utils/wordTools'
 const { t } = useI18n()
 const router = useRouter()
@@ -546,36 +547,50 @@ const tabs = [
   },
 ]
 
-const getApiInputSettings = (platform: string) => {
-  return Object.keys(settingForm.value).filter(
-    key =>
-      key.startsWith(platform) && settingPreset[key as SettingNames].type === 'input' && !key.endsWith('CustomModel'),
+type SettingKeysOfType<T> = {
+  [K in SettingNames]: (typeof settingPreset)[K]['defaultValue'] extends T ? K : never
+}[SettingNames]
+
+const getApiInputSettings = (platform: string) =>
+  Setting_Names.filter(
+    (key): key is SettingKeysOfType<string> =>
+      key.startsWith(platform) &&
+      settingPreset[key].type === 'input' &&
+      typeof settingPreset[key].defaultValue === 'string' &&
+      !key.endsWith('CustomModel'),
   )
-}
 
 const getApiNumSettings = (platform: string) => {
-  return Object.keys(settingForm.value).filter(
-    key => key.startsWith(platform) && settingPreset[key as SettingNames].type === 'inputNum',
+  return Setting_Names.filter(
+    (key): key is SettingKeysOfType<number> =>
+      key.startsWith(platform) &&
+      settingPreset[key].type === 'inputNum' &&
+      typeof settingPreset[key].defaultValue === 'number',
   )
 }
 
 const getApiSelectSettings = (platform: string) => {
-  return Object.keys(settingForm.value).filter(
-    key => key.startsWith(platform) && settingPreset[key as SettingNames].type === 'select',
+  return Setting_Names.filter(
+    (key): key is SettingKeysOfType<string> =>
+      key.startsWith(platform) &&
+      settingPreset[key].type === 'select' &&
+      typeof settingPreset[key].defaultValue === 'string',
   )
 }
 
-const getCustomModelsKey = (platform: string): SettingNames | null => {
-  const key = `${platform}CustomModels` as SettingNames
-  return settingPreset[key] ? key : null
-}
+type CustomModelPlatform = 'official' | 'gemini' | 'ollama' | 'groq'
+const isCustomModelPlatform = (platform: string): platform is CustomModelPlatform =>
+  ['official', 'gemini', 'ollama', 'groq'].includes(platform)
+
+const getCustomModelsKey = (platform: string): `${CustomModelPlatform}CustomModels` | null =>
+  isCustomModelPlatform(platform) ? `${platform}CustomModels` : null
 
 const loadCustomModels = () => {
   const platforms = ['official', 'gemini', 'ollama', 'groq']
   platforms.forEach(platform => {
     const key = getCustomModelsKey(platform)
     if (key && settingPreset[key].getFunc) {
-      customModelsMap.value[platform] = settingPreset[key].getFunc() as string[]
+      customModelsMap.value[platform] = settingPreset[key].getFunc()
     }
   })
 }
@@ -593,7 +608,7 @@ const addCustomModel = (platform: string) => {
 
   if (!customModelsMap.value[platform].includes(model)) {
     customModelsMap.value[platform].push(model)
-    ;(settingPreset[key] as any).saveFunc(customModelsMap.value[platform])
+    settingPreset[key].saveFunc?.(customModelsMap.value[platform] ?? [])
     newCustomModel.value[platform] = ''
   }
 }
@@ -602,21 +617,24 @@ const removeCustomModel = (platform: string, model: string) => {
   const key = getCustomModelsKey(platform)
   if (!key) return
 
-  customModelsMap.value[platform] = customModelsMap.value[platform].filter(m => m !== model)
-  ;(settingPreset[key] as any).saveFunc(customModelsMap.value[platform])
+  customModelsMap.value[platform] = (customModelsMap.value[platform] ?? []).filter(m => m !== model)
+  settingPreset[key].saveFunc?.(customModelsMap.value[platform] ?? [])
 
   // If the removed model was selected, switch to first available
-  const selectKey = `${platform}ModelSelect` as SettingNames
+  if (!isCustomModelPlatform(platform)) return
+  const selectKey = `${platform}ModelSelect` as const
   if (settingForm.value[selectKey] === model) {
     const options = getMergedModelOptions(platform)
-    if (options.length > 0) {
-      ;(settingForm.value as any)[selectKey] = options[0]
+    const firstOption = options?.[0]
+    if (firstOption !== undefined) {
+      settingForm.value[selectKey] = firstOption
     }
   }
 }
 
 const getMergedModelOptions = (platform: string) => {
-  const selectKey = `${platform}ModelSelect` as SettingNames
+  if (!isCustomModelPlatform(platform)) return []
+  const selectKey = `${platform}ModelSelect` as const
   const presetOptions = settingPreset[selectKey]?.optionList || []
   const customModels = customModelsMap.value[platform] || []
 
@@ -632,12 +650,7 @@ const addWatch = () => {
     watch(
       () => settingForm.value[key],
       () => {
-        if (settingPreset[key].saveFunc) {
-          ;(settingPreset[key] as any).saveFunc(settingForm.value[key])
-          logDiagnostic('log', '[Settings] Saved via custom saveFunc')
-          return
-        }
-        localStorage.setItem(settingPreset[key].saveKey || key, settingForm.value[key] as string)
+        saveSetting(key, settingForm.value[key])
         logDiagnostic('log', '[Settings] Saved to localStorage')
       },
       { deep: true },
@@ -825,7 +838,7 @@ const isToolEnabled = (toolName: string, isWordTool: boolean): boolean => {
 
 const isGeneralTool = (toolName: string): boolean => {
   const generalToolNames = getGeneralToolDefinitions().map(t => t.name)
-  return generalToolNames.includes(toolName as any)
+  return generalToolNames.some(name => name === toolName)
 }
 
 onBeforeMount(() => {
@@ -837,6 +850,6 @@ onBeforeMount(() => {
 })
 
 function backToHome() {
-  router.push('/')
+  return router.push('/')
 }
 </script>

@@ -130,7 +130,7 @@ function errorMetadata(error: unknown, seen: WeakSet<object>, depth = 0): Diagno
  * Unknown fields are dropped rather than trying to recognize every possible secret.
  */
 export function logDiagnostic(level: DiagnosticLevel, event: string, details: DiagnosticRecord = {}): void {
-  let safe: DiagnosticRecord = {}
+  let safe: DiagnosticRecord
   try {
     safe = metadata(details)
     const error = readField(details, 'error')

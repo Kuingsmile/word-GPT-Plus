@@ -1,5 +1,5 @@
 import { ToolMessage } from '@langchain/core/messages'
-import { StructuredToolInterface } from '@langchain/core/tools'
+import type { StructuredToolInterface } from '@langchain/core/tools'
 import { createMiddleware } from 'langchain'
 
 import { loadActiveToolNames } from '@/utils/activeTools'

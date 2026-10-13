@@ -87,7 +87,7 @@ Word GPT Plus seamlessly integrates AI and Agent directly into Microsoft Word, a
 
 - Microsoft Word 2016/2019 (retail version), Word 2021, or Microsoft 365
 - [Edge WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
-- Node.js 20+ (only for self-hosting)
+- Node.js 24.21.0 LTS / pnpm 12.11.2 (only for self-hosting)
 
 > **Note**: Works only with .docx files (not compatible with older .doc format)
 
@@ -135,27 +135,53 @@ Choose the method that best suits your needs:
 <details>
 <summary><strong>Build from Source</strong></summary>
 
-*Requires Node.js 20+*
+*Requires Node.js 24.21.0 LTS / pnpm 12.11.2*
+
+The exact Node version is recorded in `.node-version`, `.nvmrc`, and `package.json`; the pnpm version is
+recorded in `packageManager`. CI reads these pins and Docker uses the same versions. Install Node first
+(or run `nvm install` and `nvm use`), then use the commands below. Remove any old `node_modules` directory
+when switching from Yarn. Commit `pnpm-lock.yaml` after dependency changes.
+
+If an existing `pnpm` command is managed by Corepack, run `corepack disable pnpm` before the npm installation
+below. Corepack 0.36.0 targets the old `bin/pnpm.cjs` entry point, which pnpm 12 no longer ships. Install the
+pinned pnpm directly with npm; do not run `corepack enable pnpm` afterward.
 
 1. Clone and start the project:
 
    ```bash
    git clone https://github.com/Kuingsmile/Word-GPT-Plus.git
    cd Word-GPT-Plus
-   yarn
-   yarn build
-   yarn run serve
+   npm install --global pnpm@12.11.2
+   pnpm install --frozen-lockfile
+   pnpm build
+   pnpm serve
    ```
+
+   For development, run `pnpm dev`. Run `pnpm format` to format code. Before submitting changes, run
+   `pnpm check` (formatting, ESLint, Stylelint, TypeScript, and circular dependencies) and `pnpm build`.
+   CI runs the same checks. `pnpm cz` uses czg with the existing emoji
+   commit convention; `pnpm release --dry-run` previews a release.
 
 2. Use the [self-hosted manifest.xml](https://github.com/Kuingsmile/word-GPT-Plus/blob/master/release/self-hosted/manifest.xml).
 3. Proceed to the [Add-in Installation Guide](#add-in-installation-guide).
+
+Versions were checked on 2026-10-13 against the official [Node release index](https://nodejs.org/dist/index.json),
+[Node support schedule](https://github.com/nodejs/Release/blob/main/schedule.json),
+[pnpm package metadata](https://registry.npmjs.org/pnpm/12.11.2), and
+[Docker image tags](https://github.com/docker-library/official-images/blob/master/library/node).
+Dependencies use current stable releases with compatible peer requirements. TypeScript stays on `~6.0.3`
+because `typescript-eslint@8.71.2` supports TypeScript `<6.1.0`. The deprecated `lucide-vue-next` package
+was replaced by `@lucide/vue`; unused Stylus, JSON5, and style-order tooling was removed. The release tools
+now declare their dependencies explicitly, with czg replacing the legacy Commitizen dependency tree.
 
 </details>
 
 <details>
 <summary><strong>Deploy to Tencent EdgeOne</strong></summary>
 
-[![Deploy to Tencent EdgeOne](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2FKuingsmile%2FWord-GPT-Plus%2Ftree%2Fmaster&build-command=npm%20run%20build&output-directory=.%2Fdist&install-command=yarn%20install)
+[![Deploy to Tencent EdgeOne](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2FKuingsmile%2FWord-GPT-Plus%2Ftree%2Fmaster&build-command=pnpm%20build&output-directory=.%2Fdist&install-command=npm%20install%20--global%20pnpm%4012.11.2%20%26%26%20pnpm%20install%20--frozen-lockfile)
+
+Set the deployment environment to Node.js `24.21.0` before running the install command.
 
 </details>
 

@@ -1,4 +1,5 @@
-import { BaseChatModel } from '@langchain/core/language_models/chat_models'
+import type { BaseChatModel } from '@langchain/core/language_models/chat_models'
+import { isAIMessage, isToolMessage } from '@langchain/core/messages'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { ChatGroq } from '@langchain/groq'
 // import { MemorySaver } from '@langchain/langgraph'
@@ -10,7 +11,7 @@ import { IndexedDBSaver } from '@/api/checkpoints'
 import { logDiagnostic } from '@/utils/diagnostics'
 
 import { createToolAuthorization } from './toolAuthorization'
-import {
+import type {
   AgentOptions,
   AzureOptions,
   GeminiOptions,
@@ -20,7 +21,7 @@ import {
   ProviderOptions,
 } from './types'
 
-const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
+const ModelCreators = {
   official: (opts: OpenAIOptions) => {
     const modelName = opts.model || 'gpt-5'
     return new ChatOpenAI({
@@ -110,8 +111,8 @@ async function executeChatFlow(model: BaseChatModel, options: ProviderOptions): 
       fullContent += content
       options.onStream(fullContent)
     }
-  } catch (error: any) {
-    if (error?.name === 'AbortError' || options.abortSignal?.aborted) {
+  } catch (error) {
+    if ((error instanceof Error && error.name === 'AbortError') || options.abortSignal?.aborted) {
       // Don't mark as error if intentionally aborted
       throw error
     }
@@ -176,11 +177,10 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
 
       if (!lastMessage) continue
 
-      // Cast to any for accessing tool-related properties
-      const msg = lastMessage as any
+      const msg = lastMessage
 
       // Handle AI messages with tool calls
-      if (msg._getType?.() === 'ai' && msg.tool_calls?.length > 0) {
+      if (isAIMessage(msg) && msg.tool_calls?.length) {
         logDiagnostic('log', '[Agent] Tool calls detected', {
           threadId: options.threadId,
           toolCallCount: msg.tool_calls.length,
@@ -197,7 +197,7 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
       }
 
       // Handle tool result messages
-      if (msg._getType?.() === 'tool') {
+      if (isToolMessage(msg)) {
         const toolName = msg.name || 'unknown'
         const toolContent = String(msg.content || '')
         logDiagnostic('log', '[Agent] Tool result', {
@@ -211,7 +211,7 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
       }
 
       // Handle AI message content (the final response)
-      if (msg._getType?.() === 'ai' && msg.content) {
+      if (isAIMessage(msg) && msg.content) {
         const content = typeof msg.content === 'string' ? msg.content : ''
         if (content && (!msg.tool_calls || msg.tool_calls.length === 0)) {
           fullContent = content
@@ -225,11 +225,11 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
     }
 
     logDiagnostic('log', '[Agent] Flow completed', { threadId: options.threadId, stepCount })
-  } catch (error: any) {
-    if (error?.name === 'AbortError' || options.abortSignal?.aborted) {
+  } catch (error) {
+    if ((error instanceof Error && error.name === 'AbortError') || options.abortSignal?.aborted) {
       throw error
     }
-    if (error?.name === 'GraphRecursionError') {
+    if (error instanceof Error && error.name === 'GraphRecursionError') {
       options.errorIssue.value = 'recursionLimitExceeded'
     } else {
       options.errorIssue.value = true
@@ -245,20 +245,25 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
   }
 }
 
-export async function getChatResponse(options: ProviderOptions) {
-  const creator = ModelCreators[options.provider]
-  if (!creator) {
-    throw new Error(`Unsupported provider: ${options.provider}`)
+function createModel(options: ProviderOptions): BaseChatModel {
+  switch (options.provider) {
+    case 'official':
+      return ModelCreators.official(options)
+    case 'ollama':
+      return ModelCreators.ollama(options)
+    case 'groq':
+      return ModelCreators.groq(options)
+    case 'gemini':
+      return ModelCreators.gemini(options)
+    case 'azure':
+      return ModelCreators.azure(options)
   }
-  const model = creator(options)
-  return executeChatFlow(model, options)
+}
+
+export async function getChatResponse(options: ProviderOptions) {
+  return executeChatFlow(createModel(options), options)
 }
 
 export async function getAgentResponse(options: AgentOptions) {
-  const creator = ModelCreators[options.provider]
-  if (!creator) {
-    throw new Error(`Unsupported provider: ${options.provider}`)
-  }
-  const model = creator(options)
-  return executeAgentFlow(model, options)
+  return executeAgentFlow(createModel(options), options)
 }

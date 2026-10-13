@@ -1,0 +1,36 @@
+engineStrict: true
+strictPeerDependencies: true
+verifyDepsBeforeRun: error
+allowBuilds:
+  '@tailwindcss/oxide': true
+  esbuild: true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - '@langchain/langgraph-checkpoint@1.2.0'
+  - '@langchain/langgraph-sdk@1.12.4'
+  - '@langchain/langgraph@1.5.0'
+  - '@lucide/vue@1.56.0'
+  - '@typescript-eslint/eslint-plugin@8.71.2'
+  - '@typescript-eslint/parser@8.71.2'
+  - '@typescript-eslint/project-service@8.71.2'
+  - '@typescript-eslint/scope-manager@8.71.2'
+  - '@typescript-eslint/tsconfig-utils@8.71.2'
+  - '@typescript-eslint/type-utils@8.71.2'
+  - '@typescript-eslint/types@8.71.2'
+  - '@typescript-eslint/typescript-estree@8.71.2'
+  - '@typescript-eslint/utils@8.71.2'
+  - '@typescript-eslint/visitor-keys@8.71.2'
+  - '@vue/compiler-core@3.5.44'
+  - '@vue/compiler-dom@3.5.44'
+  - '@vue/compiler-sfc@3.5.44'
+  - '@vue/compiler-ssr@3.5.44'
+  - '@vue/reactivity@3.5.44'
+  - '@vue/runtime-core@3.5.44'
+  - '@vue/runtime-dom@3.5.44'
+  - '@vue/server-renderer@3.5.44'
+  - '@vue/shared@3.5.44'
+  - eslint-plugin-unicorn@78.0.0
+  - postcss@8.5.30
+  - typescript-eslint@8.71.2
+  - vue@3.5.44
+  - zod@4.6.7
