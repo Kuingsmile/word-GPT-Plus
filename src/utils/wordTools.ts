@@ -1,6 +1,8 @@
 import { tool } from '@langchain/core/tools'
 import { z } from 'zod'
 
+import { readToolPreference, resolveToolSelection, toolPermissionError, ToolSelection } from './toolPermissions'
+
 export type WordToolName =
   | 'getSelectedText'
   | 'getDocumentContent'
@@ -833,9 +835,16 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
   },
 }
 
-export function createWordTools(enabledTools?: WordToolName[]) {
+const wordToolNames = Object.keys(wordToolDefinitions) as WordToolName[]
+
+export function loadEnabledWordTools(): WordToolName[] {
+  return readToolPreference('enabledWordTools', wordToolNames, wordToolNames)
+}
+
+export function createWordTools(enabledTools?: ToolSelection<WordToolName>) {
+  const allowedNames = () => resolveToolSelection(enabledTools, wordToolNames, wordToolNames)
   const tools = Object.entries(wordToolDefinitions)
-    .filter(([name]) => !enabledTools || enabledTools.includes(name as WordToolName))
+    .filter(([name]) => allowedNames().includes(name as WordToolName))
     .map(([, def]) => {
       const schemaObj: Record<string, z.ZodTypeAny> = {}
 
@@ -872,6 +881,7 @@ export function createWordTools(enabledTools?: WordToolName[]) {
 
       return tool(
         async input => {
+          if (!allowedNames().includes(def.name as WordToolName)) throw new Error(toolPermissionError(def.name))
           try {
             return await def.execute(input)
           } catch (error: any) {
@@ -889,12 +899,10 @@ export function createWordTools(enabledTools?: WordToolName[]) {
   return tools
 }
 
-export function getWordToolDefinitions(): WordToolDefinition[] {
-  return Object.values(wordToolDefinitions)
+export function getWordToolDefinitions(): Pick<WordToolDefinition, 'name' | 'description'>[] {
+  return Object.values(wordToolDefinitions).map(({ name, description }) => ({ name, description }))
 }
 
-export function getWordTool(name: WordToolName): WordToolDefinition | undefined {
-  return wordToolDefinitions[name]
+export function getWordTool(name: WordToolName): Pick<WordToolDefinition, 'name' | 'description'> | undefined {
+  return getWordToolDefinitions().find(def => def.name === name)
 }
-
-export { wordToolDefinitions }

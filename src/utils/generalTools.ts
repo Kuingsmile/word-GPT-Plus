@@ -2,13 +2,19 @@ import { DynamicStructuredTool } from '@langchain/core/tools'
 import { evaluate } from 'mathjs'
 import { z } from 'zod'
 
+import { readToolPreference, resolveToolSelection, toolPermissionError, ToolSelection } from './toolPermissions'
+
 export type GeneralToolName = 'fetchWebContent' | 'searchWeb' | 'getCurrentDate' | 'calculateMath'
 
 export interface GeneralToolDefinition {
   name: GeneralToolName
   description: string
-  tool: DynamicStructuredTool
+  destination?: string
 }
+
+export const WEB_SEARCH_ENDPOINT = 'https://ddgs.horosama.com/search/text'
+
+const defaultGeneralToolNames: readonly GeneralToolName[] = ['fetchWebContent', 'getCurrentDate', 'calculateMath']
 
 const fetchWebContentTool = new DynamicStructuredTool({
   name: 'fetchWebContent',
@@ -50,15 +56,14 @@ const fetchWebContentTool = new DynamicStructuredTool({
 
 const searchWebTool = new DynamicStructuredTool({
   name: 'searchWeb',
-  description:
-    'Searches the web for information. Returns top search results with titles and snippets. Useful for finding references, facts, or background information for the document. If you need to look up information you do not know, use this tool.',
+  description: `Searches the web by sending the search query to ${WEB_SEARCH_ENDPOINT}. Requires explicit permission in Tools settings. Returns search results with titles and snippets.`,
   schema: z.object({
     query: z.string().describe('The search query'),
     maxResults: z.number().optional().default(10).describe('Maximum number of results to return (default: 10)'),
   }),
   func: async ({ query, maxResults = 10 }) => {
     try {
-      const url = `https://ddgs.horosama.com/search/text?query=${encodeURIComponent(query)}&max_results=${maxResults <= 10 ? maxResults : 10}`
+      const url = `${WEB_SEARCH_ENDPOINT}?query=${encodeURIComponent(query)}&max_results=${maxResults <= 10 ? maxResults : 10}`
       const response = await fetch(url)
       if (!response.ok) {
         return `Search failed: ${response.status}`
@@ -140,7 +145,7 @@ const calculateMathTool = new DynamicStructuredTool({
   },
 })
 
-export const generalToolDefinitions: GeneralToolDefinition[] = [
+const generalToolDefinitions: (GeneralToolDefinition & { tool: DynamicStructuredTool })[] = [
   {
     name: 'fetchWebContent',
     description: fetchWebContentTool.description,
@@ -149,6 +154,7 @@ export const generalToolDefinitions: GeneralToolDefinition[] = [
   {
     name: 'searchWeb',
     description: searchWebTool.description,
+    destination: WEB_SEARCH_ENDPOINT,
     tool: searchWebTool,
   },
   {
@@ -163,18 +169,36 @@ export const generalToolDefinitions: GeneralToolDefinition[] = [
   },
 ]
 
-export function createGeneralTools(enabledTools?: GeneralToolName[]): DynamicStructuredTool[] {
-  if (!enabledTools || enabledTools.length === 0) {
-    return generalToolDefinitions.map(def => def.tool)
-  }
+const generalToolNames = generalToolDefinitions.map(def => def.name)
 
-  return generalToolDefinitions.filter(def => enabledTools.includes(def.name)).map(def => def.tool)
+export function loadEnabledGeneralTools(): GeneralToolName[] {
+  return readToolPreference('enabledGeneralTools', generalToolNames, defaultGeneralToolNames)
+}
+
+export function createGeneralTools(enabledTools?: ToolSelection<GeneralToolName>): DynamicStructuredTool[] {
+  const allowedNames = () => resolveToolSelection(enabledTools, generalToolNames, defaultGeneralToolNames)
+  return generalToolDefinitions
+    .filter(def => allowedNames().includes(def.name))
+    .map(
+      def =>
+        new DynamicStructuredTool({
+          name: def.name,
+          description: def.description,
+          schema: def.tool.schema,
+          func: async (input, runManager, config) => {
+            // Recheck at execution: an already exposed tool may have since been disabled.
+            if (!allowedNames().includes(def.name)) throw new Error(toolPermissionError(def.name))
+            return def.tool.func(input, runManager, config)
+          },
+        }),
+    )
 }
 
 export function getGeneralToolDefinitions(): GeneralToolDefinition[] {
-  return generalToolDefinitions
+  // Settings and lookup helpers expose metadata, never unguarded executors.
+  return generalToolDefinitions.map(({ name, description, destination }) => ({ name, description, destination }))
 }
 
 export function getGeneralTool(name: GeneralToolName): GeneralToolDefinition | undefined {
-  return generalToolDefinitions.find(def => def.name === name)
+  return getGeneralToolDefinitions().find(def => def.name === name)
 }

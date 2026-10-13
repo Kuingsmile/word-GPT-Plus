@@ -211,6 +211,11 @@ Agent mode gives the AI direct access to your Word document through 25+ speciali
 - Numerical calculations
 - Date retrieval
 
+Web search is off until you enable **Search Web** in **Settings → Tools**. Enabling it permits sending search queries
+to `https://ddgs.horosama.com/search/text`, which is also shown beside the setting. Missing tool preferences keep the
+other default tools available; an explicitly empty list disables that category, and invalid preferences grant no
+tools. Permissions are checked before each model call and tool execution, including restored conversations.
+
 **Document Reading Tools:**
 
 - Get selected text or full document content

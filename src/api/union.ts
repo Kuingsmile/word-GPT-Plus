@@ -9,6 +9,7 @@ import { createAgent } from 'langchain'
 import { IndexedDBSaver } from '@/api/checkpoints'
 import { logDiagnostic } from '@/utils/diagnostics'
 
+import { createToolAuthorization } from './toolAuthorization'
 import {
   AgentOptions,
   AzureOptions,
@@ -85,6 +86,7 @@ async function executeChatFlow(model: BaseChatModel, options: ProviderOptions): 
     const agent = createAgent({
       model,
       tools: [],
+      middleware: [createToolAuthorization([], () => [])],
       checkpointer,
     })
     const stream = await agent.stream(
@@ -131,9 +133,11 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
       options.threadId = crypto.randomUUID()
       logDiagnostic('log', '[Agent] New thread started', { threadId: options.threadId })
     }
+    const tools = options.tools ?? []
     const agent = createAgent({
       model,
-      tools: options.tools || [],
+      tools,
+      middleware: [createToolAuthorization(tools)],
       checkpointer,
     })
 
@@ -202,7 +206,7 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
           contentLength: toolContent.length,
         })
         if (options.onToolResult) {
-          options.onToolResult(toolName, toolContent)
+          options.onToolResult(toolName, toolContent, msg.status)
         }
       }
 
@@ -227,6 +231,8 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
     }
     if (error?.name === 'GraphRecursionError') {
       options.errorIssue.value = 'recursionLimitExceeded'
+    } else {
+      options.errorIssue.value = true
     }
     // TODO: more specific error handling based on LangGraph error
     logDiagnostic('error', '[Agent] Error', { error, threadId: options.threadId })

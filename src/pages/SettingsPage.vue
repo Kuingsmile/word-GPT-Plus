@@ -319,14 +319,15 @@
                     class="h-4 w-4 cursor-pointer"
                     @change="toggleTool(tool.name, !isGeneralTool(tool.name))"
                   />
-                  <div class="flex flex-col" @click="toggleTool(tool.name, !isGeneralTool(tool.name))">
-                    <label :for="'tool-' + tool.name" class="text-xs font-semibold text-secondary">{{
-                      $t(`wordTool_${tool.name}`)
-                    }}</label>
+                  <label :for="'tool-' + tool.name" class="flex cursor-pointer flex-col">
+                    <span class="text-xs font-semibold text-secondary">{{ $t(`wordTool_${tool.name}`) }}</span>
                     <span class="text-xs text-secondary/90">
                       {{ $t(`wordTool_${tool.name}_desc`) }}
                     </span>
-                  </div>
+                    <span v-if="tool.name === 'searchWeb'" class="text-xs wrap-break-word text-secondary/90">
+                      {{ t('webSearchDestination', { destination: WEB_SEARCH_ENDPOINT }) }}
+                    </span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -453,10 +454,10 @@ import SingleSelect from '@/components/SingleSelect.vue'
 import { getLabel, getPlaceholder } from '@/utils/common'
 import { availableAPIs, buildInPrompt } from '@/utils/constant'
 import { logDiagnostic } from '@/utils/diagnostics'
-import { getGeneralToolDefinitions } from '@/utils/generalTools'
+import { getGeneralToolDefinitions, loadEnabledGeneralTools, WEB_SEARCH_ENDPOINT } from '@/utils/generalTools'
 import useSettingForm from '@/utils/settingForm'
 import { Setting_Names, SettingNames, settingPreset } from '@/utils/settingPreset'
-import { getWordToolDefinitions } from '@/utils/wordTools'
+import { getWordToolDefinitions, loadEnabledWordTools } from '@/utils/wordTools'
 const { t } = useI18n()
 const router = useRouter()
 const settingForm = useSettingForm()
@@ -792,30 +793,8 @@ const getUserPromptPreview = (userFunc: (text: string, language: string) => stri
 }
 
 const loadToolPreferences = () => {
-  const wordTools = localStorage.getItem('enabledWordTools')
-  const generalTools = localStorage.getItem('enabledGeneralTools')
-
-  if (wordTools) {
-    try {
-      enabledWordTools.value = new Set(JSON.parse(wordTools))
-    } catch {
-      enabledWordTools.value = new Set(getWordToolDefinitions().map(t => t.name))
-    }
-  } else {
-    enabledWordTools.value = new Set(getWordToolDefinitions().map(t => t.name))
-  }
-
-  if (generalTools) {
-    try {
-      enabledGeneralTools.value = new Set(JSON.parse(generalTools))
-    } catch {
-      const generalToolNames = getGeneralToolDefinitions().map(t => t.name)
-      enabledGeneralTools.value = new Set(generalToolNames)
-    }
-  } else {
-    const generalToolNames = getGeneralToolDefinitions().map(t => t.name)
-    enabledGeneralTools.value = new Set(generalToolNames)
-  }
+  enabledWordTools.value = new Set(loadEnabledWordTools())
+  enabledGeneralTools.value = new Set(loadEnabledGeneralTools())
 }
 
 const saveToolPreferences = () => {

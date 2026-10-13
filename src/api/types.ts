@@ -1,3 +1,4 @@
+import { StructuredToolInterface } from '@langchain/core/tools'
 import { Messages } from '@langchain/langgraph'
 import { Ref } from 'vue'
 
@@ -55,9 +56,9 @@ type supportedProviders = 'official' | 'ollama' | 'groq' | 'gemini' | 'azure'
 // Agent options with tools support
 export interface AgentOptions extends BaseChatCompletionOptions {
   provider: supportedProviders
-  tools?: any[]
+  tools?: StructuredToolInterface[]
   onToolCall?: (toolName: string, args: any) => void
-  onToolResult?: (toolName: string, result: string) => void
+  onToolResult?: (toolName: string, result: string, status?: 'success' | 'error') => void
   recursionLimit?: number
   checkpointId?: string
   // Provider-specific options

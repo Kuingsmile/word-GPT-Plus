@@ -271,15 +271,14 @@ import { getAgentResponse, getChatResponse } from '@/api/union'
 import CustomButton from '@/components/CustomButton.vue'
 import SingleSelect from '@/components/SingleSelect.vue'
 import CheckPointsPage from '@/pages/checkPointsPage.vue'
+import { getActiveTools } from '@/utils/activeTools'
 import { checkAuth } from '@/utils/common'
 import { buildInPrompt, getBuiltInPrompt } from '@/utils/constant'
 import { logDiagnostic } from '@/utils/diagnostics'
 import { localStorageKey } from '@/utils/enum'
-import { createGeneralTools, GeneralToolName } from '@/utils/generalTools'
 import { message as messageUtil } from '@/utils/message'
 import useSettingForm from '@/utils/settingForm'
 import { settingPreset } from '@/utils/settingPreset'
-import { createWordTools, WordToolName } from '@/utils/wordTools'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -296,70 +295,6 @@ interface SavedPrompt {
 const savedPrompts = ref<SavedPrompt[]>([])
 const selectedPromptId = ref<string>('')
 const customSystemPrompt = ref<string>('')
-
-const allWordToolNames: WordToolName[] = [
-  'getSelectedText',
-  'getDocumentContent',
-  'insertText',
-  'replaceSelectedText',
-  'appendText',
-  'insertParagraph',
-  'formatText',
-  'searchAndReplace',
-  'getDocumentProperties',
-  'insertTable',
-  'insertList',
-  'deleteText',
-  'clearFormatting',
-  'setFontName',
-  'insertPageBreak',
-  'getRangeInfo',
-  'selectText',
-  'insertImage',
-  'getTableInfo',
-  'insertBookmark',
-  'goToBookmark',
-  'insertContentControl',
-  'findText',
-]
-
-const allGeneralToolNames: GeneralToolName[] = ['fetchWebContent', 'searchWeb', 'getCurrentDate', 'calculateMath']
-
-// Tool state
-const enabledWordTools = ref<WordToolName[]>(loadEnabledWordTools())
-const enabledGeneralTools = ref<GeneralToolName[]>(loadEnabledGeneralTools())
-
-function loadEnabledWordTools(): WordToolName[] {
-  const stored = localStorage.getItem('enabledWordTools')
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored)
-      return parsed.filter((name: string) => allWordToolNames.includes(name as WordToolName))
-    } catch {
-      return [...allWordToolNames]
-    }
-  }
-  return [...allWordToolNames]
-}
-
-function loadEnabledGeneralTools(): GeneralToolName[] {
-  const stored = localStorage.getItem('enabledGeneralTools')
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored)
-      return parsed.filter((name: string) => allGeneralToolNames.includes(name as GeneralToolName))
-    } catch {
-      return [...allGeneralToolNames]
-    }
-  }
-  return [...allGeneralToolNames]
-}
-
-function getActiveTools() {
-  const wordTools = createWordTools(enabledWordTools.value)
-  const generalTools = createGeneralTools(enabledGeneralTools.value)
-  return [...generalTools, ...wordTools]
-}
 
 function loadSavedPrompts() {
   const stored = localStorage.getItem('savedPrompts')
@@ -661,7 +596,7 @@ You are a highly skilled Microsoft Word Expert Agent. Your goal is to assist use
 - You understand document structure, typography, and professional writing standards.
 
 # Guidelines
-1. **Tool First**: If a request requires document modification or inspection or web search and fetch, prioritize using the available tools.
+1. **Tool First**: Use only the tools currently provided. Web search requires explicit permission in Tools settings; if it is unavailable, explain that it must be enabled before searching.
 2. **Accuracy**: Ensure formatting and content changes are precise and follow the user's intent.
 3. **Conciseness**: Provide brief, helpful explanations of your actions.
 4. **Language**: You must communicate entirely in ${lang}.
@@ -767,13 +702,13 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
         history.value[lastIndex] = new AIMessage(currentContent + `\n\n🔧 Calling tool: ${toolName}...`)
         scrollToBottom()
       },
-      onToolResult: (toolName: string, _result: string) => {
+      onToolResult: (toolName: string, _result: string, status?: 'success' | 'error') => {
         // Update with tool result
         const lastIndex = history.value.length - 1
         const currentContent = getMessageText(history.value[lastIndex])
         const updatedContent = currentContent.replace(
           `🔧 Calling tool: ${toolName}...`,
-          `✅ Tool ${toolName} completed`,
+          status === 'error' ? `❌ Tool ${toolName} failed` : `✅ Tool ${toolName} completed`,
         )
         history.value[lastIndex] = new AIMessage(updatedContent)
         scrollToBottom()
