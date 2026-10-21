@@ -1,5 +1,5 @@
 # Keep the Node patch in sync with .node-version, .nvmrc and package.json.
-FROM node:24.21.0-alpine3.24 AS build-stage
+FROM node:24.22.1-alpine3.24 AS build-stage
 WORKDIR /app
 ENV HUSKY=0
 
