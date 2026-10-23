@@ -226,7 +226,7 @@ importers:
         version: 4.3.3(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@types/office-js':
         specifier: ^1.0.611
-        version: 1.0.611
+        version: 1.0.614
       '@vitejs/plugin-vue':
         specifier: ^6.0.10
         version: 6.0.10(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))(vue@3.5.44(typescript@6.0.3))
@@ -1076,8 +1076,8 @@ packages:
   '@types/node@26.6.5':
     resolution: {integrity: sha512-uMzsv9stDdofIZBx4UGh4Z9ZgXnGC9seRDscilBcTHAeOFk67MZg/k9bWVfO+bk4qZmG+l52hRnLwUiH2LnJTg==}
 
-  '@types/office-js@1.0.611':
-    resolution: {integrity: sha512-C5jSOZXboSRbo+OYiIzeh/w/g4Hm5jGmrO0PsFleVio98uXHIVllhE8H1SkyrbFlon1U1vUDFxyF43QGNVN+dw==}
+  '@types/office-js@1.0.614':
+    resolution: {integrity: sha512-Uy4Q3T2/qfb+cig+9wz1lpyo+nA376gOvo/rqwUhhjbx8Lnw884xLNvNKjufmb1uzvwTGfULDQLOILIRoXUWRA==}
 
   '@types/web-bluetooth@0.0.21':
     resolution: {integrity: sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==}
@@ -3741,7 +3741,7 @@ snapshots:
     dependencies:
       undici-types: 8.9.0
 
-  '@types/office-js@1.0.611': {}
+  '@types/office-js@1.0.614': {}
 
   '@types/web-bluetooth@0.0.21': {}
 
@@ -3913,7 +3913,7 @@ snapshots:
       '@vue/shared': 3.5.44
       estree-walker: 2.0.2
       magic-string: 0.30.21
-      postcss: 8.5.29
+      postcss: 8.5.30
       source-map-js: 1.2.2
 
   '@vue/compiler-ssr@3.5.43':
