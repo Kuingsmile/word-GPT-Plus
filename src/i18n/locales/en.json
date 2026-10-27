@@ -36,6 +36,8 @@
   "customModelPlaceholder": "Enter custom model name",
   "customModelsLabel": "Custom Models",
   "delete": "Delete",
+  "deleteFailed": "Failed to delete",
+  "deleteSuccess": "Deleted successfully",
   "detail": "Detail",
   "directTheAgent": "Direct the Agent",
   "disconnect": "Disconnect",
