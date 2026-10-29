@@ -73,7 +73,7 @@
     "vue-tsc": "^3.3.13"
   },
   "engines": {
-    "node": "24.21.0",
+    "node": "24.22.2",
     "pnpm": "12.11.2"
   },
   "packageManager": "pnpm@12.11.2"
