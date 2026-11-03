@@ -8,7 +8,7 @@ interface MessageOptions {
   duration?: number
 }
 
-let messageInstance: any = null
+let messageInstance: ReturnType<typeof createApp> | null = null
 
 function showMessage(options: MessageOptions) {
   if (messageInstance) {

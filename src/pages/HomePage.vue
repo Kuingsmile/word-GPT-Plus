@@ -241,8 +241,8 @@
 </template>
 
 <script lang="ts" setup>
-import { AIMessage, HumanMessage, Message, SystemMessage } from '@langchain/core/messages'
-import { useStorage } from '@vueuse/core'
+import type { Message } from '@langchain/core/messages'
+import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages'
 import {
   BookOpen,
   BotMessageSquare,
@@ -259,26 +259,31 @@ import {
   Sparkle,
   Sparkles,
   Square,
-} from 'lucide-vue-next'
+} from '@lucide/vue'
+import { useStorage } from '@vueuse/core'
 import { v4 as uuidv4 } from 'uuid'
+import type { Component } from 'vue'
 import { computed, nextTick, onBeforeMount, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
 import { type CheckpointTuple, IndexedDBSaver } from '@/api/checkpoints'
 import { insertFormattedResult, insertResult } from '@/api/common'
+import type { ProviderConfig } from '@/api/types'
 import { getAgentResponse, getChatResponse } from '@/api/union'
 import CustomButton from '@/components/CustomButton.vue'
 import SingleSelect from '@/components/SingleSelect.vue'
 import CheckPointsPage from '@/pages/checkPointsPage.vue'
+import { getActiveTools } from '@/utils/activeTools'
+import { messageContentToText, restoreChatMessages } from '@/utils/chatMessages'
 import { checkAuth } from '@/utils/common'
-import { buildInPrompt, getBuiltInPrompt } from '@/utils/constant'
+import type { buildInPrompt } from '@/utils/constant'
+import { getBuiltInPrompt } from '@/utils/constant'
+import { logDiagnostic } from '@/utils/diagnostics'
 import { localStorageKey } from '@/utils/enum'
-import { createGeneralTools, GeneralToolName } from '@/utils/generalTools'
 import { message as messageUtil } from '@/utils/message'
 import useSettingForm from '@/utils/settingForm'
 import { settingPreset } from '@/utils/settingPreset'
-import { createWordTools, WordToolName } from '@/utils/wordTools'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -296,77 +301,13 @@ const savedPrompts = ref<SavedPrompt[]>([])
 const selectedPromptId = ref<string>('')
 const customSystemPrompt = ref<string>('')
 
-const allWordToolNames: WordToolName[] = [
-  'getSelectedText',
-  'getDocumentContent',
-  'insertText',
-  'replaceSelectedText',
-  'appendText',
-  'insertParagraph',
-  'formatText',
-  'searchAndReplace',
-  'getDocumentProperties',
-  'insertTable',
-  'insertList',
-  'deleteText',
-  'clearFormatting',
-  'setFontName',
-  'insertPageBreak',
-  'getRangeInfo',
-  'selectText',
-  'insertImage',
-  'getTableInfo',
-  'insertBookmark',
-  'goToBookmark',
-  'insertContentControl',
-  'findText',
-]
-
-const allGeneralToolNames: GeneralToolName[] = ['fetchWebContent', 'searchWeb', 'getCurrentDate', 'calculateMath']
-
-// Tool state
-const enabledWordTools = ref<WordToolName[]>(loadEnabledWordTools())
-const enabledGeneralTools = ref<GeneralToolName[]>(loadEnabledGeneralTools())
-
-function loadEnabledWordTools(): WordToolName[] {
-  const stored = localStorage.getItem('enabledWordTools')
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored)
-      return parsed.filter((name: string) => allWordToolNames.includes(name as WordToolName))
-    } catch {
-      return [...allWordToolNames]
-    }
-  }
-  return [...allWordToolNames]
-}
-
-function loadEnabledGeneralTools(): GeneralToolName[] {
-  const stored = localStorage.getItem('enabledGeneralTools')
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored)
-      return parsed.filter((name: string) => allGeneralToolNames.includes(name as GeneralToolName))
-    } catch {
-      return [...allGeneralToolNames]
-    }
-  }
-  return [...allGeneralToolNames]
-}
-
-function getActiveTools() {
-  const wordTools = createWordTools(enabledWordTools.value)
-  const generalTools = createGeneralTools(enabledGeneralTools.value)
-  return [...generalTools, ...wordTools]
-}
-
 function loadSavedPrompts() {
   const stored = localStorage.getItem('savedPrompts')
   if (stored) {
     try {
       savedPrompts.value = JSON.parse(stored)
     } catch (error) {
-      console.error('Error loading saved prompts:', error)
+      logDiagnostic('error', '[Prompts] Error loading saved prompts', { error })
       savedPrompts.value = []
     }
   }
@@ -418,7 +359,7 @@ const displayHistory = computed(() => {
 const quickActions: {
   key: keyof typeof buildInPrompt
   label: string
-  icon: any
+  icon: Component
 }[] = [
   { key: 'translate', label: t('translate'), icon: Globe },
   { key: 'polish', label: t('polish'), icon: Sparkle },
@@ -444,8 +385,8 @@ const getCustomModels = (key: string, oldKey: string): string[] => {
 }
 
 const currentModelOptions = computed(() => {
-  let presetOptions: string[] = []
-  let customModels: string[] = []
+  let presetOptions: string[]
+  let customModels: string[]
 
   switch (settingForm.value.api) {
     case 'official':
@@ -528,7 +469,7 @@ const currentModelSelect = computed({
 
 function settings() {
   // FIXME: 使用路由方式会改变当前的threadID,进而重置页面
-  router.push('/settings')
+  return router.push('/settings')
 }
 
 function checkPoints() {
@@ -593,18 +534,18 @@ async function sendMessage() {
     selectedText ? `${userMessage}\n\n[Selected text: "${selectedText}"]` : userMessage,
   )
 
-  scrollToBottom()
+  await scrollToBottom()
 
   loading.value = true
   abortController.value = new AbortController()
 
   try {
     await processChat(fullMessage, undefined)
-  } catch (error: any) {
-    if (error.name === 'AbortError') {
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
       messageUtil.info(t('generationStop'))
     } else {
-      console.error(error)
+      logDiagnostic('error', '[Chat] Failed to send message', { error, threadId: threadId.value })
       messageUtil.error(t('failedToResponse'))
       history.value.pop()
     }
@@ -638,18 +579,18 @@ async function applyQuickAction(actionKey: keyof typeof buildInPrompt) {
   const systemMessage = action.system(lang)
   const userMessage = new HumanMessage(action.user(selectedText, lang))
 
-  scrollToBottom()
+  await scrollToBottom()
 
   loading.value = true
   abortController.value = new AbortController()
 
   try {
     await processChat(userMessage, systemMessage)
-  } catch (error: any) {
-    if (error.name === 'AbortError') {
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
       messageUtil.info(t('generationStop'))
     } else {
-      console.error(error)
+      logDiagnostic('error', '[Chat] Failed to process action', { error, threadId: threadId.value })
       messageUtil.error(t('failedToProcessAction'))
       // Remove failed message
       history.value.pop()
@@ -670,7 +611,7 @@ You are a highly skilled Microsoft Word Expert Agent. Your goal is to assist use
 - You understand document structure, typography, and professional writing standards.
 
 # Guidelines
-1. **Tool First**: If a request requires document modification or inspection or web search and fetch, prioritize using the available tools.
+1. **Tool First**: Use only the tools currently provided. Web search requires explicit permission in Tools settings; if it is unavailable, explain that it must be enabled before searching.
 2. **Accuracy**: Ensure formatting and content changes are precise and follow the user's intent.
 3. **Conciseness**: Provide brief, helpful explanations of your actions.
 4. **Language**: You must communicate entirely in ${lang}.
@@ -699,7 +640,7 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
   // Prepare messages for LLM (always include system message first, followed by all history)
   const finalMessages = [defaultSystemMessage, ...history.value]
   // Build provider configuration
-  const providerConfigs: Record<string, any> = {
+  const providerConfigs: Record<string, ProviderConfig> = {
     official: {
       provider: 'official',
       config: {
@@ -775,25 +716,25 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
       onStream: (text: string) => {
         const lastIndex = history.value.length - 1
         history.value[lastIndex] = new AIMessage(text)
-        scrollToBottom()
+        scrollToBottom().catch(error => logDiagnostic('error', '[Chat] Scroll failed', { error }))
       },
-      onToolCall: (toolName: string, _args: any) => {
+      onToolCall: (toolName: string) => {
         // Show tool call in UI
         const lastIndex = history.value.length - 1
         const currentContent = getMessageText(history.value[lastIndex])
         history.value[lastIndex] = new AIMessage(currentContent + `\n\n🔧 Calling tool: ${toolName}...`)
-        scrollToBottom()
+        scrollToBottom().catch(error => logDiagnostic('error', '[Chat] Scroll failed', { error }))
       },
-      onToolResult: (toolName: string, _result: string) => {
+      onToolResult: (toolName: string, _result: string, status?: 'success' | 'error') => {
         // Update with tool result
         const lastIndex = history.value.length - 1
         const currentContent = getMessageText(history.value[lastIndex])
         const updatedContent = currentContent.replace(
           `🔧 Calling tool: ${toolName}...`,
-          `✅ Tool ${toolName} completed`,
+          status === 'error' ? `❌ Tool ${toolName} failed` : `✅ Tool ${toolName} completed`,
         )
         history.value[lastIndex] = new AIMessage(updatedContent)
-        scrollToBottom()
+        scrollToBottom().catch(error => logDiagnostic('error', '[Chat] Scroll failed', { error }))
       },
     })
   } else {
@@ -807,7 +748,7 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
       onStream: (text: string) => {
         const lastIndex = history.value.length - 1
         history.value[lastIndex] = new AIMessage(text)
-        scrollToBottom()
+        scrollToBottom().catch(error => logDiagnostic('error', '[Chat] Scroll failed', { error }))
       },
     })
   }
@@ -822,7 +763,7 @@ async function processChat(userMessage: HumanMessage, systemMessage?: string) {
     return
   }
 
-  scrollToBottom()
+  await scrollToBottom()
 }
 
 async function insertToDocument(content: string, type: insertTypes) {
@@ -835,9 +776,14 @@ async function insertToDocument(content: string, type: insertTypes) {
   }
 }
 
-function copyToClipboard(text: string) {
-  navigator.clipboard.writeText(text)
-  messageUtil.success(t('copied'))
+async function copyToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text)
+    messageUtil.success(t('copied'))
+  } catch (error) {
+    logDiagnostic('error', '[Clipboard] Copy failed', { error })
+    messageUtil.error(t('somethingWentWrong'))
+  }
 }
 
 function checkApiKey() {
@@ -864,22 +810,7 @@ interface RenderSegment {
   text: string
 }
 
-const flattenContentArray = (content: any[]): string =>
-  content
-    .map((part: any) => {
-      if (typeof part === 'string') return part
-      if (part?.text && typeof part.text === 'string') return part.text
-      if (part?.data && typeof part.data === 'string') return part.data
-      return ''
-    })
-    .join('')
-
-const getMessageText = (msg: Message): string => {
-  const content: any = (msg as any).content
-  if (typeof content === 'string') return content
-  if (Array.isArray(content)) return flattenContentArray(content)
-  return ''
-}
+const getMessageText = (msg: Message | undefined): string => messageContentToText(msg?.content)
 
 const cleanMessageText = (msg: Message): string => {
   const raw = getMessageText(msg)
@@ -943,7 +874,7 @@ const addWatch = () => {
   )
 }
 
-async function initData() {
+function initData() {
   insertType.value = (localStorage.getItem(localStorageKey.insertType) as insertTypes) || 'replace'
 }
 
@@ -959,11 +890,7 @@ async function handleRestore(checkpointId: string) {
   if (checkpointTuple) {
     const messages = checkpointTuple.checkpoint.channel_values.messages
     if (messages && Array.isArray(messages)) {
-      history.value = messages
-        .filter((msg: any) => ['human', 'ai'].includes(msg.type))
-        .map((msg: any) => {
-          return msg.type === 'human' ? new HumanMessage(msg.content) : new AIMessage(msg.content)
-        })
+      history.value = restoreChatMessages(messages)
     }
   }
 }
@@ -978,18 +905,13 @@ async function loadThreadHistory(targetThreadId: string) {
     checkpoints.push(checkpoint)
   }
 
-  if (checkpoints.length > 0) {
-    checkpoints.sort((a, b) => (a.metadata?.step ?? 0) - (b.metadata?.step ?? 0))
-
-    const latestCheckpoint = checkpoints[checkpoints.length - 1]
+  checkpoints.sort((a, b) => (a.metadata?.step ?? 0) - (b.metadata?.step ?? 0))
+  const latestCheckpoint = checkpoints.at(-1)
+  if (latestCheckpoint) {
     const messages = latestCheckpoint.checkpoint.channel_values.messages
     // TODO: 优化过滤策略
     if (messages && Array.isArray(messages)) {
-      history.value = messages
-        .filter((msg: any) => ['human', 'ai'].includes(msg.type))
-        .map((msg: any) => {
-          return msg.type === 'human' ? new HumanMessage(msg.content) : new AIMessage(msg.content)
-        })
+      history.value = restoreChatMessages(messages)
       currentCheckpointId.value = latestCheckpoint.config.configurable?.checkpoint_id || ''
     } else {
       history.value = []
@@ -1009,7 +931,7 @@ async function handleSelectThread(newThreadId: string) {
   await loadThreadHistory(newThreadId)
 }
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   addWatch()
   initData()
   loadSavedPrompts()
@@ -1017,9 +939,9 @@ onBeforeMount(() => {
   if (threadId.value) {
     loading.value = true // 可选：显示加载状态
     try {
-      loadThreadHistory(threadId.value)
+      await loadThreadHistory(threadId.value)
     } catch (e) {
-      console.error('Auto reload history failed:', e)
+      logDiagnostic('error', '[Sessions] Auto reload history failed', { error: e, threadId: threadId.value })
     } finally {
       loading.value = false
     }

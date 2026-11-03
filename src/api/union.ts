@@ -1,4 +1,5 @@
-import { BaseChatModel } from '@langchain/core/language_models/chat_models'
+import type { BaseChatModel } from '@langchain/core/language_models/chat_models'
+import { isAIMessage, isToolMessage } from '@langchain/core/messages'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { ChatGroq } from '@langchain/groq'
 // import { MemorySaver } from '@langchain/langgraph'
@@ -7,8 +8,10 @@ import { AzureChatOpenAI, ChatOpenAI } from '@langchain/openai'
 import { createAgent } from 'langchain'
 
 import { IndexedDBSaver } from '@/api/checkpoints'
+import { logDiagnostic } from '@/utils/diagnostics'
 
-import {
+import { createToolAuthorization } from './toolAuthorization'
+import type {
   AgentOptions,
   AtlasCloudOptions,
   AzureOptions,
@@ -19,7 +22,7 @@ import {
   ProviderOptions,
 } from './types'
 
-const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
+const ModelCreators = {
   official: (opts: OpenAIOptions) => {
     const modelName = opts.model || 'gpt-5'
     return new ChatOpenAI({
@@ -88,14 +91,16 @@ const ModelCreators: Record<string, (opts: any) => BaseChatModel> = {
 const checkpointer = new IndexedDBSaver()
 
 async function executeChatFlow(model: BaseChatModel, options: ProviderOptions): Promise<void> {
+  const startedAt = performance.now()
   try {
     if (!options.threadId) {
       options.threadId = crypto.randomUUID()
-      console.log(`[Chat] New thread started: ${options.threadId}`)
+      logDiagnostic('log', '[Chat] New thread started', { threadId: options.threadId })
     }
     const agent = createAgent({
       model,
       tools: [],
+      middleware: [createToolAuthorization([], () => [])],
       checkpointer,
     })
     const stream = await agent.stream(
@@ -119,27 +124,34 @@ async function executeChatFlow(model: BaseChatModel, options: ProviderOptions): 
       fullContent += content
       options.onStream(fullContent)
     }
-  } catch (error: any) {
-    if (error.name === 'AbortError' || options.abortSignal?.aborted) {
+  } catch (error) {
+    if ((error instanceof Error && error.name === 'AbortError') || options.abortSignal?.aborted) {
       // Don't mark as error if intentionally aborted
       throw error
     }
     options.errorIssue.value = true
-    console.error(error)
+    logDiagnostic('error', '[Chat] Error', { error, threadId: options.threadId })
   } finally {
+    logDiagnostic('log', '[Chat] Flow ended', {
+      threadId: options.threadId,
+      durationMs: performance.now() - startedAt,
+    })
     options.loading.value = false
   }
 }
 
 async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Promise<void> {
+  const startedAt = performance.now()
   try {
     if (!options.threadId) {
       options.threadId = crypto.randomUUID()
-      console.log(`[Agent] New thread started: ${options.threadId}`)
+      logDiagnostic('log', '[Agent] New thread started', { threadId: options.threadId })
     }
+    const tools = options.tools ?? []
     const agent = createAgent({
       model,
-      tools: options.tools || [],
+      tools,
+      middleware: [createToolAuthorization(tools)],
       checkpointer,
     })
 
@@ -167,9 +179,10 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
       }
 
       stepCount++
-      console.log(`[Agent] Step ${stepCount}:`, {
+      logDiagnostic('log', '[Agent] Step', {
+        threadId: options.threadId,
+        stepCount,
         messageCount: step.messages?.length || 0,
-        lastMessageType: step.messages?.[step.messages.length - 1]?.constructor?.name,
       })
 
       const messages = step.messages || []
@@ -177,18 +190,18 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
 
       if (!lastMessage) continue
 
-      // Cast to any for accessing tool-related properties
-      const msg = lastMessage as any
-
-      console.log(`[Agent] Message type: ${msg._getType?.() || 'unknown'}`)
+      const msg = lastMessage
 
       // Handle AI messages with tool calls
-      if (msg._getType?.() === 'ai' && msg.tool_calls?.length > 0) {
-        console.log('[Agent] Tool calls detected:', msg.tool_calls.length)
+      if (isAIMessage(msg) && msg.tool_calls?.length) {
+        logDiagnostic('log', '[Agent] Tool calls detected', {
+          threadId: options.threadId,
+          toolCallCount: msg.tool_calls.length,
+        })
         for (const toolCall of msg.tool_calls) {
-          console.log('[Agent] Tool call:', {
-            name: toolCall.name,
-            args: toolCall.args,
+          logDiagnostic('log', '[Agent] Tool call', {
+            threadId: options.threadId,
+            toolCallId: toolCall.id,
           })
           if (options.onToolCall) {
             options.onToolCall(toolCall.name, toolCall.args)
@@ -197,62 +210,75 @@ async function executeAgentFlow(model: BaseChatModel, options: AgentOptions): Pr
       }
 
       // Handle tool result messages
-      if (msg._getType?.() === 'tool') {
+      if (isToolMessage(msg)) {
         const toolName = msg.name || 'unknown'
         const toolContent = String(msg.content || '')
-        console.log('[Agent] Tool result:', {
-          name: toolName,
+        logDiagnostic('log', '[Agent] Tool result', {
+          threadId: options.threadId,
+          toolCallId: msg.tool_call_id,
           contentLength: toolContent.length,
-          contentPreview: toolContent.substring(0, 100),
         })
         if (options.onToolResult) {
-          options.onToolResult(toolName, toolContent)
+          options.onToolResult(toolName, toolContent, msg.status)
         }
       }
 
       // Handle AI message content (the final response)
-      if (msg._getType?.() === 'ai' && msg.content) {
+      if (isAIMessage(msg) && msg.content) {
         const content = typeof msg.content === 'string' ? msg.content : ''
         if (content && (!msg.tool_calls || msg.tool_calls.length === 0)) {
           fullContent = content
-          console.log('[Agent] AI response:', {
-            content,
+          logDiagnostic('log', '[Agent] AI response', {
+            threadId: options.threadId,
+            contentLength: content.length,
           })
           options.onStream(fullContent)
         }
       }
     }
 
-    console.log('[Agent] Flow completed. Total steps:', stepCount)
-  } catch (error: any) {
-    console.error('[Agent] Error:', error)
-    if (error.name === 'AbortError' || options.abortSignal?.aborted) {
+    logDiagnostic('log', '[Agent] Flow completed', { threadId: options.threadId, stepCount })
+  } catch (error) {
+    if ((error instanceof Error && error.name === 'AbortError') || options.abortSignal?.aborted) {
       throw error
     }
-    if (error.name === 'GraphRecursionError') {
+    if (error instanceof Error && error.name === 'GraphRecursionError') {
       options.errorIssue.value = 'recursionLimitExceeded'
+    } else {
+      options.errorIssue.value = true
     }
     // TODO: more specific error handling based on LangGraph error
-    console.error(error)
+    logDiagnostic('error', '[Agent] Error', { error, threadId: options.threadId })
   } finally {
+    logDiagnostic('log', '[Agent] Flow ended', {
+      threadId: options.threadId,
+      durationMs: performance.now() - startedAt,
+    })
     options.loading.value = false
   }
 }
 
-export async function getChatResponse(options: ProviderOptions) {
-  const creator = ModelCreators[options.provider]
-  if (!creator) {
-    throw new Error(`Unsupported provider: ${options.provider}`)
+function createModel(options: ProviderOptions): BaseChatModel {
+  switch (options.provider) {
+    case 'official':
+      return ModelCreators.official(options)
+    case 'atlascloud':
+      return ModelCreators.atlascloud(options)
+    case 'ollama':
+      return ModelCreators.ollama(options)
+    case 'groq':
+      return ModelCreators.groq(options)
+    case 'gemini':
+      return ModelCreators.gemini(options)
+    case 'azure':
+      return ModelCreators.azure(options)
   }
-  const model = creator(options)
-  return executeChatFlow(model, options)
+}
+
+export async function getChatResponse(options: ProviderOptions) {
+  return executeChatFlow(createModel(options), options)
 }
 
 export async function getAgentResponse(options: AgentOptions) {
-  const creator = ModelCreators[options.provider]
-  if (!creator) {
-    throw new Error(`Unsupported provider: ${options.provider}`)
-  }
-  const model = creator(options)
-  return executeAgentFlow(model, options)
+  return executeAgentFlow(createModel(options), options)
 }

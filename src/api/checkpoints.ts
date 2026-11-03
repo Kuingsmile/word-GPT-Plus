@@ -1,7 +1,11 @@
 import type { RunnableConfig } from '@langchain/core/runnables'
-import { BaseCheckpointSaver, Checkpoint, CheckpointMetadata, type CheckpointTuple } from '@langchain/langgraph'
+import type { Checkpoint, CheckpointMetadata } from '@langchain/langgraph'
+import { BaseCheckpointSaver, type CheckpointTuple } from '@langchain/langgraph'
 export type { CheckpointTuple }
-import Dexie, { Table } from 'dexie'
+import type { Table } from 'dexie'
+import Dexie from 'dexie'
+
+import { logDiagnostic } from '@/utils/diagnostics'
 
 export interface Thread {
   id: string
@@ -21,8 +25,8 @@ interface CheckpointRow {
   thread_id: string
   checkpoint_id: string
   parent_checkpoint_id?: string
-  checkpoint: any
-  metadata: any
+  checkpoint: Checkpoint
+  metadata: CheckpointMetadata
 }
 
 export interface CheckpointListOptions {
@@ -58,7 +62,7 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
   async getTuple(config: RunnableConfig): Promise<CheckpointTuple | undefined> {
     try {
       if (!config.configurable?.thread_id) {
-        console.warn('[IndexedDBSaver] getTuple: missing thread_id')
+        logDiagnostic('warn', '[IndexedDBSaver] getTuple: missing thread_id')
         return undefined // ✅ 返回 undefined 而不是抛错
       }
 
@@ -79,13 +83,13 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
       }
 
       if (!row) {
-        console.log('[IndexedDBSaver] getTuple: no checkpoint found')
+        logDiagnostic('log', '[IndexedDBSaver] getTuple: no checkpoint found', { threadId: thread_id })
         return undefined
       }
 
       //直接使用对象，不需要序列化
-      const checkpoint = row.checkpoint as Checkpoint
-      const metadata = row.metadata as CheckpointMetadata
+      const checkpoint = row.checkpoint
+      const metadata = row.metadata
 
       return {
         config: { configurable: { thread_id, checkpoint_id: row.checkpoint_id } },
@@ -96,7 +100,7 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
           : undefined,
       }
     } catch (error) {
-      console.error('[IndexedDBSaver] getTuple error:', error)
+      logDiagnostic('error', '[IndexedDBSaver] getTuple error', { error, threadId: config.configurable?.thread_id })
       return undefined
     }
   }
@@ -122,8 +126,8 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
     const rows = await query.toArray()
 
     for (const row of rows) {
-      const checkpoint = row.checkpoint as Checkpoint
-      const metadata = row.metadata as CheckpointMetadata
+      const checkpoint = row.checkpoint
+      const metadata = row.metadata
       yield {
         config: { configurable: { thread_id: row.thread_id, checkpoint_id: row.checkpoint_id } },
         checkpoint,
@@ -144,7 +148,7 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
 
       const checkpoint_id = config.configurable?.checkpoint_id || checkpoint.id || crypto.randomUUID()
 
-      console.log('[IndexedDBSaver] put:', { thread_id, checkpoint_id })
+      logDiagnostic('log', '[IndexedDBSaver] put', { threadId: thread_id, checkpointId: checkpoint_id })
 
       await db.checkpoints.put({
         thread_id,
@@ -161,12 +165,12 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
         },
       }
     } catch (error) {
-      console.error('[IndexedDBSaver] put error:', error)
+      logDiagnostic('error', '[IndexedDBSaver] put error', { error, threadId: config.configurable?.thread_id })
       throw error
     }
   }
 
-  async putWrites(config: RunnableConfig, writes: [string, any][], taskId: string): Promise<void> {
+  async putWrites(config: RunnableConfig, writes: [string, unknown][], taskId: string): Promise<void> {
     try {
       if (!config.configurable?.thread_id) {
         throw new Error('thread_id is required in config.configurable')
@@ -211,7 +215,7 @@ export class IndexedDBSaver extends BaseCheckpointSaver {
 
       await this.put(checkpointConfig, newCheckpoint, newMetadata)
     } catch (error) {
-      console.error('[IndexedDBSaver] putWrites error:', error)
+      logDiagnostic('error', '[IndexedDBSaver] putWrites error', { error, threadId: config.configurable?.thread_id })
       throw error
     }
   }

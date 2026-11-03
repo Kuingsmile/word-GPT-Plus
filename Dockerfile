@@ -1,15 +1,14 @@
-# 第一阶段：使用Node.js 22版本构建Vue项目
-FROM node:22.21.1-alpine3.22 as build-stage
+# Keep the Node patch in sync with .node-version, .nvmrc and package.json.
+FROM node:24.21.0-alpine3.24 AS build-stage
 WORKDIR /app
+ENV HUSKY=0
 
-# 复制项目文件并安装依赖
-COPY package.json yarn.lock ./
-RUN yarn config set network-timeout 300000
-RUN apk add g++ make py3-pip
-RUN yarn global add node-gyp
-RUN yarn install
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY scripts/check-toolchain.mjs ./scripts/check-toolchain.mjs
+RUN npm install --global "$(node -p 'require("./package.json").packageManager')" \
+    && pnpm install --frozen-lockfile
 COPY . .
-RUN yarn run build
+RUN pnpm build
 
 # 第二阶段：使用Nginx构建生产环境镜像
 FROM nginx:alpine

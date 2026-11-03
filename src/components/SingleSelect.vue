@@ -6,7 +6,7 @@
     <span class="text-sm leading-[1.4] font-semibold text-secondary">{{ title }}</span>
     <span v-if="required" class="ml-1 text-danger">*</span>
   </div>
-  <div ref="dropdownRef" class="sort-dropdown relative">
+  <div ref="dropdownRef" v-bind="$attrs" class="sort-dropdown relative">
     <button
       ref="triggerRef"
       class="flex h-7 w-full cursor-pointer items-center justify-between gap-1 rounded-md border border-border-secondary px-2 py-1.5 text-sm leading-[1.4] text-main transition-all duration-fast ease-apple hover:border-accent-hover focus:[.active]:border-accent-hover focus:[.active]:shadow-md"
@@ -35,13 +35,16 @@
 </template>
 
 <script setup lang="ts">
+import { ChevronDownIcon, SortAscIcon } from '@lucide/vue'
 import { onClickOutside } from '@vueuse/core'
-import { ChevronDownIcon, SortAscIcon } from 'lucide-vue-next'
+import type { Component } from 'vue'
 import { nextTick, ref } from 'vue'
+
+defineOptions({ inheritAttrs: false })
 
 const emit = defineEmits<(e: 'change', key: string) => void>()
 const dropdownRef = ref(null)
-const modelValue = defineModel<any>()
+const modelValue = defineModel<string>()
 const triggerRef = ref<HTMLElement | null>(null)
 const optionsRef = ref<HTMLElement | null>(null)
 
@@ -111,12 +114,12 @@ const {
   required = false,
 } = defineProps<{
   title: string
-  icon?: any
+  icon?: Component | null
   iconSize?: number
   tight?: boolean
-  placeholder?: any
+  placeholder?: string
   fronticon?: boolean
-  customFrontIcon?: any
+  customFrontIcon?: Component | null
   keyList: string[]
   required?: boolean
 }>()

@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import { AlertCircle, AlertTriangle, CheckCircle, Info } from 'lucide-vue-next'
+import { AlertCircle, AlertTriangle, CheckCircle, Info } from '@lucide/vue'
 import { onMounted, ref } from 'vue'
 
 interface Props {
@@ -92,7 +92,7 @@ onMounted(() => {
   line-height: 1.4;
   flex: 1;
   font-weight: 500;
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .toast-progress {

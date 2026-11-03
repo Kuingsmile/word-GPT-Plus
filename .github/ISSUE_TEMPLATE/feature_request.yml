@@ -1,7 +1,7 @@
-name: "✨ Feature Request"
+name: '✨ Feature Request'
 description: 功能请求 / Feature request
-title: "[Feature]: "
-labels: ["feature request"]
+title: '[Feature]: '
+labels: ['feature request']
 assignees:
   - Kuingsmile
 body:
@@ -22,9 +22,9 @@ body:
       label: 前置阅读 | Pre-reading
       description: 我已经自行查找、阅读以下内容（阅读了请打勾） | I have searched and read the following on my own (Please tick after reading)
       options:
-        - label: "[Issues](https://github.com/Kuingsmile/word-gpt-plus/issues?q=is%3Aissue+sort%3Aupdated-desc+is%3Aclosed)"
+        - label: '[Issues](https://github.com/Kuingsmile/word-gpt-plus/issues?q=is%3Aissue+sort%3Aupdated-desc+is%3Aclosed)'
           required: true
-        - label: "[README](https://github.com/Kuingsmile/word-gpt-plus/blob/master/README.md)"
+        - label: '[README](https://github.com/Kuingsmile/word-gpt-plus/blob/master/README.md)'
           required: true
   - type: dropdown
     id: service

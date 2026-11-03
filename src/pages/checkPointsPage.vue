@@ -73,13 +73,15 @@
 </template>
 
 <script setup lang="ts">
-import { RunnableConfig } from '@langchain/core/runnables'
-import { ArrowLeft, Copy, Delete, PackageIcon, SquareMousePointer } from 'lucide-vue-next'
+import type { RunnableConfig } from '@langchain/core/runnables'
+import { ArrowLeft, Copy, Delete, PackageIcon, SquareMousePointer } from '@lucide/vue'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { IndexedDBSaver } from '@/api/checkpoints'
+import type { IndexedDBSaver } from '@/api/checkpoints'
 import CustomButton from '@/components/CustomButton.vue'
+import { isRecord, messageContentToText } from '@/utils/chatMessages'
+import { logDiagnostic } from '@/utils/diagnostics'
 import { message as messageUtil } from '@/utils/message'
 
 const props = defineProps<{
@@ -118,7 +120,7 @@ const formatTime = (isoStr: string) => {
       second: '2-digit',
     })
   } catch (e) {
-    console.error('Failed to format time:', e)
+    logDiagnostic('error', '[Sessions] Failed to format time', { error: e })
     return isoStr
   }
 }
@@ -147,22 +149,12 @@ const loadAllSessions = async () => {
         continue
       }
 
-      interface CheckpointMessage {
-        _getType: () => 'ai' | 'human' | 'tool'
-        content: string | any
-        tool_calls?: { name: string }[]
-      }
-
-      const messages = (checkpoint.channel_values?.messages || []) as CheckpointMessage[]
+      const storedMessages = checkpoint.channel_values.messages
+      const messages: unknown[] = Array.isArray(storedMessages) ? storedMessages : []
       const lastMsg = messages.at(-1)
-
-      if (!lastMsg) continue
-      let previewText = '[Complex Content]'
-      if (typeof lastMsg.content === 'string') {
-        previewText = lastMsg.content
-      } else if (Array.isArray(lastMsg.content)) {
-        previewText = lastMsg.content.map((c: any) => c.text || '').join(' ')
-      }
+      if (!isRecord(lastMsg)) continue
+      let previewText = messageContentToText(lastMsg.content, ' ')
+      const firstToolCall: unknown = Array.isArray(lastMsg.tool_calls) ? lastMsg.tool_calls[0] : undefined
 
       previewText = previewText.slice(0, 100) + (previewText.length > 100 ? '...' : '')
       if (!previewText) previewText = '[Empty Message]'
@@ -172,14 +164,14 @@ const loadAllSessions = async () => {
         timestamp: currentTs,
         previewText: previewText || '[Empty Session]',
         messageCount: messages.length,
-        toolName: lastMsg.tool_calls?.length ? lastMsg.tool_calls[0].name : undefined,
+        toolName: isRecord(firstToolCall) && typeof firstToolCall.name === 'string' ? firstToolCall.name : undefined,
       })
     }
     sessionItems.value = Array.from(sessionMap.values()).sort((a, b) => {
       return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     })
   } catch (err) {
-    console.error('Failed to load sessions:', err)
+    logDiagnostic('error', '[Sessions] Failed to load sessions', { error: err })
   } finally {
     loading.value = false
   }
@@ -195,20 +187,23 @@ const deleteSession = async (threadId: string) => {
     sessionItems.value = sessionItems.value.filter(item => item.threadId !== threadId)
     messageUtil.success(t('deleteSuccess'))
   } catch (error) {
-    console.error('Failed to delete session:', error)
+    logDiagnostic('error', '[Sessions] Failed to delete session', { error, threadId })
     messageUtil.error(t('deleteFailed'))
   }
 }
 
-const copyItemPrompt = (text: string) => {
+const copyItemPrompt = async (text: string) => {
   if (!text) return
-  navigator.clipboard.writeText(text)
-  messageUtil.success(t('copied'))
+  try {
+    await navigator.clipboard.writeText(text)
+    messageUtil.success(t('copied'))
+  } catch (error) {
+    logDiagnostic('error', '[Clipboard] Copy failed', { error })
+    messageUtil.error(t('somethingWentWrong'))
+  }
 }
 
-onMounted(() => {
-  loadAllSessions()
-})
+onMounted(loadAllSessions)
 
 function backToHome() {
   emit('close')

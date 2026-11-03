@@ -30,17 +30,17 @@
 </template>
 
 <script setup lang="ts">
-import { EyeClosedIcon, EyeIcon } from 'lucide-vue-next'
+import { EyeClosedIcon, EyeIcon } from '@lucide/vue'
 import { onMounted, ref } from 'vue'
 
-const [modelValue, modifiers] = defineModel<any>({
+const [modelValue, modifiers] = defineModel<string | number>({
   set(value) {
     let result = value
     if (modifiers.trim && typeof result === 'string') {
       result = result.trim()
     }
     if (modifiers.number) {
-      const n = parseFloat(result)
+      const n = parseFloat(String(result))
       result = isNaN(n) ? result : n
     }
     return result

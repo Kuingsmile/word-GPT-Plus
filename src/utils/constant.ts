@@ -1,3 +1,5 @@
+import { logDiagnostic } from './diagnostics'
+
 export const languageMap: IStringKeyMap = {
   en: 'English',
   es: 'Español',
@@ -214,7 +216,7 @@ export const getBuiltInPrompt = () => {
 
     return result
   } catch (error) {
-    console.error('Error loading custom built-in prompts:', error)
+    logDiagnostic('error', '[Prompts] Error loading custom built-in prompts', { error })
     return buildInPrompt
   }
 }

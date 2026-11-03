@@ -1,153 +1,95 @@
 import js from '@eslint/js'
-import { defineConfig } from 'eslint/config'
-import configPrettier from 'eslint-config-prettier'
+import { defineConfig, globalIgnores } from 'eslint/config'
+import configPrettier from 'eslint-config-prettier/flat'
 import jsonc from 'eslint-plugin-jsonc'
-import pluginPrettier from 'eslint-plugin-prettier/recommended'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
-import pluginUnicorn from 'eslint-plugin-unicorn'
-import pluginVue from 'eslint-plugin-vue'
+import unicorn from 'eslint-plugin-unicorn'
+import vue from 'eslint-plugin-vue'
 import globals from 'globals'
-import jsoncParser from 'jsonc-eslint-parser'
+import * as jsoncParser from 'jsonc-eslint-parser'
 import tseslint from 'typescript-eslint'
 import vueParser from 'vue-eslint-parser'
 
+const codeFiles = ['**/*.{js,mjs,cjs,ts,vue}']
+const appFiles = ['src/**/*.{ts,vue}']
+
 export default defineConfig(
+  globalIgnores(['**/node_modules/**', '**/dist/**', '**/coverage/**', 'docs/**', 'public/**', 'release/**']),
   {
-    ignores: ['**/dist/**', '**/node_modules/**', 'release/**'],
-  },
-  js.configs.recommended,
-  ...pluginVue.configs['flat/recommended'],
-  ...tseslint.configs.recommended,
-  ...tseslint.configs.stylistic,
-  {
-    files: ['**/*.ts', '**/*.d.ts'],
-    languageOptions: {
-      parser: tseslint.parser,
-      sourceType: 'module',
-      ecmaVersion: 'latest',
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-        Office: 'readonly',
-      },
-    },
-  },
-  {
-    files: ['**/*.vue'],
-    languageOptions: {
-      parser: vueParser,
-      parserOptions: {
-        parser: tseslint.parser,
-        extraFileExtensions: ['.vue'],
-        sourceType: 'module',
-        ecmaVersion: 'latest',
-      },
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-        Office: 'readonly',
-      },
-    },
-  },
-  {
-    files: ['**/*.ts', '**/*.d.ts', '**/*.vue', 'eslint.config.js', 'vite.config.js', 'async_hook.js'],
-    plugins: {
-      'simple-import-sort': simpleImportSort,
-      unicorn: pluginUnicorn,
-    },
+    name: 'project/javascript',
+    files: codeFiles,
+    extends: [js.configs.recommended],
+    plugins: { 'simple-import-sort': simpleImportSort, unicorn },
     rules: {
-      'unicorn/prefer-node-protocol': 'error',
-      'unicorn/prefer-module': 'error',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
-      eqeqeq: 'error',
-      'no-caller': 'error',
-      'no-constant-condition': ['error', { checkLoops: false }],
+      'unicorn/prefer-node-protocol': 'error',
+      eqeqeq: ['error', 'always'],
       'no-eval': 'error',
-      'no-extra-bind': 'error',
       'no-new-func': 'error',
-      'no-new-wrappers': 'error',
-      'no-throw-literal': 'error',
-      'no-undef-init': 'error',
       'no-var': 'error',
       'object-shorthand': 'error',
       'prefer-const': 'error',
       'prefer-object-spread': 'error',
-      'unicode-bom': ['error', 'never'],
-      'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-      'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-      'no-unused-vars': 'off',
-      'no-extra-boolean-cast': 'off',
-      'no-case-declarations': 'off',
-      'no-cond-assign': 'off',
-      'no-control-regex': 'off',
-      'no-inner-declarations': 'off',
-      'no-empty': 'off',
-      // @typescript-eslint/eslint-plugin
-      '@typescript-eslint/no-unused-expressions': 'off',
-      '@typescript-eslint/ban-ts-comment': 'off',
-      '@typescript-eslint/no-empty-function': 'off',
-      '@typescript-eslint/no-namespace': 'off',
-      '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
-      '@typescript-eslint/no-var-requires': 'off',
-      '@typescript-eslint/no-empty-interface': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-empty-object-type': 'off', // {} is a totally useful and valid type.
-      '@typescript-eslint/no-require-imports': 'off',
-      '@typescript-eslint/no-inferrable-types': 'off',
-      '@typescript-eslint/no-this-alias': 'off',
-      // Pending https://github.com/typescript-eslint/typescript-eslint/issues/4820
-      '@typescript-eslint/prefer-optional-chain': 'off',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          args: 'all',
-          argsIgnorePattern: '^_',
-          caughtErrors: 'all',
-          caughtErrorsIgnorePattern: '^_',
-        },
-      ],
-      'vue/no-v-html': 'off',
-      'vue/multi-word-component-names': 'off',
-      'no-undef': 'off', // TypeScript handles this
-      'no-async-promise-executor': 'off',
     },
   },
-  ...jsonc.configs['flat/recommended-with-jsonc'],
   {
-    files: ['**/*.json', '**/*.jsonc', '**/*.json5'],
+    name: 'project/node-tooling',
+    files: ['*.config.{js,mjs,cjs}', '.*rc.cjs', 'scripts/**/*.mjs'],
+    languageOptions: { globals: globals.node },
+  },
+  {
+    name: 'project/browser',
+    files: [...appFiles, 'async_hook.js'],
+    languageOptions: { globals: { ...globals.browser, Office: 'readonly', Word: 'readonly' } },
+  },
+  {
+    name: 'project/typescript',
+    files: appFiles,
+    extends: [tseslint.configs.recommended],
     languageOptions: {
-      parser: jsoncParser,
-    },
-    rules: {
-      'jsonc/array-bracket-spacing': ['error', 'never'],
-      'jsonc/comma-dangle': ['error', 'never'],
-      'jsonc/indent': ['error', 2],
-      'jsonc/no-comments': 'off',
-      'jsonc/quotes': ['error', 'double'],
-    },
-  },
-  {
-    files: ['src/i18n/**/*.json'],
-    rules: {
-      'jsonc/sort-keys': [
-        'error',
-        'asc', // 升序排列
-        {
-          caseSensitive: false,
-          natural: true,
-        },
-      ],
-    },
-  },
-  {
-    files: ['*.config.js', '.stylelintrc.cjs', '.*rc.js'],
-    languageOptions: {
-      globals: {
-        ...globals.node,
+      parser: tseslint.parser,
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+        extraFileExtensions: ['.vue'],
       },
     },
+    rules: {
+      // The compiler checks identifiers in TypeScript, including Office.js globals.
+      'no-undef': 'off',
+      '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'separate-type-imports' }],
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': 'error',
+      '@typescript-eslint/await-thenable': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_', ignoreRestSiblings: true },
+      ],
+    },
   },
+  {
+    name: 'project/vue',
+    files: ['src/**/*.vue'],
+    extends: [vue.configs['flat/recommended']],
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: { parser: tseslint.parser },
+    },
+    rules: { 'vue/multi-word-component-names': ['error', { ignores: ['Home', 'Message'] }] },
+  },
+  {
+    name: 'project/json',
+    files: ['**/*.json', '**/*.jsonc', '.prettierrc'],
+    languageOptions: { parser: jsoncParser },
+    plugins: { jsonc },
+    rules: Object.assign({}, ...jsonc.configs['flat/recommended-with-jsonc'].map(config => config.rules)),
+  },
+  {
+    name: 'project/translations',
+    files: ['src/i18n/locales/*.json'],
+    rules: { 'jsonc/sort-keys': ['error', 'asc', { caseSensitive: false, natural: true }] },
+  },
+  // Prettier owns layout; ESLint owns code quality and import order.
   configPrettier,
-  pluginPrettier,
 )

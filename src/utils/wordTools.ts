@@ -1,6 +1,10 @@
 import { tool } from '@langchain/core/tools'
 import { z } from 'zod'
 
+import { getErrorMessage } from './errors'
+import type { ToolSelection } from './toolPermissions'
+import { readToolPreference, resolveToolSelection, toolPermissionError } from './toolPermissions'
+
 export type WordToolName =
   | 'getSelectedText'
   | 'getDocumentContent'
@@ -26,8 +30,65 @@ export type WordToolName =
   | 'insertContentControl'
   | 'findText'
 
+type PropertyValue<P extends ToolProperty> = P extends { enum: readonly (infer E)[] }
+  ? E
+  : P extends { type: 'string' }
+    ? string
+    : P extends { type: 'number' }
+      ? number
+      : P extends { type: 'boolean' }
+        ? boolean
+        : P extends { type: 'array'; items: infer I extends ToolProperty }
+          ? PropertyValue<I>[]
+          : unknown
+
+type ToolArguments<S extends ToolInputSchema> = {
+  [K in keyof S['properties'] as K extends NonNullable<S['required']>[number] ? K : never]: PropertyValue<
+    S['properties'][K]
+  >
+} & {
+  [K in keyof S['properties'] as K extends NonNullable<S['required']>[number] ? never : K]?: PropertyValue<
+    S['properties'][K]
+  >
+}
+
+function defineWordTool<const S extends ToolInputSchema>(definition: {
+  name: WordToolName
+  description: string
+  inputSchema: S
+  execute: (args: ToolArguments<S>) => Promise<string>
+}): WordToolDefinition {
+  return {
+    ...definition,
+    // createWordTools validates every argument against this same schema before execution.
+    execute: args => definition.execute(args as ToolArguments<S>),
+  }
+}
+
+function propertySchema(property: ToolProperty): z.ZodType {
+  let schema: z.ZodType
+  switch (property.type) {
+    case 'string':
+      schema = property.enum ? z.enum(property.enum) : z.string()
+      break
+    case 'number':
+      schema = z.number()
+      break
+    case 'boolean':
+      schema = z.boolean()
+      break
+    case 'array':
+      schema = z.array(property.items ? propertySchema(property.items) : z.unknown())
+      break
+    case 'object':
+      schema = z.record(z.string(), z.unknown())
+      break
+  }
+  return property.description ? schema.describe(property.description) : schema
+}
+
 const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
-  getSelectedText: {
+  getSelectedText: defineWordTool({
     name: 'getSelectedText',
     description:
       'Get the currently selected text in the Word document. Returns the selected text or empty string if nothing is selected.',
@@ -44,9 +105,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return range.text || ''
       })
     },
-  },
+  }),
 
-  getDocumentContent: {
+  getDocumentContent: defineWordTool({
     name: 'getDocumentContent',
     description: 'Get the full content of the Word document body as plain text.',
     inputSchema: {
@@ -62,9 +123,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return body.text || ''
       })
     },
-  },
+  }),
 
-  insertText: {
+  insertText: defineWordTool({
     name: 'insertText',
     description: 'Insert text at the current cursor position in the Word document.',
     inputSchema: {
@@ -91,9 +152,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return `Successfully inserted text at ${location}`
       })
     },
-  },
+  }),
 
-  replaceSelectedText: {
+  replaceSelectedText: defineWordTool({
     name: 'replaceSelectedText',
     description: 'Replace the currently selected text with new text.',
     inputSchema: {
@@ -115,9 +176,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return 'Successfully replaced selected text'
       })
     },
-  },
+  }),
 
-  appendText: {
+  appendText: defineWordTool({
     name: 'appendText',
     description: 'Append text to the end of the document.',
     inputSchema: {
@@ -139,9 +200,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return 'Successfully appended text to document'
       })
     },
-  },
+  }),
 
-  insertParagraph: {
+  insertParagraph: defineWordTool({
     name: 'insertParagraph',
     description: 'Insert a new paragraph at the specified location.',
     inputSchema: {
@@ -193,9 +254,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return `Successfully inserted paragraph at ${location}`
       })
     },
-  },
+  }),
 
-  formatText: {
+  formatText: defineWordTool({
     name: 'formatText',
     description: 'Apply formatting to the currently selected text.',
     inputSchema: {
@@ -245,9 +306,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return 'Successfully applied formatting'
       })
     },
-  },
+  }),
 
-  searchAndReplace: {
+  searchAndReplace: defineWordTool({
     name: 'searchAndReplace',
     description: 'Search for text in the document and replace it with new text.',
     inputSchema: {
@@ -291,9 +352,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return `Replaced ${count} occurrence(s) of "${searchText}" with "${replaceText}"`
       })
     },
-  },
+  }),
 
-  getDocumentProperties: {
+  getDocumentProperties: defineWordTool({
     name: 'getDocumentProperties',
     description: 'Get document properties including paragraph count, word count, and character count.',
     inputSchema: {
@@ -327,9 +388,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         )
       })
     },
-  },
+  }),
 
-  insertTable: {
+  insertTable: defineWordTool({
     name: 'insertTable',
     description: 'Insert a table at the current cursor position.',
     inputSchema: {
@@ -373,9 +434,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return `Successfully inserted ${rows}x${columns} table`
       })
     },
-  },
+  }),
 
-  insertList: {
+  insertList: defineWordTool({
     name: 'insertList',
     description: 'Insert a bulleted or numbered list at the current position.',
     inputSchema: {
@@ -416,9 +477,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return `Successfully inserted ${listType} list with ${items.length} items`
       })
     },
-  },
+  }),
 
-  deleteText: {
+  deleteText: defineWordTool({
     name: 'deleteText',
     description:
       'Delete the currently selected text or a specific range. If no text is selected, this will delete at the cursor position.',
@@ -453,9 +514,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return 'Successfully deleted text'
       })
     },
-  },
+  }),
 
-  clearFormatting: {
+  clearFormatting: defineWordTool({
     name: 'clearFormatting',
     description: 'Clear all formatting from the selected text, returning it to default style.',
     inputSchema: {
@@ -474,9 +535,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return 'Successfully cleared formatting'
       })
     },
-  },
+  }),
 
-  setFontName: {
+  setFontName: defineWordTool({
     name: 'setFontName',
     description: 'Set the font name/family for the selected text (e.g., Arial, Times New Roman, Calibri).',
     inputSchema: {
@@ -498,9 +559,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return `Successfully set font to ${fontName}`
       })
     },
-  },
+  }),
 
-  insertPageBreak: {
+  insertPageBreak: defineWordTool({
     name: 'insertPageBreak',
     description: 'Insert a page break at the current cursor position.',
     inputSchema: {
@@ -525,9 +586,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return `Successfully inserted page break ${location.toLowerCase()}`
       })
     },
-  },
+  }),
 
-  getRangeInfo: {
+  getRangeInfo: defineWordTool({
     name: 'getRangeInfo',
     description: 'Get detailed information about the current selection including text, formatting, and position.',
     inputSchema: {
@@ -568,9 +629,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         )
       })
     },
-  },
+  }),
 
-  selectText: {
+  selectText: defineWordTool({
     name: 'selectText',
     description: 'Select all text in the document or specific location.',
     inputSchema: {
@@ -596,9 +657,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return 'Invalid scope'
       })
     },
-  },
+  }),
 
-  insertImage: {
+  insertImage: defineWordTool({
     name: 'insertImage',
     description: 'Insert an image from a URL at the current cursor position. The image URL must be accessible.',
     inputSchema: {
@@ -637,9 +698,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return `Successfully inserted image at ${location}`
       })
     },
-  },
+  }),
 
-  getTableInfo: {
+  getTableInfo: defineWordTool({
     name: 'getTableInfo',
     description: 'Get information about tables in the document, including row and column counts.',
     inputSchema: {
@@ -654,8 +715,7 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         await context.sync()
 
         const tableInfos = []
-        for (let i = 0; i < tables.items.length; i++) {
-          const table = tables.items[i]
+        for (const [i, table] of tables.items.entries()) {
           table.load(['rowCount', 'values'])
           await context.sync()
 
@@ -678,9 +738,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         )
       })
     },
-  },
+  }),
 
-  insertBookmark: {
+  insertBookmark: defineWordTool({
     name: 'insertBookmark',
     description: 'Insert a bookmark at the current selection to mark a location in the document.',
     inputSchema: {
@@ -709,9 +769,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return `Successfully inserted bookmark: ${bookmarkName}`
       })
     },
-  },
+  }),
 
-  goToBookmark: {
+  goToBookmark: defineWordTool({
     name: 'goToBookmark',
     description: 'Navigate to a previously created bookmark in the document.',
     inputSchema: {
@@ -746,9 +806,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return `Bookmark not found: ${bookmarkName}`
       })
     },
-  },
+  }),
 
-  insertContentControl: {
+  insertContentControl: defineWordTool({
     name: 'insertContentControl',
     description:
       'Insert a content control (a container for content) at the current selection. Useful for creating structured documents.',
@@ -784,9 +844,9 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         return `Successfully inserted content control: ${title}`
       })
     },
-  },
+  }),
 
-  findText: {
+  findText: defineWordTool({
     name: 'findText',
     description: 'Find text in the document and return information about matches. Does not modify the document.',
     inputSchema: {
@@ -830,38 +890,24 @@ const wordToolDefinitions: Record<WordToolName, WordToolDefinition> = {
         )
       })
     },
-  },
+  }),
 }
 
-export function createWordTools(enabledTools?: WordToolName[]) {
+const wordToolNames = Object.keys(wordToolDefinitions) as WordToolName[]
+
+export function loadEnabledWordTools(): WordToolName[] {
+  return readToolPreference('enabledWordTools', wordToolNames, wordToolNames)
+}
+
+export function createWordTools(enabledTools?: ToolSelection<WordToolName>) {
+  const allowedNames = () => resolveToolSelection(enabledTools, wordToolNames, wordToolNames)
   const tools = Object.entries(wordToolDefinitions)
-    .filter(([name]) => !enabledTools || enabledTools.includes(name as WordToolName))
+    .filter(([name]) => allowedNames().includes(name as WordToolName))
     .map(([, def]) => {
-      const schemaObj: Record<string, z.ZodTypeAny> = {}
+      const schemaObj: Record<string, z.ZodType> = {}
 
       for (const [propName, prop] of Object.entries(def.inputSchema.properties)) {
-        let zodType: z.ZodTypeAny
-
-        switch (prop.type) {
-          case 'string':
-            zodType = prop.enum ? z.enum(prop.enum as [string, ...string[]]) : z.string()
-            break
-          case 'number':
-            zodType = z.number()
-            break
-          case 'boolean':
-            zodType = z.boolean()
-            break
-          case 'array':
-            zodType = z.array(z.any())
-            break
-          default:
-            zodType = z.any()
-        }
-
-        if (prop.description) {
-          zodType = zodType.describe(prop.description)
-        }
+        let zodType = propertySchema(prop)
 
         if (!def.inputSchema.required?.includes(propName)) {
           zodType = zodType.optional()
@@ -872,10 +918,11 @@ export function createWordTools(enabledTools?: WordToolName[]) {
 
       return tool(
         async input => {
+          if (!allowedNames().includes(def.name as WordToolName)) throw new Error(toolPermissionError(def.name))
           try {
             return await def.execute(input)
-          } catch (error: any) {
-            return `Error: ${error.message || 'Unknown error occurred'}`
+          } catch (error) {
+            return `Error: ${getErrorMessage(error)}`
           }
         },
         {
@@ -889,12 +936,10 @@ export function createWordTools(enabledTools?: WordToolName[]) {
   return tools
 }
 
-export function getWordToolDefinitions(): WordToolDefinition[] {
-  return Object.values(wordToolDefinitions)
+export function getWordToolDefinitions(): Pick<WordToolDefinition, 'name' | 'description'>[] {
+  return Object.values(wordToolDefinitions).map(({ name, description }) => ({ name, description }))
 }
 
-export function getWordTool(name: WordToolName): WordToolDefinition | undefined {
-  return wordToolDefinitions[name]
+export function getWordTool(name: WordToolName): Pick<WordToolDefinition, 'name' | 'description'> | undefined {
+  return getWordToolDefinitions().find(def => def.name === name)
 }
-
-export { wordToolDefinitions }

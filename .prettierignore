@@ -1,0 +1,10 @@
+node_modules/
+dist/
+docs/
+coverage/
+public/
+release/
+pnpm-lock.yaml
+.github/skills/
+# Prose is maintained separately from the code formatting check.
+*.md
