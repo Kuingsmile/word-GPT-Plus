@@ -17,6 +17,14 @@ export const localStorageKey = {
   temperature: 'temperature',
   maxTokens: 'maxTokens',
   basePath: 'basePath',
+  // Atlas Cloud API
+  atlascloudAPIKey: 'atlascloudAPIKey',
+  atlascloudBasePath: 'atlascloudBasePath',
+  atlascloudModel: 'atlascloudModel',
+  atlascloudCustomModel: 'atlascloudCustomModel',
+  atlascloudCustomModels: 'atlascloudCustomModels',
+  atlascloudTemperature: 'atlascloudTemperature',
+  atlascloudMaxTokens: 'atlascloudMaxTokens',
   // azure api
   azureAPIKey: 'azureAPIKey',
   azureAPIEndpoint: 'azureAPIEndpoint',

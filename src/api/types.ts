@@ -23,6 +23,13 @@ export interface OpenAIOptions extends BaseChatCompletionOptions {
   }
 }
 
+export interface AtlasCloudOptions extends BaseChatCompletionOptions {
+  provider: 'atlascloud'
+  atlascloudAPIKey: string
+  atlascloudBasePath?: string
+  atlascloudModel?: string
+}
+
 export interface OllamaOptions extends BaseChatCompletionOptions {
   provider: 'ollama'
   ollamaModel: string
@@ -49,7 +56,7 @@ export interface AzureOptions extends BaseChatCompletionOptions {
   azureAPIVersion?: string
 }
 
-export type ProviderOptions = OpenAIOptions | OllamaOptions | GroqOptions | GeminiOptions | AzureOptions
+export type ProviderOptions = OpenAIOptions | AtlasCloudOptions | OllamaOptions | GroqOptions | GeminiOptions | AzureOptions
 
 export type ProviderConfig = {
   [P in ProviderOptions['provider']]: Omit<Extract<ProviderOptions, { provider: P }>, keyof BaseChatCompletionOptions> &

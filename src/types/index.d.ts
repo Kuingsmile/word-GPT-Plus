@@ -1,6 +1,6 @@
 type IStringKeyMap = Record<string, string>
 
-type supportedPlatforms = 'official' | 'azure' | 'gemini' | 'ollama' | 'groq'
+type supportedPlatforms = 'official' | 'atlascloud' | 'azure' | 'gemini' | 'ollama' | 'groq'
 
 type insertTypes = 'replace' | 'append' | 'newLine' | 'NoAction'
 

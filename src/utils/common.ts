@@ -3,6 +3,7 @@ import { availableAPIs, languageMap } from './constant'
 export interface Auth {
   type: supportedPlatforms
   apiKey?: string
+  atlascloudAPIKey?: string
   azureAPIKey?: string
   geminiAPIKey?: string
   groqAPIKey?: string
@@ -14,6 +15,8 @@ export function checkAuth(auth: Auth): boolean {
   switch (auth.type) {
     case 'official':
       return !!auth.apiKey
+    case 'atlascloud':
+      return !!auth.atlascloudAPIKey
     case 'azure':
       return !!auth.azureAPIKey
     case 'gemini':
@@ -48,7 +51,10 @@ export const optionLists = {
     { label: 'English', value: 'en' },
     { label: '简体中文', value: 'zh-cn' },
   ],
-  apiList: getOptionList(availableAPIs),
+  apiList: getOptionList(availableAPIs).map(option => ({
+    ...option,
+    label: option.value === 'atlascloud' ? 'Atlas Cloud' : option.label,
+  })),
   replyLanguageList: getOptionList(languageMap, 'value'),
 }
 

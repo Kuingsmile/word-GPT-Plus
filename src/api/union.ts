@@ -13,6 +13,7 @@ import { logDiagnostic } from '@/utils/diagnostics'
 import { createToolAuthorization } from './toolAuthorization'
 import type {
   AgentOptions,
+  AtlasCloudOptions,
   AzureOptions,
   GeminiOptions,
   GroqOptions,
@@ -29,6 +30,18 @@ const ModelCreators = {
       configuration: {
         apiKey: opts.config.apiKey,
         baseURL: opts.config.baseURL || 'https://api.openai.com/v1',
+      },
+      temperature: opts.temperature ?? 0.7,
+      maxTokens: opts.maxTokens ?? 800,
+    })
+  },
+
+  atlascloud: (opts: AtlasCloudOptions) => {
+    return new ChatOpenAI({
+      modelName: opts.atlascloudModel || 'qwen/qwen3.8-max',
+      configuration: {
+        apiKey: opts.atlascloudAPIKey,
+        baseURL: opts.atlascloudBasePath?.replace(/\/$/, '') || 'https://api.atlascloud.ai/v1',
       },
       temperature: opts.temperature ?? 0.7,
       maxTokens: opts.maxTokens ?? 800,
@@ -249,6 +262,8 @@ function createModel(options: ProviderOptions): BaseChatModel {
   switch (options.provider) {
     case 'official':
       return ModelCreators.official(options)
+    case 'atlascloud':
+      return ModelCreators.atlascloud(options)
     case 'ollama':
       return ModelCreators.ollama(options)
     case 'groq':

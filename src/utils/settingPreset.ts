@@ -1,7 +1,13 @@
 import { i18n } from '@/i18n'
 
 import { forceNumber, optionLists } from './common'
-import { availableModels, availableModelsForGemini, availableModelsForGroq, availableModelsForOllama } from './constant'
+import {
+  availableModels,
+  availableModelsForAtlasCloud,
+  availableModelsForGemini,
+  availableModelsForGroq,
+  availableModelsForOllama,
+} from './constant'
 import { localStorageKey } from './enum'
 
 type componentType = 'input' | 'select' | 'inputNum'
@@ -48,6 +54,13 @@ export const Setting_Names = [
   'officialTemperature',
   'officialMaxTokens',
   'officialModelSelect',
+  'atlascloudAPIKey',
+  'atlascloudBasePath',
+  'atlascloudCustomModel',
+  'atlascloudCustomModels',
+  'atlascloudTemperature',
+  'atlascloudMaxTokens',
+  'atlascloudModelSelect',
   'azureAPIKey',
   'azureAPIEndpoint',
   'azureDeploymentName',
@@ -150,6 +163,13 @@ export const settingPreset = {
   officialTemperature: inputNumSetting(0.7, 'temperature', 'temperature'),
   officialMaxTokens: inputNumSetting(800, 'maxTokens', 'maxTokens'),
   officialModelSelect: selectSetting('gpt-5', 'model', availableModels),
+  atlascloudAPIKey: inputSetting('', 'atlascloudAPIKey'),
+  atlascloudBasePath: inputSetting('https://api.atlascloud.ai/v1', 'atlascloudBasePath'),
+  atlascloudCustomModel: inputSetting('', 'atlascloudCustomModel'),
+  atlascloudCustomModels: customModelsetting('atlascloudCustomModels', 'atlascloudCustomModel'),
+  atlascloudTemperature: inputNumSetting(0.7, 'atlascloudTemperature', 'temperature'),
+  atlascloudMaxTokens: inputNumSetting(800, 'atlascloudMaxTokens', 'maxTokens'),
+  atlascloudModelSelect: selectSetting('qwen/qwen3.8-max', 'atlascloudModel', availableModelsForAtlasCloud),
   azureAPIKey: inputSetting(''),
   azureAPIEndpoint: inputSetting(''),
   azureDeploymentName: inputSetting(''),
