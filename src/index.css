@@ -289,22 +289,28 @@ select,
   font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif !important;
 }
 
-/* اصلاح قطعی جهت راست‌به‌چپ و جلوگیری از جابه‌جایی کلمات فارسی و انگلیسی */
+/* اصلاح قطعی راست‌چین و حذف وسط‌چین شدن در تمام لایه‌های چت */
+#app div,
+#app p,
+#app span,
+#app li,
 textarea,
 input[type="text"],
 .markdown-body,
-.markdown-body p,
-.markdown-body li,
-.markdown-body h1,
-.markdown-body h2,
-.markdown-body h3,
-.markdown-body h4,
-[class*="message"],
-[class*="content"] {
+.markdown-body * {
   direction: rtl !important;
-  unicode-bidi: normal !important;
   text-align: right !important;
 }
+
+/* حفظ چیدمان چپ‌به‌راست برای کدها و دکمه‌های نوار ابزار */
+pre,
+code,
+button,
+select {
+  direction: ltr !important;
+  text-align: center !important;
+}
+
 /* حفظ چیدمان چپ‌به‌راست و فونت کد برای بلوک‌های کد */
 pre,
 code {
