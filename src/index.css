@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn');
 @import 'tailwindcss';
 
 @utility no-scrollbar {
@@ -274,5 +275,42 @@ h4,
 pre,
 code {
   direction: ltr !important;
+  text-align: left !important;
+}
+/* اعمال فونت رسمی جمنای (Vazirmatn) به کل محیط افزونه */
+body,
+button,
+input,
+textarea,
+select,
+.markdown-body,
+[class*="message"],
+[class*="content"] {
+  font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif !important;
+}
+
+/* اصلاح قطعی جهت راست‌به‌چپ و جلوگیری از جابه‌جایی کلمات فارسی و انگلیسی */
+textarea,
+input[type="text"],
+.markdown-body,
+.markdown-body p,
+.markdown-body li,
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+[class*="message"],
+[class*="content"] {
+  direction: rtl !important;
+  unicode-bidi: embed !important;
+  text-align: right !important;
+}
+
+/* حفظ چیدمان چپ‌به‌راست و فونت کد برای بلوک‌های کد */
+pre,
+code {
+  font-family: 'JetBrains Mono', Consolas, Monaco, monospace !important;
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
   text-align: left !important;
 }
