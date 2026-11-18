@@ -302,10 +302,9 @@ input[type="text"],
 [class*="message"],
 [class*="content"] {
   direction: rtl !important;
-  unicode-bidi: embed !important;
+  unicode-bidi: normal !important;
   text-align: right !important;
 }
-
 /* حفظ چیدمان چپ‌به‌راست و فونت کد برای بلوک‌های کد */
 pre,
 code {
