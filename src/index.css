@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn');
 @import 'tailwindcss';
 
 @utility no-scrollbar {
@@ -252,4 +253,69 @@
       opacity: 1;
     }
   }
+}
+/* پشتیبانی هوشمند از چیدمان راست‌به‌چپ و چپ‌به‌راست برای فارسی و انگلیسی */
+textarea,
+input[type="text"],
+p,
+li,
+h1,
+h2,
+h3,
+h4,
+.markdown-body,
+[class*="message"],
+[class*="content"] {
+  direction: auto;
+  unicode-bidi: plaintext;
+  text-align: start;
+}
+
+/* حفظ چیدمان چپ‌به‌راست برای بلوک‌های کد */
+pre,
+code {
+  direction: ltr !important;
+  text-align: left !important;
+}
+/* اعمال فونت رسمی جمنای (Vazirmatn) به کل محیط افزونه */
+body,
+button,
+input,
+textarea,
+select,
+.markdown-body,
+[class*="message"],
+[class*="content"] {
+  font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif !important;
+}
+
+/* اصلاح قطعی راست‌چین و حذف وسط‌چین شدن در تمام لایه‌های چت */
+#app div,
+#app p,
+#app span,
+#app li,
+textarea,
+input[type="text"],
+.markdown-body,
+.markdown-body * {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* حفظ چیدمان چپ‌به‌راست برای کدها و دکمه‌های نوار ابزار */
+pre,
+code,
+button,
+select {
+  direction: ltr !important;
+  text-align: center !important;
+}
+
+/* حفظ چیدمان چپ‌به‌راست و فونت کد برای بلوک‌های کد */
+pre,
+code {
+  font-family: 'JetBrains Mono', Consolas, Monaco, monospace !important;
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+  text-align: left !important;
 }

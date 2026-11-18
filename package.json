@@ -70,10 +70,10 @@
     "typescript-eslint": "^8.71.2",
     "vite": "^8.3.4",
     "vue-eslint-parser": "^10.4.1",
-    "vue-tsc": "^3.3.13"
+ "vue-tsc": "^3.3.13"
   },
   "engines": {
-    "node": "24.21.0",
+    "node": "26.13.1",
     "pnpm": "12.11.2"
   },
   "packageManager": "pnpm@12.11.2"

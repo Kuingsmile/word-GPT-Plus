@@ -43,8 +43,8 @@ export const languageMap: IStringKeyMap = {
   ta: 'தமிழ்',
   te: 'తెలుగు',
   ur: 'اردو',
+  fa: 'فارسی',
 }
-
 export const availableAPIs: IStringKeyMap = {
   official: 'official',
   azure: 'azure',
