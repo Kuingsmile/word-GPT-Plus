@@ -253,3 +253,26 @@
     }
   }
 }
+/* پشتیبانی هوشمند از چیدمان راست‌به‌چپ و چپ‌به‌راست برای فارسی و انگلیسی */
+textarea,
+input[type="text"],
+p,
+li,
+h1,
+h2,
+h3,
+h4,
+.markdown-body,
+[class*="message"],
+[class*="content"] {
+  direction: auto;
+  unicode-bidi: plaintext;
+  text-align: start;
+}
+
+/* حفظ چیدمان چپ‌به‌راست برای بلوک‌های کد */
+pre,
+code {
+  direction: ltr !important;
+  text-align: left !important;
+}
